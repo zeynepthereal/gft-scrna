@@ -1,0 +1,50 @@
+Loading data/GSE161277_all.h5ad (backed='r' -- memory-constrained machine)...
+Patient3 normal epithelial: n=359
+Patient3 carcinoma epithelial: n=359
+
+Normal subspace: SVD of normal cells' 50D PCA coords, top-20 components...
+U: (50, 20), explained variance = 0.984
+
+Projection residuals for carcinoma cells: residual_i = ||x_i - U U^T x_i||...
+Carcinoma residual: median=6.0475  mean=9.1736  std=10.0790
+Normal self-residual (control): median=2.2319  mean=2.5285  std=1.0855
+
+Top-20 residual range: [37.146, 65.114]
+Bottom-20 residual range: [2.201, 3.642]
+
+Building small AnnData from raw (lazy row slicing, memory-safe) for DEG + marker panel...
+n(high_residual, top20)=20, n(rest)=339
+
+=== rank_genes_groups (Wilcoxon, top-20 high-residual vs rest of carcinoma) ===
+
+Top 15 marker genes for high-residual (top-20) cells vs rest:
+symbol           names  logfoldchanges    pvals_adj   scores
+ NAMPT ENSG00000105835        6.537265 1.394365e-09 7.441260
+S100A9 ENSG00000163220        7.464384 1.394365e-09 7.388045
+S100A8 ENSG00000143546        8.728881 1.394365e-09 7.345916
+  FTH1 ENSG00000167996        3.776378 1.394365e-09 7.306005
+  SRGN ENSG00000122862        6.815355 1.394365e-09 7.299353
+   B2M ENSG00000166710        2.390556 1.780539e-09 7.241703
+  ACTB ENSG00000075624        2.526301 2.697012e-09 7.164097
+ NEAT1 ENSG00000245532        3.274842 6.080153e-09 7.033277
+   FTL ENSG00000087086        3.087383 1.189526e-08 6.922412
+IFITM2 ENSG00000185201        6.234947 2.931887e-08 6.751679
+ H3F3B ENSG00000132475        3.085687 2.931887e-08 6.738376
+  G0S2 ENSG00000123689        7.102321 7.878415e-08 6.509994
+MALAT1 ENSG00000251562        2.678377 1.050552e-07 6.436823
+ CXCL8 ENSG00000169429        7.082941 1.211119e-07 6.404672
+  IGKC ENSG00000211592        1.826786 1.306838e-07 6.388042
+
+=== Marker panel: mean expression, high-residual (top-20) vs low-residual (bottom-20) ===
+Gene      mean_high20   %+_high20   mean_low20    %+_low20    mean_rest_all 
+----------------------------------------------------------------------------
+ASCL2     0.000         0.0         0.135         15.0        0.488         
+SOX4      0.000         0.0         0.271         30.0        0.790         
+MKI67     0.000         0.0         0.134         10.0        0.178         
+HIF1A     0.479         15.0        0.062         15.0        0.190         
+LDHA      0.000         0.0         0.885         55.0        1.665         
+VEGFA     0.136         5.0         0.480         40.0        0.530         
+TP53      0.000         0.0         0.054         10.0        0.219         
+KRAS      0.262         10.0        0.138         25.0        0.419         
+MYC       0.127         5.0         0.218         20.0        0.586         
+CDX2      0.000         0.0         0.317         35.0        0.490         

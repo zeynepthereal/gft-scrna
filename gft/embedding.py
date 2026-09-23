@@ -21,23 +21,31 @@ def normalized_laplacian(W: csr_matrix) -> csr_matrix:
 
 
 def gft_embed(W: csr_matrix, k_eig: int = 5,
-              tol: float = 1e-4, maxiter: int = 10000) -> np.ndarray:
+              tol: float = 1e-4, maxiter: int = 10000,
+              random_state: int = 42) -> np.ndarray:
     """
     Graf Fourier Transform — düşük frekanslı özvektörler.
 
     Parametreler
     -----------
-    W      : (N, N) simetrik ağırlık matrisi
-    k_eig  : özvektör sayısı (varsayılan: 5)
-    tol    : ARPACK toleransı
-    maxiter: maksimum iterasyon
+    W            : (N, N) simetrik ağırlık matrisi
+    k_eig        : özvektör sayısı (varsayılan: 5)
+    tol          : ARPACK toleransı
+    maxiter      : maksimum iterasyon
+    random_state : eigsh'in v0 başlangıç vektörü için sabit tohum. eigsh varsayılan
+                   olarak rastgele bir v0 kullanır; yakın/dejenere özdeğerlerde bu,
+                   aynı W için çalıştırmalar arası tamamen farklı (ama matematiksel
+                   olarak "geçerli") özvektör kombinasyonlarına yol açabilir. Sabit
+                   bir v0 bu embedding'i tekrarlanabilir kılar.
 
     Döndürür
     --------
     U : (N, k_eig) spektral embedding matrisi
     """
     L = normalized_laplacian(W)
-    _, vecs = eigsh(L, k=k_eig + 1, which='SM', tol=tol, maxiter=maxiter)
+    rng = np.random.RandomState(random_state)
+    v0 = rng.rand(L.shape[0])
+    _, vecs = eigsh(L, k=k_eig + 1, which='SM', tol=tol, maxiter=maxiter, v0=v0)
     return vecs[:, 1:]  # trivial özvektörü at
 
 

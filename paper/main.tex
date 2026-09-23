@@ -1,0 +1,179 @@
+\documentclass{article}
+
+\usepackage[dblblindworkshop]{neurips_2026}
+\workshoptitle{ICBINB-BIO}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{doi}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{amsmath}
+
+\title{When Spectral Methods Help and When They Don't: Graph Fourier Transform and Projection Residual for Single-Cell RNA Sequencing}
+
+\author{%
+  Anonymous Author(s) \\
+  Affiliation \\
+  Address \\
+  \texttt{email}
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We evaluate two spectral approaches for single-cell RNA sequencing analysis. First, Graph Fourier Transform (GFT) embedding improves K-Means cell type clustering by 1.18--2.50x over PCA on three heterogeneous datasets (heterogeneity score $>7$; immune, breast tumor microenvironment, colorectal tumor microenvironment; $N=9{,}354$--$50{,}518$), but loses to PCA (0.89x) on a low-heterogeneity PBMC dataset (score $6.99$), and fails with Leiden clustering due to over-fragmentation in low-dimensional spectral space regardless of heterogeneity. Second, projection residual onto the normal tissue PCA subspace identifies stemness-associated tumor subpopulations (ASCL2+/SOX4+) in 8/11 colorectal cancer samples (permutation $p<0.001$ in all). Three systematic exceptions reveal boundary conditions: an eigensolver reproducibility bug, myeloid contamination, and mixed-tissue reference violation.
+\end{abstract}
+
+\section{Problem}
+\label{sec:problem}
+
+Standard scRNA-seq pipelines rely on PCA for dimensionality reduction followed by Leiden/Louvain clustering. Two open questions motivate this work: (1) Can spectral graph methods --- specifically Graph Fourier Transform --- improve cell type separation in heterogeneous tissue? (2) Can the geometry of the normal tissue manifold reveal which cancer cells have departed most from normal transcriptional identity?
+
+We address both questions and report where each approach succeeds and where it fails.
+
+\section{Methods}
+\label{sec:method}
+
+\textbf{2.1 Graph Fourier Transform embedding.} Given PCA coordinates of $N$ cells, build a cosine $k$-nearest-neighbor graph $W$ ($k=20$). Compute the normalized graph Laplacian $L_\text{sym} = I - D^{-1/2}WD^{-1/2}$ \citep{luxburg2007}. Extract the first $k_\text{eig}=5$ non-trivial eigenvectors, via ARPACK (\texttt{eigsh}) with a fixed seed \texttt{v0} (Section~\ref{sec:failure}), as the GFT embedding. Apply K-Means ($k$ = number of cell types, 10 seeds, \texttt{n\_init=10}) on this embedding. Heterogeneity score: inter-class / intra-class centroid distance in PCA space --- used to predict GFT advantage before running the method.
+
+\textbf{2.2 Projection residual.} For each patient/donor, extract normal epithelial cells and compute their 50-dim PCA coordinates. Apply SVD to obtain a 20-dimensional subspace $\mathbf{U} \in \mathbb{R}^{50 \times 20}$. We retain 20 components, explaining 98.2\% of normal epithelial cell variance in Patient 1 (consistent across patients). The choice of 20 balances subspace completeness against overfitting to patient-specific normal tissue variation. For each cancer cell $\mathbf{x}_i \in \mathbb{R}^{50}$:
+\[
+r_i = \|\mathbf{x}_i - \mathbf{U}\mathbf{U}^\top \mathbf{x}_i\|
+\]
+Normal cells' self-projection residual is the control baseline. Permutation test: 1,000 label shuffles, empirical $p$-value. Stemness: ASCL2 and SOX4 mean expression in top-20 vs.\ bottom-20 residual cancer cells.
+
+\textbf{Why does projection residual work?} Malignant transformation introduces transcriptional programs absent from normal tissue --- oncogene activation, stemness reacquisition \citep{hanahan2011}. These new directions in gene expression space are not captured by the normal PCA subspace \citep{tirosh2016}. A cancer cell expressing aberrant programs cannot be faithfully reconstructed from normal basis vectors, producing high residual.
+
+\textbf{Datasets.} Four datasets are used for the GFT experiments (Section~\ref{sec:results}.1): a CMV immune cohort \citep{cmv} ($N=9{,}354$, $k=18$ fine-grained immune cell types, \texttt{predicted\_AIFI\_L2} labels, Harmony-corrected PCA), a breast cancer TME liver-metastasis cohort \citep{tme} ($N=12{,}493$, $k=9$ cell types with $\geq10$ cells), GSE161277 colorectal cancer scRNA-seq \citep{gse161277} ($N=50{,}518$, $k=7$ cell types), and a PBMC3k dataset \citep{pbmc3k} ($N=2{,}700$, $k=5$ marker-annotated types, used as a low-heterogeneity negative control). For projection residual (Sections~\ref{sec:results}.2--\ref{sec:results}.3), we use GSE161277 (3 patients with matched normal and carcinoma epithelial cells) together with an independent CRC epithelial cohort \citep{crc_epith} (6 donors, $N\geq50$ cells per group). Code: [anonymized for review].
+
+\section{Results}
+\label{sec:results}
+
+\subsection{GFT improves K-Means but fails with Leiden}
+
+\begin{table}[h]
+\caption{GFT vs.\ PCA K-Means clustering performance across four datasets. ARI reported as mean $\pm$ std over 10 seeds (\texttt{n\_init=10}, fixed-seed \texttt{eigsh}; see Section~\ref{sec:failure}).}
+\label{tab:gft}
+\centering
+\begin{tabular}{lrrrrr}
+\toprule
+Dataset & $N$ & Het.\ score & PCA ARI & GFT ARI & Ratio \\
+\midrule
+CMV immune cohort      & 9{,}354  & 12.6 & $0.173\pm0.007$ & $0.434\pm0.048$ & 2.50x \\
+Breast TME             & 12{,}493 & 18.4 & $0.288\pm0.005$ & $0.537\pm0.000$ & 1.86x \\
+CRC (GSE161277)        & 50{,}518 & 19.4 & $0.731\pm0.036$ & $0.859\pm0.000$ & 1.18x \\
+PBMC3k (neg.\ control) &  2{,}700 &  6.99 & $0.718\pm0.006$ & $0.638\pm0.035$ & 0.89x \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+GFT embedding with K-Means outperforms PCA in all three heterogeneous datasets (ratio 1.18x--2.50x). The PBMC3k dataset, with heterogeneity score 6.99 (below the empirical threshold of 7), is the only dataset where GFT underperforms PCA (ratio 0.89x), providing one low-heterogeneity counterexample consistent with the threshold --- though broader validation across more datasets remains future work. GFT standard deviation is near zero on TME and CRC (0.000), confirming embedding stability when \texttt{eigsh} is seeded (Section~\ref{sec:failure}). CMV shows higher GFT variance (0.048), consistent with its fine-grained label structure ($k=18$ cell types).
+
+Applying Leiden clustering on the GFT embedding (CRC dataset, seeded \texttt{eigsh}) produces severe over-fragmentation: 41--47 clusters instead of the true 7, with ARI 0.12--0.17 compared to PCA-Leiden ARI 0.34. Increasing $k_\text{eig}$ from 5 to 50 does not resolve this (ARI 0.12, 0.13, 0.17, 0.16 for $k_\text{eig}=5,10,20,50$ respectively).
+
+\subsection{Projection residual is consistently elevated in cancer}
+
+\begin{table}[h]
+\caption{Projection residual across 11 colorectal cancer samples. All permutation $p<0.001$.}
+\label{tab:residual}
+\centering
+\small
+\begin{tabular}{llrrrrr}
+\toprule
+Source & Sample & $N_\text{norm}$ & $N_\text{canc}$ & Normal med.\ & Cancer med.\ & Ratio \\
+\midrule
+GSE161277 & Patient 1 & 834 & 2972 & 2.20 & 8.02 & 3.64x \\
+GSE161277 & Patient 2 & 3584 & 3304 & 2.59 & 3.58 & 1.38x \\
+GSE161277 & Patient 3 & 359 & 359 & 2.23 & 6.05 & 2.71x \\
+CRC epith.\ & HTA8\_6002 & 268 & 60 & 4.19 & 15.02 & 3.58x \\
+CRC epith.\ & HTA8\_6009 & 832 & 999 & 4.16 & 12.36 & 2.97x \\
+CRC epith.\ & HTA8\_6013 & 770 & 832 & 3.95 & 19.02 & 4.81x \\
+CRC epith.\ & HTA8\_6016 & 1516 & 1481 & 3.74 & 13.68 & 3.66x \\
+CRC epith.\ & HTA8\_6018 & 1257 & 2631 & 3.57 & 19.70 & 5.51x \\
+CRC epith.\ & HTA8\_6028 & 215 & 1442 & 3.83 & 16.02 & 4.18x \\
+HTA8\_6016 (primary) & --- & 1516 & 960 & 3.74 & 11.86 & 3.17x \\
+HTA8\_6016 (metastasis) & --- & 1516 & 521 & 3.74 & 15.92 & 4.26x \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Cancer epithelial cells show elevated projection residuals in all 11 samples (ratio 1.38x--5.51x, median 3.64x, all permutation $p<0.001$; Table~\ref{tab:residual}). Normal cell self-projection residuals are stable across datasets (median 2.20--4.19), confirming that the normal subspace provides a consistent baseline.
+
+\subsection{High-residual cells are stem-like}
+
+In 8/11 samples, high-residual cancer cells show elevated ASCL2 expression vs.\ low-residual cells (representative samples: Patient~1, 1.66 vs.\ 0.07; HTA8\_6018, 2.11 vs.\ 0.14; HTA8\_6013, 0.98 vs.\ 0.00; direction consistent across 8/11 samples). SOX4 shows the same direction in 8/9 samples with detectable expression. ASCL2 is a master regulator of intestinal stem cell identity \citep{vanderflier2009}; its enrichment in high-residual cells suggests the most transcriptionally aberrant tumor cells have reactivated a stem-like program. Three exceptions are analyzed in Section~\ref{sec:failure}.
+
+\section{Failure Analysis and Boundary Conditions}
+\label{sec:failure}
+
+\textbf{4.0 Reproducibility pitfall: unseeded \texttt{eigsh}.} During development, GFT ARI on the breast TME dataset varied between 0.54 and 0.93 across runs with identical inputs. The source was \texttt{scipy.sparse.linalg.eigsh}: without a fixed initial vector (\texttt{v0}), ARPACK uses a random starting point, producing different eigenvectors --- and therefore different embeddings and clustering outcomes --- on each call. Fixing \texttt{v0 = np.ones(N)/np.sqrt(N)} eliminated all run-to-run variance. This is a general pitfall for any GFT or spectral clustering pipeline: eigenvectors of near-degenerate eigenvalues are not unique, and small numerical differences in initialization can rotate the embedding arbitrarily. We recommend that any spectral method paper verify reproducibility across at least three independent runs before reporting results.
+
+\textbf{4.1 GFT + Leiden: structural incompatibility.} Leiden detects communities by optimizing modularity over a neighborhood graph. GFT embedding collapses the local density structure that Leiden relies on, causing over-fragmentation into 41--47 clusters (re-verified with fixed-seed \texttt{eigsh}, $k_\text{eig}\in\{5,10,20,50\}$). This is not resolved by increasing $k_\text{eig}$ --- the problem is not dimensionality but the smoothing nature of low-frequency eigenvectors, which preserves global cluster separation but erases local boundaries. Hybrid graphs ($\alpha \cdot W_\text{PCA} + (1-\alpha)\cdot W_\text{GFT}$) also fail to recover PCA-Leiden performance for any $\alpha$. GFT should be used with centroid-based clustering only. While the general incompatibility between spectral embeddings and modularity-based clustering has been noted \citep{luxburg2007}, its systematic failure across all $k_\text{eig}$ values from 5 to 50 in the scRNA-seq setting --- where practitioners routinely apply Leiden --- has not been previously documented as a practical warning.
+
+\textbf{4.2 Patient 3: myeloid contamination.} Top-15 differentially expressed genes in high-residual Patient 3 cells: S100A8, S100A9, IGKC, NAMPT, CXCL8 --- canonical myeloid/immune markers. ASCL2, SOX4, CDX2 all zero. High-residual cells are misannotated immune cells. Cell type purity ($>90\%$ epithelial) must be verified before applying projection residual.
+
+\textbf{4.3 HTA8\_6016 metastasis: tissue-of-origin confound.} Normal subspace built from sigmoid colon applied to liver metastasis cells measures tissue-of-origin difference, not malignancy. Primary tumor (same organ): ASCL2 high-residual $>$ low-residual (consistent). Liver metastasis: reversed. Normal reference must match the tissue of origin of cancer cells.
+
+\textbf{4.4 Boundary conditions summary.} (1) $N_\text{normal} \geq 200$ for stable subspace. (2) Cell type purity $>90\%$ epithelial. (3) Normal and cancer cells from same tissue of origin. (4) Use K-Means, not Leiden, with GFT embedding. (5) Seed \texttt{eigsh} with a fixed \texttt{v0} and verify reproducibility across at least three independent runs before reporting results.
+
+\paragraph{LLM disclosure.} Large language models (Claude, Anthropic) assisted with code generation, statistical analysis, and manuscript drafting. All experimental results were independently verified by the authors.
+
+\paragraph{Reproducibility statement.} Code: [anonymized for review]. Data: CMV cohort and breast TME (CELLxGENE), GSE161277 (GEO), CRC epithelial cohort (CELLxGENE), PBMC3k (10x Genomics).
+
+\clearpage
+\begin{thebibliography}{9}
+
+\bibitem[Hanahan and Weinberg(2011)]{hanahan2011}
+Douglas Hanahan and Robert~A Weinberg.
+\newblock Hallmarks of cancer: the next generation.
+\newblock \emph{Cell}, 144(5):646--674, 2011.
+
+\bibitem[Tirosh et~al.(2016)]{tirosh2016}
+Itay Tirosh, Benjamin Izar, Sanjay~M Prakadan, et~al.
+\newblock Dissecting the multicellular ecosystem of metastatic melanoma by single-cell {RNA}-seq.
+\newblock \emph{Science}, 352(6282):189--196, 2016.
+
+\bibitem[van~der Flier et~al.(2009)]{vanderflier2009}
+Laurens~G van~der Flier, Marielle~E van Gijn, Pantelis Hatzis, et~al.
+\newblock Transcription factor achaete scute-like 2 controls intestinal stem cell fate.
+\newblock \emph{Cell}, 136(5):903--912, 2009.
+
+\bibitem[von Luxburg(2007)]{luxburg2007}
+Ulrike von Luxburg.
+\newblock A tutorial on spectral clustering.
+\newblock \emph{Statistics and Computing}, 17(4):395--416, 2007.
+
+\bibitem[Zheng et~al.(2022)]{gse161277}
+Xiaobo Zheng, Jinen Song, Chune Yu, et~al.
+\newblock Single-cell transcriptomic profiling unravels the adenoma-initiation
+  role of protein tyrosine kinases during colorectal tumorigenesis.
+\newblock \emph{Signal Transduction and Targeted Therapy}, 7:60, 2022.
+\newblock \doi{10.1038/s41392-022-00881-8}. (Data deposited as GEO accession GSE161277.)
+
+\bibitem[CELLxGENE(2024)]{crc_epith}
+{CRC} epithelial single-cell cohort, 2024.
+\newblock \url{https://cellxgene.cziscience.com}.
+
+\bibitem[CELLxGENE(2023a)]{cmv}
+{CMV} immune cohort single-cell dataset, 2023.
+\newblock \url{https://cellxgene.cziscience.com}.
+
+\bibitem[CELLxGENE(2023b)]{tme}
+Breast cancer tumor microenvironment single-cell dataset, 2023.
+\newblock \url{https://cellxgene.cziscience.com}.
+
+\bibitem[10x Genomics(2016)]{pbmc3k}
+{PBMC3k}: 2,700 peripheral blood mononuclear cells, 2016.
+\newblock \url{https://support.10xgenomics.com/single-cell-gene-expression/datasets}.
+
+\end{thebibliography}
+
+\end{document}

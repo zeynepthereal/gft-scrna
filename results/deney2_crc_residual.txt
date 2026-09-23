@@ -1,0 +1,41 @@
+Loading data/crc_epithelial.h5ad...
+1) PCA (n_comps=50) on log-normalized X (no HVG mask)...
+ASCL2 resolvable: True
+SKIP HTA8_6002: normal=268, cancer=60 (need >= 100 in both)
+SKIP HTA8_6006: normal=117, cancer=0 (need >= 100 in both)
+HTA8_6009: n_normal=832, n_cancer=999, normal_res_median=4.1631, cancer_res_median=12.3607, ratio=2.97x
+    ASCL2: high20_residual mean=0.804, low20_residual mean=0.123, high>low
+SKIP HTA8_6011: normal=20, cancer=167 (need >= 100 in both)
+HTA8_6013: n_normal=770, n_cancer=832, normal_res_median=3.9517, cancer_res_median=19.0186, ratio=4.81x
+    ASCL2: high20_residual mean=0.981, low20_residual mean=0.000, high>low
+SKIP HTA8_6014: normal=0, cancer=1236 (need >= 100 in both)
+HTA8_6016: n_normal=1516, n_cancer=1481, normal_res_median=3.7366, cancer_res_median=13.6799, ratio=3.66x
+    ASCL2: high20_residual mean=0.000, low20_residual mean=0.000, high<=low
+HTA8_6018: n_normal=1257, n_cancer=2631, normal_res_median=3.5743, cancer_res_median=19.7008, ratio=5.51x
+    ASCL2: high20_residual mean=2.115, low20_residual mean=0.136, high>low
+HTA8_6028: n_normal=215, n_cancer=1442, normal_res_median=3.8343, cancer_res_median=16.0157, ratio=4.18x
+    ASCL2: high20_residual mean=0.494, low20_residual mean=0.000, high>low
+
+====================================================================================================
+Donor         N_normal  N_cancer  normal_res_med  cancer_res_med  oran    
+----------------------------------------------------------------------------------------------------
+HTA8_6009     832       999       4.1631          12.3607         2.97    
+HTA8_6013     770       832       3.9517          19.0186         4.81    
+HTA8_6016     1516      1481      3.7366          13.6799         3.66    
+HTA8_6018     1257      2631      3.5743          19.7008         5.51    
+HTA8_6028     215       1442      3.8343          16.0157         4.18    
+====================================================================================================
+
+cancer residual > normal residual: 5/5 donor
+
+======================================================================
+ASCL2: yuksek-residual top-20 vs dusuk-residual top-20 (her donor)
+======================================================================
+Donor         ASCL2_high20    ASCL2_low20     high>low
+HTA8_6009     0.8044          0.1226          YES
+HTA8_6013     0.9805          0.0000          YES
+HTA8_6016     0.0000          0.0000          no
+HTA8_6018     2.1145          0.1360          YES
+HTA8_6028     0.4936          0.0000          YES
+
+ASCL2 higher in high-residual group: 4/5 donor

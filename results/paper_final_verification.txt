@@ -1,0 +1,81 @@
+==========================================================================================
+GSE161277 (3 patients) -- unified method
+==========================================================================================
+
+Patient1: n_normal=834, n_cancer=2972
+  normal_res_median=2.2009  cancer_res_median=8.0213  ratio_median=3.64x  ratio_mean=4.11x
+  normal_res_std=1.2406  cancer_res_std=7.1631
+  Mann-Whitney U=2399710.0  p=0.000e+00
+  ASCL2: top20=1.6606  bottom20=0.0727  HIGH>low
+  SOX4: top20=3.6931  bottom20=0.2969  HIGH>low
+  MKI67: top20=0.0000  bottom20=0.1981  no
+
+Patient2: n_normal=3584, n_cancer=3304
+  normal_res_median=2.5946  cancer_res_median=3.5756  ratio_median=1.38x  ratio_mean=1.56x
+  normal_res_std=1.5238  cancer_res_std=2.9375
+  Mann-Whitney U=8567682.0  p=0.000e+00
+  ASCL2: top20=0.2483  bottom20=0.0000  HIGH>low
+  SOX4: top20=1.4555  bottom20=0.1500  HIGH>low
+  MKI67: top20=0.0000  bottom20=0.0000  no
+
+Patient3: n_normal=359, n_cancer=359
+  normal_res_median=2.2319  cancer_res_median=6.0475  ratio_median=2.71x  ratio_mean=3.63x
+  normal_res_std=1.0855  cancer_res_std=10.0790
+  Mann-Whitney U=124475.0  p=0.000e+00
+  ASCL2: top20=0.0000  bottom20=0.1350  no
+  SOX4: top20=0.0000  bottom20=0.2713  no
+  MKI67: top20=0.0000  bottom20=0.1337  no
+
+==========================================================================================
+CRC epithelial dataset (donors N>=100 both groups) -- unified method
+==========================================================================================
+
+HTA8_6009: n_normal=832, n_cancer=999
+  normal_res_median=4.1631  cancer_res_median=12.3607  ratio_median=2.97x
+  ASCL2: top20=0.8044  bottom20=0.1226  HIGH>low
+  SOX4: top20=2.6387  bottom20=0.6579  HIGH>low
+  MKI67: top20=1.2884  bottom20=0.0000  HIGH>low
+
+HTA8_6013: n_normal=770, n_cancer=832
+  normal_res_median=3.9517  cancer_res_median=19.0186  ratio_median=4.81x
+  ASCL2: top20=0.9805  bottom20=0.0000  HIGH>low
+  SOX4: top20=2.1003  bottom20=0.7563  HIGH>low
+  MKI67: top20=0.1618  bottom20=0.0000  HIGH>low
+
+HTA8_6016: n_normal=1516, n_cancer=1481
+  normal_res_median=3.7366  cancer_res_median=13.6799  ratio_median=3.66x
+  ASCL2: top20=0.0000  bottom20=0.0000  no
+  SOX4: top20=1.7816  bottom20=0.6682  HIGH>low
+  MKI67: top20=0.4198  bottom20=0.0000  HIGH>low
+
+HTA8_6018: n_normal=1257, n_cancer=2631
+  normal_res_median=3.5743  cancer_res_median=19.7008  ratio_median=5.51x
+  ASCL2: top20=2.1145  bottom20=0.1360  HIGH>low
+  SOX4: top20=2.0855  bottom20=0.9351  HIGH>low
+  MKI67: top20=0.0260  bottom20=0.3683  no
+
+HTA8_6028: n_normal=215, n_cancer=1442
+  normal_res_median=3.8343  cancer_res_median=16.0157  ratio_median=4.18x
+  ASCL2: top20=0.4936  bottom20=0.0000  HIGH>low
+  SOX4: top20=2.6688  bottom20=0.7031  HIGH>low
+  MKI67: top20=0.0267  bottom20=0.0000  HIGH>low
+
+
+====================================================================================================
+FINAL SUMMARY TABLE (all median-based, unified method)
+====================================================================================================
+Source      Sample      N_normal  N_cancer  med_n   med_c   ratio   ASCL2  SOX4  MKI67
+----------------------------------------------------------------------------------------------------
+GSE161277   Patient1    834       2972      2.20    8.02    3.64    YES    YES   no
+GSE161277   Patient2    3584      3304      2.59    3.58    1.38    YES    YES   no
+GSE161277   Patient3    359       359       2.23    6.05    2.71    no     no    no
+CRC_epith   HTA8_6009   832       999       4.16    12.36   2.97    YES    YES   YES
+CRC_epith   HTA8_6013   770       832       3.95    19.02   4.81    YES    YES   YES
+CRC_epith   HTA8_6016   1516      1481      3.74    13.68   3.66    no     YES   YES
+CRC_epith   HTA8_6018   1257      2631      3.57    19.70   5.51    YES    YES   no
+CRC_epith   HTA8_6028   215       1442      3.83    16.02   4.18    YES    YES   YES
+
+cancer_residual > normal_residual: 8/8 samples
+ASCL2 higher in top20 vs bottom20: 6/8 samples
+SOX4 higher in top20 vs bottom20: 7/8 samples
+ratio range: min=1.38x, max=5.51x

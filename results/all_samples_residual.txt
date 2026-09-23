@@ -1,0 +1,78 @@
+====================================================================================================
+GSE161277 -- Patient0 has no matched normal sample in this GEO series (carcinoma-only); excluded.
+====================================================================================================
+
+Patient1: n_normal=834, n_cancer=2972
+  normal_med=2.2009  cancer_med=8.0213  ratio=3.64x  p=0.000e+00
+  ASCL2: top20=1.6606  bottom20=0.0727  HIGH>low
+  SOX4: top20=3.6931  bottom20=0.2969  HIGH>low
+
+Patient2: n_normal=3584, n_cancer=3304
+  normal_med=2.5946  cancer_med=3.5756  ratio=1.38x  p=0.000e+00
+  ASCL2: top20=0.2483  bottom20=0.0000  HIGH>low
+  SOX4: top20=1.4555  bottom20=0.1500  HIGH>low
+
+Patient3: n_normal=359, n_cancer=359
+  normal_med=2.2319  cancer_med=6.0475  ratio=2.71x  p=0.000e+00
+  ASCL2: top20=0.0000  bottom20=0.1350  no
+  SOX4: top20=0.0000  bottom20=0.2713  no
+
+====================================================================================================
+CRC epithelial cohort -- donors with N_normal>=50 AND N_cancer>=50
+====================================================================================================
+
+HTA8_6002: n_normal=268, n_cancer=60
+  normal_med=4.1915  cancer_med=15.0225  ratio=3.58x  p=9.560e-34
+  ASCL2: top20=0.6791  bottom20=0.6482  HIGH>low
+  SOX4: top20=1.0406  bottom20=0.6424  HIGH>low
+SKIP HTA8_6006: n_normal=117, n_cancer=0 (need >= 50)
+
+HTA8_6009: n_normal=832, n_cancer=999
+  normal_med=4.1631  cancer_med=12.3607  ratio=2.97x  p=0.000e+00
+  ASCL2: top20=0.8044  bottom20=0.1226  HIGH>low
+  SOX4: top20=2.6387  bottom20=0.6579  HIGH>low
+SKIP HTA8_6011: n_normal=20, n_cancer=167 (need >= 50)
+
+HTA8_6013: n_normal=770, n_cancer=832
+  normal_med=3.9517  cancer_med=19.0186  ratio=4.81x  p=0.000e+00
+  ASCL2: top20=0.9805  bottom20=0.0000  HIGH>low
+  SOX4: top20=2.1003  bottom20=0.7563  HIGH>low
+SKIP HTA8_6014: n_normal=0, n_cancer=1236 (need >= 50)
+
+HTA8_6016: n_normal=1516, n_cancer=1481
+  normal_med=3.7366  cancer_med=13.6799  ratio=3.66x  p=0.000e+00
+  ASCL2: top20=0.0000  bottom20=0.0000  no
+  SOX4: top20=1.7816  bottom20=0.6682  HIGH>low
+
+HTA8_6018: n_normal=1257, n_cancer=2631
+  normal_med=3.5743  cancer_med=19.7008  ratio=5.51x  p=0.000e+00
+  ASCL2: top20=2.1145  bottom20=0.1360  HIGH>low
+  SOX4: top20=2.0855  bottom20=0.9351  HIGH>low
+
+HTA8_6028: n_normal=215, n_cancer=1442
+  normal_med=3.8343  cancer_med=16.0157  ratio=4.18x  p=0.000e+00
+  ASCL2: top20=0.4936  bottom20=0.0000  HIGH>low
+  SOX4: top20=2.6688  bottom20=0.7031  HIGH>low
+
+
+==================================================================================================================================
+FINAL TABLE -- all samples, N>=50, unified SVD-based method
+==================================================================================================================================
+Source      Sample      N_normal  N_cancer  Normal_med  Cancer_med  Ratio   p-value     ASCL2_high  ASCL2_low  ASCL2_dir
+----------------------------------------------------------------------------------------------------------------------------------
+GSE161277   Patient1    834       2972      2.2009      8.0213      3.64    0.000e+00   1.6606      0.0727     high>low
+GSE161277   Patient2    3584      3304      2.5946      3.5756      1.38    0.000e+00   0.2483      0.0000     high>low
+GSE161277   Patient3    359       359       2.2319      6.0475      2.71    0.000e+00   0.0000      0.1350     low>=high
+CRC_epith   HTA8_6002   268       60        4.1915      15.0225     3.58    9.560e-34   0.6791      0.6482     high>low
+CRC_epith   HTA8_6009   832       999       4.1631      12.3607     2.97    0.000e+00   0.8044      0.1226     high>low
+CRC_epith   HTA8_6013   770       832       3.9517      19.0186     4.81    0.000e+00   0.9805      0.0000     high>low
+CRC_epith   HTA8_6016   1516      1481      3.7366      13.6799     3.66    0.000e+00   0.0000      0.0000     low>=high
+CRC_epith   HTA8_6018   1257      2631      3.5743      19.7008     5.51    0.000e+00   2.1145      0.1360     high>low
+CRC_epith   HTA8_6028   215       1442      3.8343      16.0157     4.18    0.000e+00   0.4936      0.0000     high>low
+
+Total samples analyzed: 9
+cancer_residual > normal_residual: 9/9
+ASCL2 higher in top20 vs bottom20: 7/9
+SOX4 higher in top20 vs bottom20: 8/9
+Ratio: min=1.38x  max=5.51x  mean=3.61x  median=3.64x
+All Mann-Whitney p-values < 0.05: True  (max p-value across samples: 9.560e-34)

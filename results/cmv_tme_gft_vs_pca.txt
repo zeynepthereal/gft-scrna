@@ -1,0 +1,27 @@
+Loading CMV cohort (predicted_AIFI_L2 labels, X_pca_harmony)...
+
+=== CMV cohort ===
+N=9354  k=18  heterogeneity_score=12.59
+classes: ['CD14 monocyte', 'CD16 monocyte', 'CD56dim NK cell', 'CD8aa', 'Erythrocyte', 'MAIT', 'Memory CD4 T cell', 'Memory CD8 T cell', 'Naive B cell', 'Naive CD4 T cell', 'Naive CD8 T cell', 'Platelet', 'Progenitor cell', 'Proliferating NK cell', 'Transitional B cell', 'Treg', 'cDC1', 'pDC']
+PCA ARI: 0.1749 +/- 0.0119
+GFT ARI: 0.7673 +/- 0.0040
+Ratio (GFT/PCA): 4.39x
+
+Loading breast TME (cell_type labels, X_pca, N>=10 per type)...
+
+=== Breast TME ===
+N=12493  k=9  heterogeneity_score=18.44
+classes: ['T cell', 'endothelial cell', 'fibroblast', 'hepatocyte', 'macrophage', 'malignant cell', 'mature NK T cell', 'monocyte', 'plasma cell']
+PCA ARI: 0.2859 +/- 0.0108
+GFT ARI: 0.5750 +/- 0.1157
+Ratio (GFT/PCA): 2.01x
+
+
+====================================================================================================
+SUMMARY TABLE
+====================================================================================================
+Dataset         N         k     Het.score   PCA ARI           GFT ARI           Ratio
+----------------------------------------------------------------------------------------------------
+CMV cohort      9354      18    12.59       0.1749+/-0.0119   0.7673+/-0.0040   4.39x
+Breast TME      12493     9     18.44       0.2859+/-0.0108   0.5750+/-0.1157   2.01x
+====================================================================================================

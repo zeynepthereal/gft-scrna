@@ -1,0 +1,88 @@
+==========================================================================================
+GSE161277 patients
+==========================================================================================
+GSE161277/Patient1: n_normal=834, n_cancer=2972
+  observed ratio = 3.645x
+  permutation p-value (n_perm=1000) = 0.0000
+  null distribution 95% CI = [0.948, 1.061]
+  null distribution mean=1.002, std=0.031
+GSE161277/Patient2: n_normal=3584, n_cancer=3304
+  observed ratio = 1.378x
+  permutation p-value (n_perm=1000) = 0.0000
+  null distribution 95% CI = [0.977, 1.024]
+  null distribution mean=1.000, std=0.012
+GSE161277/Patient3: n_normal=359, n_cancer=359
+  observed ratio = 2.710x
+  permutation p-value (n_perm=1000) = 0.0000
+  null distribution 95% CI = [0.792, 1.250]
+  null distribution mean=1.004, std=0.111
+
+==========================================================================================
+CRC epithelial cohort donors
+==========================================================================================
+CRC_epith/HTA8_6002: n_normal=268, n_cancer=60
+  observed ratio = 3.584x
+  permutation p-value (n_perm=1000) = 0.0000
+  null distribution 95% CI = [0.912, 1.107]
+  null distribution mean=1.000, std=0.052
+CRC_epith/HTA8_6009: n_normal=832, n_cancer=999
+  observed ratio = 2.969x
+  permutation p-value (n_perm=1000) = 0.0000
+  null distribution 95% CI = [0.871, 1.173]
+  null distribution mean=1.001, std=0.070
+CRC_epith/HTA8_6013: n_normal=770, n_cancer=832
+  observed ratio = 4.813x
+  permutation p-value (n_perm=1000) = 0.0000
+  null distribution 95% CI = [0.749, 1.352]
+  null distribution mean=1.007, std=0.152
+CRC_epith/HTA8_6016: n_normal=1516, n_cancer=1481
+  observed ratio = 3.661x
+  permutation p-value (n_perm=1000) = 0.0000
+  null distribution 95% CI = [0.825, 1.197]
+  null distribution mean=0.998, std=0.096
+CRC_epith/HTA8_6018: n_normal=1257, n_cancer=2631
+  observed ratio = 5.512x
+  permutation p-value (n_perm=1000) = 0.0000
+  null distribution 95% CI = [0.984, 1.016]
+  null distribution mean=1.000, std=0.008
+CRC_epith/HTA8_6028: n_normal=215, n_cancer=1442
+  observed ratio = 4.177x
+  permutation p-value (n_perm=1000) = 0.0000
+  null distribution 95% CI = [0.967, 1.037]
+  null distribution mean=1.001, std=0.020
+
+==========================================================================================
+HTA8_6016 primary/metastasis split (normal subspace = sigmoid colon normal cells)
+==========================================================================================
+HTA8_6016/primary(sigmoid_colon): n_normal=1516, n_cancer=960
+  observed ratio = 3.173x
+  permutation p-value (n_perm=1000) = 0.0000
+  null distribution 95% CI = [0.910, 1.097]
+  null distribution mean=1.001, std=0.045
+HTA8_6016/metastasis(liver): n_normal=1516, n_cancer=521
+  observed ratio = 4.261x
+  permutation p-value (n_perm=1000) = 0.0000
+  null distribution 95% CI = [0.940, 1.059]
+  null distribution mean=1.001, std=0.029
+
+
+==============================================================================================================
+SUMMARY TABLE (11 samples, 1000 permutations each, seed=42)
+==============================================================================================================
+Source            Sample                          N_normal  N_cancer  Obs.ratio   Perm.p    Null 95% CI
+--------------------------------------------------------------------------------------------------------------
+GSE161277         GSE161277/Patient1              834       2972      3.645       0.0000    [0.948, 1.061]
+GSE161277         GSE161277/Patient2              3584      3304      1.378       0.0000    [0.977, 1.024]
+GSE161277         GSE161277/Patient3              359       359       2.710       0.0000    [0.792, 1.250]
+CRC_epith         CRC_epith/HTA8_6002             268       60        3.584       0.0000    [0.912, 1.107]
+CRC_epith         CRC_epith/HTA8_6009             832       999       2.969       0.0000    [0.871, 1.173]
+CRC_epith         CRC_epith/HTA8_6013             770       832       4.813       0.0000    [0.749, 1.352]
+CRC_epith         CRC_epith/HTA8_6016             1516      1481      3.661       0.0000    [0.825, 1.197]
+CRC_epith         CRC_epith/HTA8_6018             1257      2631      5.512       0.0000    [0.984, 1.016]
+CRC_epith         CRC_epith/HTA8_6028             215       1442      4.177       0.0000    [0.967, 1.037]
+CRC_epith_split   HTA8_6016/primary(sigmoid_colon)1516      960       3.173       0.0000    [0.910, 1.097]
+CRC_epith_split   HTA8_6016/metastasis(liver)     1516      521       4.261       0.0000    [0.940, 1.059]
+==============================================================================================================
+
+Samples with permutation p < 0.05: 11/11
+Max permutation p-value across all samples: 0.0000
