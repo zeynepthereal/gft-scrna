@@ -1,0 +1,433 @@
+POST HOC analyses on GSE178341 -- NOT pre-registered.
+Motivated by the pre-registered run's H3 anomaly: CNV AUROC was weak even in MMRp
+(median 0.72, see results/gse178341_prereg_results.txt), where CNV-based detection is
+expected to work well. Does not modify results/gse178341_prereg_results.txt or
+docs/prereg_gse178341.md. Every section below is explicitly labeled [POST HOC].
+
+versions: numpy=2.4.6, scipy=1.17.1, scikit-learn=1.9.1, scanpy=1.11.5, infercnvpy=0.6.1
+seed=0  n_folds=5  thin_pct=10  cnv_window=250
+
+
+================================================================================================
+PART A [POST HOC] -- baselines from the stored pre-registered run (no recomputation)
+================================================================================================
+PID     MMR   res_AUROC  cnv_AUROC  euc_AUROC  ng_AUROC  
+C106    MMRd  0.995      0.490      0.756      0.618     
+C107    MMRp  0.997      0.811      0.777      0.862     
+C109    MMRd  0.988      0.554      0.891      0.483     
+C110    MMRd  1.000      0.789      0.974      0.904     
+C111    MMRd  0.996      0.732      0.783      0.784     
+C112    MMRp  0.953      0.875      0.757      0.728     
+C113    MMRp  0.935      0.664      0.559      0.606     
+C114    MMRd  0.967      0.547      0.760      0.585     
+C115    MMRd  0.957      0.593      0.837      0.815     
+C116    MMRd  0.962      0.573      0.573      0.626     
+C122    MMRd  0.944      0.570      0.674      0.638     
+C123    MMRd  0.994      0.535      0.788      0.813     
+C124    MMRp  0.948      0.734      0.782      0.516     
+C125    MMRp  0.993      0.835      0.900      0.814     
+C126    MMRp  0.992      0.432      0.839      0.809     
+C129    MMRp  0.971      0.652      0.839      0.846     
+C130    MMRd  0.995      0.755      0.872      0.878     
+C132    MMRd  0.992      0.198      0.612      0.739     
+C133    MMRp  1.000      0.875      0.994      0.899     
+C134    MMRp  0.999      0.616      0.976      0.522     
+C135    MMRp  0.957      0.408      0.736      0.514     
+C136    MMRp  0.996      0.779      0.881      0.711     
+C137    MMRd  0.988      0.682      0.766      0.785     
+C138    MMRd  0.914      0.229      0.935      0.503     
+C139    MMRd  0.991      0.634      0.871      0.829     
+C140    MMRp  0.995      0.847      0.938      0.847     
+C142    MMRd  0.965      0.699      0.778      0.585     
+C143    MMRd  0.988      0.507      0.753      0.695     
+C151    MMRd  1.000      0.844      0.934      0.880     
+C152    MMRd  0.944      0.435      0.765      0.536     
+C155    MMRp  0.988      0.555      0.894      0.645     
+C157    MMRp  0.977      0.715      0.847      0.762     
+C165    MMRd  1.000      0.480      0.895      0.670     
+C170    MMRd  0.986      0.386      0.806      0.730     
+
+Medians by MMR status:
+  MMRd (n=20): residual=0.988  CNV=0.562  euclid=0.785  n_genes=0.713
+  MMRp (n=14): residual=0.990  CNV=0.724  euclid=0.843  n_genes=0.745
+
+Patients where residual AUROC exceeds Euclidean-distance AUROC by >0.02: 32/34
+  (median residual-euclid gap = +0.160)
+
+Building global gene-position table (once)...
+var_names format: Ensembl gene id (e.g. ENSG00000243485)
+Genes with genomic position: 39114/43113 (90.7%); dropping the rest.
+Gene positions resolved for 39114/43113 genes (shared across all patients, computed once).
+
+================================================================================================
+PART B [POST HOC] -- cross-fitted CNV (fair, held-out comparison)
+================================================================================================
+
+  C106:
+    [C106] fold 0: ref(nonepi+train_normal)=2056  held_normal=213  tumor=1123
+    [C106] fold 1: ref(nonepi+train_normal)=2056  held_normal=213  tumor=1123
+    [C106] fold 2: ref(nonepi+train_normal)=2057  held_normal=212  tumor=1123
+    [C106] fold 3: ref(nonepi+train_normal)=2057  held_normal=212  tumor=1123
+    [C106] fold 4: ref(nonepi+train_normal)=2057  held_normal=212  tumor=1123
+  [C106] cross-fitted CNV AUROC=0.564  (Amendment-2 CNV AUROC was 0.490)  residual AUROC=0.995  [42s]
+
+  C107:
+    [C107] fold 0: ref(nonepi+train_normal)=4724  held_normal=232  tumor=2259
+    [C107] fold 1: ref(nonepi+train_normal)=4725  held_normal=231  tumor=2259
+    [C107] fold 2: ref(nonepi+train_normal)=4725  held_normal=231  tumor=2259
+    [C107] fold 3: ref(nonepi+train_normal)=4725  held_normal=231  tumor=2259
+    [C107] fold 4: ref(nonepi+train_normal)=4725  held_normal=231  tumor=2259
+  [C107] cross-fitted CNV AUROC=0.736  (Amendment-2 CNV AUROC was 0.811)  residual AUROC=0.997  [57s]
+
+  C109:
+    [C109] fold 0: ref(nonepi+train_normal)=2412  held_normal=311  tumor=1521
+    [C109] fold 1: ref(nonepi+train_normal)=2412  held_normal=311  tumor=1521
+    [C109] fold 2: ref(nonepi+train_normal)=2412  held_normal=311  tumor=1521
+    [C109] fold 3: ref(nonepi+train_normal)=2412  held_normal=311  tumor=1521
+    [C109] fold 4: ref(nonepi+train_normal)=2412  held_normal=311  tumor=1521
+  [C109] cross-fitted CNV AUROC=0.737  (Amendment-2 CNV AUROC was 0.554)  residual AUROC=0.988  [49s]
+
+  C110:
+    [C110] fold 0: ref(nonepi+train_normal)=4115  held_normal=127  tumor=791
+    [C110] fold 1: ref(nonepi+train_normal)=4116  held_normal=126  tumor=791
+    [C110] fold 2: ref(nonepi+train_normal)=4116  held_normal=126  tumor=791
+    [C110] fold 3: ref(nonepi+train_normal)=4116  held_normal=126  tumor=791
+    [C110] fold 4: ref(nonepi+train_normal)=4116  held_normal=126  tumor=791
+  [C110] cross-fitted CNV AUROC=0.773  (Amendment-2 CNV AUROC was 0.789)  residual AUROC=1.000  [53s]
+
+  C111:
+    [C111] fold 0: ref(nonepi+train_normal)=4241  held_normal=150  tumor=653
+    [C111] fold 1: ref(nonepi+train_normal)=4242  held_normal=149  tumor=653
+    [C111] fold 2: ref(nonepi+train_normal)=4242  held_normal=149  tumor=653
+    [C111] fold 3: ref(nonepi+train_normal)=4242  held_normal=149  tumor=653
+    [C111] fold 4: ref(nonepi+train_normal)=4242  held_normal=149  tumor=653
+  [C111] cross-fitted CNV AUROC=0.723  (Amendment-2 CNV AUROC was 0.732)  residual AUROC=0.996  [55s]
+
+  C112:
+    [C112] fold 0: ref(nonepi+train_normal)=4500  held_normal=149  tumor=1776
+    [C112] fold 1: ref(nonepi+train_normal)=4500  held_normal=149  tumor=1776
+    [C112] fold 2: ref(nonepi+train_normal)=4500  held_normal=149  tumor=1776
+    [C112] fold 3: ref(nonepi+train_normal)=4501  held_normal=148  tumor=1776
+    [C112] fold 4: ref(nonepi+train_normal)=4501  held_normal=148  tumor=1776
+  [C112] cross-fitted CNV AUROC=0.727  (Amendment-2 CNV AUROC was 0.875)  residual AUROC=0.953  [55s]
+
+  C113:
+    [C113] fold 0: ref(nonepi+train_normal)=2087  held_normal=75  tumor=2926
+    [C113] fold 1: ref(nonepi+train_normal)=2088  held_normal=74  tumor=2926
+    [C113] fold 2: ref(nonepi+train_normal)=2088  held_normal=74  tumor=2926
+    [C113] fold 3: ref(nonepi+train_normal)=2088  held_normal=74  tumor=2926
+    [C113] fold 4: ref(nonepi+train_normal)=2088  held_normal=74  tumor=2926
+  [C113] cross-fitted CNV AUROC=0.637  (Amendment-2 CNV AUROC was 0.664)  residual AUROC=0.935  [56s]
+
+  C114:
+    [C114] fold 0: ref(nonepi+train_normal)=2930  held_normal=100  tumor=1523
+    [C114] fold 1: ref(nonepi+train_normal)=2930  held_normal=100  tumor=1523
+    [C114] fold 2: ref(nonepi+train_normal)=2931  held_normal=99  tumor=1523
+    [C114] fold 3: ref(nonepi+train_normal)=2931  held_normal=99  tumor=1523
+    [C114] fold 4: ref(nonepi+train_normal)=2931  held_normal=99  tumor=1523
+  [C114] cross-fitted CNV AUROC=0.563  (Amendment-2 CNV AUROC was 0.547)  residual AUROC=0.967  [51s]
+
+  C115:
+    [C115] fold 0: ref(nonepi+train_normal)=1371  held_normal=62  tumor=562
+    [C115] fold 1: ref(nonepi+train_normal)=1371  held_normal=62  tumor=562
+    [C115] fold 2: ref(nonepi+train_normal)=1371  held_normal=62  tumor=562
+    [C115] fold 3: ref(nonepi+train_normal)=1372  held_normal=61  tumor=562
+    [C115] fold 4: ref(nonepi+train_normal)=1372  held_normal=61  tumor=562
+  [C115] cross-fitted CNV AUROC=0.618  (Amendment-2 CNV AUROC was 0.593)  residual AUROC=0.957  [34s]
+
+  C116:
+    [C116] fold 0: ref(nonepi+train_normal)=4068  held_normal=245  tumor=921
+    [C116] fold 1: ref(nonepi+train_normal)=4068  held_normal=245  tumor=921
+    [C116] fold 2: ref(nonepi+train_normal)=4068  held_normal=245  tumor=921
+    [C116] fold 3: ref(nonepi+train_normal)=4068  held_normal=245  tumor=921
+    [C116] fold 4: ref(nonepi+train_normal)=4068  held_normal=245  tumor=921
+  [C116] cross-fitted CNV AUROC=0.607  (Amendment-2 CNV AUROC was 0.573)  residual AUROC=0.962  [53s]
+
+  C122:
+    [C122] fold 0: ref(nonepi+train_normal)=4428  held_normal=513  tumor=2119
+    [C122] fold 1: ref(nonepi+train_normal)=4429  held_normal=512  tumor=2119
+    [C122] fold 2: ref(nonepi+train_normal)=4429  held_normal=512  tumor=2119
+    [C122] fold 3: ref(nonepi+train_normal)=4429  held_normal=512  tumor=2119
+    [C122] fold 4: ref(nonepi+train_normal)=4429  held_normal=512  tumor=2119
+  [C122] cross-fitted CNV AUROC=0.620  (Amendment-2 CNV AUROC was 0.570)  residual AUROC=0.944  [56s]
+
+  C123:
+    [C123] fold 0: ref(nonepi+train_normal)=9985  held_normal=468  tumor=4119
+    [C123] fold 1: ref(nonepi+train_normal)=9985  held_normal=468  tumor=4119
+    [C123] fold 2: ref(nonepi+train_normal)=9986  held_normal=467  tumor=4119
+    [C123] fold 3: ref(nonepi+train_normal)=9986  held_normal=467  tumor=4119
+    [C123] fold 4: ref(nonepi+train_normal)=9986  held_normal=467  tumor=4119
+  [C123] cross-fitted CNV AUROC=0.688  (Amendment-2 CNV AUROC was 0.535)  residual AUROC=0.994  [71s]
+
+  C124:
+    [C124] fold 0: ref(nonepi+train_normal)=14360  held_normal=1563  tumor=1022
+    [C124] fold 1: ref(nonepi+train_normal)=14360  held_normal=1563  tumor=1022
+    [C124] fold 2: ref(nonepi+train_normal)=14361  held_normal=1562  tumor=1022
+    [C124] fold 3: ref(nonepi+train_normal)=14361  held_normal=1562  tumor=1022
+    [C124] fold 4: ref(nonepi+train_normal)=14361  held_normal=1562  tumor=1022
+  [C124] cross-fitted CNV AUROC=0.733  (Amendment-2 CNV AUROC was 0.734)  residual AUROC=0.948  [78s]
+
+  C125:
+    [C125] fold 0: ref(nonepi+train_normal)=9754  held_normal=792  tumor=2114
+    [C125] fold 1: ref(nonepi+train_normal)=9754  held_normal=792  tumor=2114
+    [C125] fold 2: ref(nonepi+train_normal)=9755  held_normal=791  tumor=2114
+    [C125] fold 3: ref(nonepi+train_normal)=9755  held_normal=791  tumor=2114
+    [C125] fold 4: ref(nonepi+train_normal)=9755  held_normal=791  tumor=2114
+  [C125] cross-fitted CNV AUROC=0.841  (Amendment-2 CNV AUROC was 0.835)  residual AUROC=0.993  [63s]
+
+  C126:
+    [C126] fold 0: ref(nonepi+train_normal)=11147  held_normal=811  tumor=956
+    [C126] fold 1: ref(nonepi+train_normal)=11147  held_normal=811  tumor=956
+    [C126] fold 2: ref(nonepi+train_normal)=11147  held_normal=811  tumor=956
+    [C126] fold 3: ref(nonepi+train_normal)=11147  held_normal=811  tumor=956
+    [C126] fold 4: ref(nonepi+train_normal)=11148  held_normal=810  tumor=956
+  [C126] cross-fitted CNV AUROC=0.745  (Amendment-2 CNV AUROC was 0.432)  residual AUROC=0.992  [64s]
+
+  C129:
+    [C129] fold 0: ref(nonepi+train_normal)=9250  held_normal=202  tumor=3125
+    [C129] fold 1: ref(nonepi+train_normal)=9251  held_normal=201  tumor=3125
+    [C129] fold 2: ref(nonepi+train_normal)=9251  held_normal=201  tumor=3125
+    [C129] fold 3: ref(nonepi+train_normal)=9251  held_normal=201  tumor=3125
+    [C129] fold 4: ref(nonepi+train_normal)=9251  held_normal=201  tumor=3125
+  [C129] cross-fitted CNV AUROC=0.646  (Amendment-2 CNV AUROC was 0.652)  residual AUROC=0.971  [61s]
+
+  C130:
+    [C130] fold 0: ref(nonepi+train_normal)=7685  held_normal=413  tumor=3229
+    [C130] fold 1: ref(nonepi+train_normal)=7685  held_normal=413  tumor=3229
+    [C130] fold 2: ref(nonepi+train_normal)=7685  held_normal=413  tumor=3229
+    [C130] fold 3: ref(nonepi+train_normal)=7685  held_normal=413  tumor=3229
+    [C130] fold 4: ref(nonepi+train_normal)=7685  held_normal=413  tumor=3229
+  [C130] cross-fitted CNV AUROC=0.821  (Amendment-2 CNV AUROC was 0.755)  residual AUROC=0.995  [62s]
+
+  C132:
+    [C132] fold 0: ref(nonepi+train_normal)=6008  held_normal=195  tumor=1367
+    [C132] fold 1: ref(nonepi+train_normal)=6008  held_normal=195  tumor=1367
+    [C132] fold 2: ref(nonepi+train_normal)=6008  held_normal=195  tumor=1367
+    [C132] fold 3: ref(nonepi+train_normal)=6008  held_normal=195  tumor=1367
+    [C132] fold 4: ref(nonepi+train_normal)=6008  held_normal=195  tumor=1367
+  [C132] cross-fitted CNV AUROC=0.213  (Amendment-2 CNV AUROC was 0.198)  residual AUROC=0.992  [56s]
+
+  C133:
+    [C133] fold 0: ref(nonepi+train_normal)=2726  held_normal=122  tumor=1005
+    [C133] fold 1: ref(nonepi+train_normal)=2726  held_normal=122  tumor=1005
+    [C133] fold 2: ref(nonepi+train_normal)=2726  held_normal=122  tumor=1005
+    [C133] fold 3: ref(nonepi+train_normal)=2727  held_normal=121  tumor=1005
+    [C133] fold 4: ref(nonepi+train_normal)=2727  held_normal=121  tumor=1005
+  [C133] cross-fitted CNV AUROC=0.883  (Amendment-2 CNV AUROC was 0.875)  residual AUROC=1.000  [46s]
+
+  C134:
+    [C134] fold 0: ref(nonepi+train_normal)=6122  held_normal=321  tumor=1232
+    [C134] fold 1: ref(nonepi+train_normal)=6123  held_normal=320  tumor=1232
+    [C134] fold 2: ref(nonepi+train_normal)=6123  held_normal=320  tumor=1232
+    [C134] fold 3: ref(nonepi+train_normal)=6123  held_normal=320  tumor=1232
+    [C134] fold 4: ref(nonepi+train_normal)=6123  held_normal=320  tumor=1232
+  [C134] cross-fitted CNV AUROC=0.879  (Amendment-2 CNV AUROC was 0.616)  residual AUROC=0.999  [56s]
+
+  C135:
+    [C135] fold 0: ref(nonepi+train_normal)=4417  held_normal=135  tumor=1069
+    [C135] fold 1: ref(nonepi+train_normal)=4417  held_normal=135  tumor=1069
+    [C135] fold 2: ref(nonepi+train_normal)=4418  held_normal=134  tumor=1069
+    [C135] fold 3: ref(nonepi+train_normal)=4418  held_normal=134  tumor=1069
+    [C135] fold 4: ref(nonepi+train_normal)=4418  held_normal=134  tumor=1069
+  [C135] cross-fitted CNV AUROC=0.511  (Amendment-2 CNV AUROC was 0.408)  residual AUROC=0.957  [55s]
+
+  C136:
+    [C136] fold 0: ref(nonepi+train_normal)=4699  held_normal=479  tumor=1431
+    [C136] fold 1: ref(nonepi+train_normal)=4699  held_normal=479  tumor=1431
+    [C136] fold 2: ref(nonepi+train_normal)=4699  held_normal=479  tumor=1431
+    [C136] fold 3: ref(nonepi+train_normal)=4700  held_normal=478  tumor=1431
+    [C136] fold 4: ref(nonepi+train_normal)=4700  held_normal=478  tumor=1431
+  [C136] cross-fitted CNV AUROC=0.770  (Amendment-2 CNV AUROC was 0.779)  residual AUROC=0.996  [56s]
+
+  C137:
+    [C137] fold 0: ref(nonepi+train_normal)=4876  held_normal=166  tumor=732
+    [C137] fold 1: ref(nonepi+train_normal)=4876  held_normal=166  tumor=732
+    [C137] fold 2: ref(nonepi+train_normal)=4876  held_normal=166  tumor=732
+    [C137] fold 3: ref(nonepi+train_normal)=4876  held_normal=166  tumor=732
+    [C137] fold 4: ref(nonepi+train_normal)=4877  held_normal=165  tumor=732
+  [C137] cross-fitted CNV AUROC=0.625  (Amendment-2 CNV AUROC was 0.682)  residual AUROC=0.988  [55s]
+
+  C138:
+    [C138] fold 0: ref(nonepi+train_normal)=2815  held_normal=125  tumor=468
+    [C138] fold 1: ref(nonepi+train_normal)=2815  held_normal=125  tumor=468
+    [C138] fold 2: ref(nonepi+train_normal)=2815  held_normal=125  tumor=468
+    [C138] fold 3: ref(nonepi+train_normal)=2815  held_normal=125  tumor=468
+    [C138] fold 4: ref(nonepi+train_normal)=2816  held_normal=124  tumor=468
+  [C138] cross-fitted CNV AUROC=0.268  (Amendment-2 CNV AUROC was 0.229)  residual AUROC=0.914  [43s]
+
+  C139:
+    [C139] fold 0: ref(nonepi+train_normal)=7052  held_normal=291  tumor=3125
+    [C139] fold 1: ref(nonepi+train_normal)=7052  held_normal=291  tumor=3125
+    [C139] fold 2: ref(nonepi+train_normal)=7052  held_normal=291  tumor=3125
+    [C139] fold 3: ref(nonepi+train_normal)=7052  held_normal=291  tumor=3125
+    [C139] fold 4: ref(nonepi+train_normal)=7053  held_normal=290  tumor=3125
+  [C139] cross-fitted CNV AUROC=0.749  (Amendment-2 CNV AUROC was 0.634)  residual AUROC=0.991  [59s]
+
+  C140:
+    [C140] fold 0: ref(nonepi+train_normal)=3549  held_normal=233  tumor=2397
+    [C140] fold 1: ref(nonepi+train_normal)=3549  held_normal=233  tumor=2397
+    [C140] fold 2: ref(nonepi+train_normal)=3550  held_normal=232  tumor=2397
+    [C140] fold 3: ref(nonepi+train_normal)=3550  held_normal=232  tumor=2397
+    [C140] fold 4: ref(nonepi+train_normal)=3550  held_normal=232  tumor=2397
+  [C140] cross-fitted CNV AUROC=0.798  (Amendment-2 CNV AUROC was 0.847)  residual AUROC=0.995  [54s]
+
+  C142:
+    [C142] fold 0: ref(nonepi+train_normal)=3478  held_normal=279  tumor=1383
+    [C142] fold 1: ref(nonepi+train_normal)=3478  held_normal=279  tumor=1383
+    [C142] fold 2: ref(nonepi+train_normal)=3478  held_normal=279  tumor=1383
+    [C142] fold 3: ref(nonepi+train_normal)=3479  held_normal=278  tumor=1383
+    [C142] fold 4: ref(nonepi+train_normal)=3479  held_normal=278  tumor=1383
+  [C142] cross-fitted CNV AUROC=0.722  (Amendment-2 CNV AUROC was 0.699)  residual AUROC=0.965  [55s]
+
+  C143:
+    [C143] fold 0: ref(nonepi+train_normal)=4660  held_normal=421  tumor=1278
+    [C143] fold 1: ref(nonepi+train_normal)=4660  held_normal=421  tumor=1278
+    [C143] fold 2: ref(nonepi+train_normal)=4660  held_normal=421  tumor=1278
+    [C143] fold 3: ref(nonepi+train_normal)=4660  held_normal=421  tumor=1278
+    [C143] fold 4: ref(nonepi+train_normal)=4661  held_normal=420  tumor=1278
+  [C143] cross-fitted CNV AUROC=0.603  (Amendment-2 CNV AUROC was 0.507)  residual AUROC=0.988  [55s]
+
+  C151:
+    [C151] fold 0: ref(nonepi+train_normal)=3020  held_normal=524  tumor=329
+    [C151] fold 1: ref(nonepi+train_normal)=3021  held_normal=523  tumor=329
+    [C151] fold 2: ref(nonepi+train_normal)=3021  held_normal=523  tumor=329
+    [C151] fold 3: ref(nonepi+train_normal)=3021  held_normal=523  tumor=329
+    [C151] fold 4: ref(nonepi+train_normal)=3021  held_normal=523  tumor=329
+  [C151] cross-fitted CNV AUROC=0.901  (Amendment-2 CNV AUROC was 0.844)  residual AUROC=1.000  [47s]
+
+  C152:
+    [C152] fold 0: ref(nonepi+train_normal)=1901  held_normal=246  tumor=1077
+    [C152] fold 1: ref(nonepi+train_normal)=1902  held_normal=245  tumor=1077
+    [C152] fold 2: ref(nonepi+train_normal)=1902  held_normal=245  tumor=1077
+    [C152] fold 3: ref(nonepi+train_normal)=1902  held_normal=245  tumor=1077
+    [C152] fold 4: ref(nonepi+train_normal)=1902  held_normal=245  tumor=1077
+  [C152] cross-fitted CNV AUROC=0.494  (Amendment-2 CNV AUROC was 0.435)  residual AUROC=0.944  [42s]
+
+  C155:
+    [C155] fold 0: ref(nonepi+train_normal)=4650  held_normal=344  tumor=1454
+    [C155] fold 1: ref(nonepi+train_normal)=4650  held_normal=344  tumor=1454
+    [C155] fold 2: ref(nonepi+train_normal)=4650  held_normal=344  tumor=1454
+    [C155] fold 3: ref(nonepi+train_normal)=4650  held_normal=344  tumor=1454
+    [C155] fold 4: ref(nonepi+train_normal)=4651  held_normal=343  tumor=1454
+  [C155] cross-fitted CNV AUROC=0.539  (Amendment-2 CNV AUROC was 0.555)  residual AUROC=0.988  [54s]
+
+  C157:
+    [C157] fold 0: ref(nonepi+train_normal)=5217  held_normal=405  tumor=2530
+    [C157] fold 1: ref(nonepi+train_normal)=5217  held_normal=405  tumor=2530
+    [C157] fold 2: ref(nonepi+train_normal)=5217  held_normal=405  tumor=2530
+    [C157] fold 3: ref(nonepi+train_normal)=5217  held_normal=405  tumor=2530
+    [C157] fold 4: ref(nonepi+train_normal)=5218  held_normal=404  tumor=2530
+  [C157] cross-fitted CNV AUROC=0.786  (Amendment-2 CNV AUROC was 0.715)  residual AUROC=0.977  [58s]
+
+  C165:
+    [C165] fold 0: ref(nonepi+train_normal)=3346  held_normal=78  tumor=1100
+    [C165] fold 1: ref(nonepi+train_normal)=3346  held_normal=78  tumor=1100
+    [C165] fold 2: ref(nonepi+train_normal)=3346  held_normal=78  tumor=1100
+    [C165] fold 3: ref(nonepi+train_normal)=3346  held_normal=78  tumor=1100
+    [C165] fold 4: ref(nonepi+train_normal)=3346  held_normal=78  tumor=1100
+  [C165] cross-fitted CNV AUROC=0.343  (Amendment-2 CNV AUROC was 0.480)  residual AUROC=1.000  [51s]
+
+  C170:
+    [C170] fold 0: ref(nonepi+train_normal)=8756  held_normal=42  tumor=3724
+    [C170] fold 1: ref(nonepi+train_normal)=8756  held_normal=42  tumor=3724
+    [C170] fold 2: ref(nonepi+train_normal)=8756  held_normal=42  tumor=3724
+    [C170] fold 3: ref(nonepi+train_normal)=8757  held_normal=41  tumor=3724
+    [C170] fold 4: ref(nonepi+train_normal)=8757  held_normal=41  tumor=3724
+  [C170] cross-fitted CNV AUROC=0.539  (Amendment-2 CNV AUROC was 0.386)  residual AUROC=0.986  [68s]
+
+------------------------------------------------------------------------------------------------
+PART B SUMMARY TABLE
+------------------------------------------------------------------------------------------------
+PID     MMR   res_AUROC  CNV_crossfit CNV_amend2 xfit-amend2
+C106    MMRd  0.995      0.564        0.490      +0.074
+C107    MMRp  0.997      0.736        0.811      -0.075
+C109    MMRd  0.988      0.737        0.554      +0.183
+C110    MMRd  1.000      0.773        0.789      -0.016
+C111    MMRd  0.996      0.723        0.732      -0.009
+C112    MMRp  0.953      0.727        0.875      -0.148
+C113    MMRp  0.935      0.637        0.664      -0.027
+C114    MMRd  0.967      0.563        0.547      +0.016
+C115    MMRd  0.957      0.618        0.593      +0.026
+C116    MMRd  0.962      0.607        0.573      +0.034
+C122    MMRd  0.944      0.620        0.570      +0.050
+C123    MMRd  0.994      0.688        0.535      +0.152
+C124    MMRp  0.948      0.733        0.734      -0.001
+C125    MMRp  0.993      0.841        0.835      +0.006
+C126    MMRp  0.992      0.745        0.432      +0.313
+C129    MMRp  0.971      0.646        0.652      -0.006
+C130    MMRd  0.995      0.821        0.755      +0.066
+C132    MMRd  0.992      0.213        0.198      +0.016
+C133    MMRp  1.000      0.883        0.875      +0.008
+C134    MMRp  0.999      0.879        0.616      +0.263
+C135    MMRp  0.957      0.511        0.408      +0.103
+C136    MMRp  0.996      0.770        0.779      -0.010
+C137    MMRd  0.988      0.625        0.682      -0.057
+C138    MMRd  0.914      0.268        0.229      +0.039
+C139    MMRd  0.991      0.749        0.634      +0.115
+C140    MMRp  0.995      0.798        0.847      -0.049
+C142    MMRd  0.965      0.722        0.699      +0.022
+C143    MMRd  0.988      0.603        0.507      +0.096
+C151    MMRd  1.000      0.901        0.844      +0.056
+C152    MMRd  0.944      0.494        0.435      +0.059
+C155    MMRp  0.988      0.539        0.555      -0.017
+C157    MMRp  0.977      0.786        0.715      +0.071
+C165    MMRd  1.000      0.343        0.480      -0.137
+C170    MMRd  0.986      0.539        0.386      +0.153
+
+Medians by MMR status:
+  MMRd (n=20): residual=0.988  CNV_crossfit=0.619  CNV_amend2=0.562
+  MMRp (n=14): residual=0.990  CNV_crossfit=0.741  CNV_amend2=0.724
+
+================================================================================================
+PART C [POST HOC] -- mechanism test
+================================================================================================
+DECISION RULE, stated before the numbers: the "residual helps where CNV is blind"
+claim is supported only if cross-fitted CNV AUROC is SIGNIFICANTLY LOWER in MMRd AND
+the residual-CNV gap is SIGNIFICANTLY LARGER in MMRd (both at alpha=0.05, two-sided
+Mann-Whitney).
+
+Cross-fitted CNV AUROC: MMRd median=0.619 (n=20)  MMRp median=0.741 (n=14)
+  Mann-Whitney U=77.0  p=2.874e-02  MMRd lower (as biology predicts)
+
+Residual-CNV gap (res_auroc - cnv_auroc_crossfit): MMRd median=+0.346 (n=20)  MMRp median=+0.226 (n=14)
+  Mann-Whitney U=209.0  p=1.653e-02  MMRd larger gap (as hypothesis predicts)
+
+VERDICT: "residual helps where CNV is blind" claim is SUPPORTED (condition 1 met, condition 2 met)
+
+================================================================================================
+PART D [POST HOC] -- per-patient channel check (from stored C-ctrl pairs, no recomputation)
+================================================================================================
+patient   MMR   tumor_vs_normal_res_AUROC   channel_AUROC_median  channel_AUROC_max  flag (>0.75)
+C129      MMRp  0.971                       0.908                 0.943              YES
+C162      nan   n/a (not in eligible-34)    0.887                 0.889              YES
+C139      MMRd  0.991                       0.695                 0.786              YES
+C106      MMRd  0.995                       0.611                 0.742              no
+C138      MMRd  0.914                       0.588                 0.716              no
+C136      MMRp  0.996                       0.601                 0.685              no
+C125      MMRp  0.993                       0.596                 0.684              no
+C137      MMRd  0.988                       0.599                 0.674              no
+C126      MMRp  0.992                       0.610                 0.656              no
+C124      MMRp  0.948                       0.565                 0.624              no
+C122      MMRd  0.944                       0.565                 0.612              no
+C123      MMRd  0.994                       0.533                 0.579              no
+C130      MMRd  0.995                       0.529                 0.568              no
+C134      MMRp  0.999                       0.545                 0.555              no
+C111      MMRd  0.996                       0.533                 0.541              no
+
+Patients with max channel AUROC > 0.75: 3/15 -> ['C129', 'C162', 'C139']
+
+================================================================================================
+[POST HOC] CAVEATS
+================================================================================================
+- All analyses in this file are POST HOC: they were designed after seeing the
+  pre-registered run's results (specifically the H3 anomaly) and are exploratory,
+  not confirmatory. They do not alter the pre-registered H1/H2/H3 verdicts.
+- Cross-fitted CNV (Part B) still shares genomic positions, window size, and the
+  non-epithelial reference cells with the Amendment-2 CNV score; only the normal-
+  epithelial portion of the reference is now held out per fold.
+- Tumor epithelial CNV scores in Part B are averaged over 5 independent fold-runs
+  (each with a very slightly different reference, varying only in which 80% of normal
+  cells are included) -- this is a minor smoothing effect, not a held-out score in the
+  same sense as the normal fold scores.
+- Part C's Mann-Whitney tests use n=20 (MMRd) and n=14 (MMRp) eligible patients --
+  modest sample sizes for a two-group nonparametric test.
