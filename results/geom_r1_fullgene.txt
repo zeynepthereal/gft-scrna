@@ -1,0 +1,438 @@
+CORRECTED R1 -- residual/PPCA in the full gene space (see results/NOTE_r1_invalid.txt)
+versions: numpy=2.4.6, scipy=1.17.1, scikit-learn=1.9.1, scanpy=1.11.5
+q=20; seed=0; N_HVG=3000; split-half reps=50
+
+DECISION RULE (B1'), stated before the numbers: SUPPORTED if, in >=4/6 donors:
+  (a) G1: residual term's share of MEAN delta-E > 50%;
+  (b) G1 AND thinned-G1 both pass Test A (stratified median ratio>1.2x AND OLS
+      is_malignant coef>0, p<0.05);
+  (c) G2's (a) and (b) point the same direction as G1.
+  G3 is reference-only (label-blind HVG excluded by construction), not part of the rule.
+DECISION RULE (B2a'): in G1 space, in >=4/6 donors, d(N,M) > max(N-N null p95, M-M null p95).
+B2b is NOT retested (closed in cohort-PCA space at 0.1284 < 0.1287; see NOTE_r1_invalid.txt).
+
+================================================================================================
+HTA8_6002
+================================================================================================
+Gene set sizes: G1(all-cell HVG)=3000  G2(>=10% expressed)=8433  G3(normal-only HVG, reference)=3000
+
+[G1] n_normal=264 n_malignant=60 d=3000 genes
+  [G1] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 5.15e-04 (should be ~0)
+  mean E: normal=986.900 malignant=4653.867  delta_E_mean=+3666.967
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+3600.737  from_M_in=+1.171  from_const=+65.060  (sum=+3666.968 vs total +3666.967)
+  share_residual = from_residual/(from_residual+from_M_in) = 1.000
+
+[G2] n_normal=264 n_malignant=60 d=8433 genes
+  [G2] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 3.31e-04 (should be ~0)
+  mean E: normal=5141.495 malignant=9956.188  delta_E_mean=+4814.693
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+4663.432  from_M_in=+2.501  from_const=+148.760  (sum=+4814.693 vs total +4814.693)
+  share_residual = from_residual/(from_residual+from_M_in) = 0.999
+
+[G3 (reference only)] n_normal=264 n_malignant=60 d=3000 genes
+  [G3 (reference only)] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 2.60e-04 (should be ~0)
+  mean E: normal=1409.151 malignant=2223.970  delta_E_mean=+814.818
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+740.548  from_M_in=-0.887  from_const=+75.157  (sum=+814.818 vs total +814.818)
+  share_residual = from_residual/(from_residual+from_M_in) = 1.001
+  [G1] AUROC: E=0.921  r=0.926  M_in=0.660  n_genes=0.157
+  [G2] AUROC: E=0.879  r=0.888  M_in=0.839  n_genes=0.157
+  [G3 (reference only)] AUROC: E=0.715  r=0.723  M_in=0.426  n_genes=0.157
+
+  Test A on G1 (untransformed):
+
+--- TEST A: HTA8_6002_G1_raw ---
+  n_normal=264  n_malignant=60
+  median n_genes_by_counts: normal=3304  malignant=738
+  raw (unstratified) residual median ratio malignant/normal = 1.87x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [291, 1134]         26        40          25.586          30.455          1.19
+  1         [1191, 2051]        55        9           --              --              skipped (<20/group)
+  2         [2057, 3529]        58        6           --              --              skipped (<20/group)
+  3         [3537, 4553]        63        2           --              --              skipped (<20/group)
+  4         [4559, 6425]        62        3           --              --              skipped (<20/group)
+  Median of per-quintile ratios: 1.19x  (n_quintiles_used=1/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 5.2541  95% CI=[4.0197, 6.4886]  p=1.752e-15
+    log(n_genes) coefficient = -7.1341  p=1.991e-67  R^2=0.771  n=324
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): NO
+
+  Test A on G1 (binomial-thinned to common depth):
+
+--- TEST A: HTA8_6002_G1_thinned ---
+  n_normal=258  n_malignant=33
+  median n_genes_by_counts: normal=686  malignant=766
+  raw (unstratified) residual median ratio malignant/normal = 1.34x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [427, 625]          55        4           --              --              skipped (<20/group)
+  1         [627, 674]          53        5           --              --              skipped (<20/group)
+  2         [675, 707]          57        4           --              --              skipped (<20/group)
+  3         [709, 755]          53        2           --              --              skipped (<20/group)
+  4         [757, 1034]         40        18          --              --              skipped (<20/group)
+  No quintile had >=20 cells in both groups.
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 5.1797  95% CI=[4.0457, 6.3137]  p=3.368e-17
+    log(n_genes) coefficient = 10.0583  p=2.764e-10  R^2=0.349  n=291
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): NO
+
+  G1 principal angles: d(N,M)=6.3280  null p95: N-N=6.0119 M-M=6.3306  (half-split n=30) -> FAIL
+
+Donor decision inputs: (a) G1 share_r=1.000 (>0.5? YES)  (b) Test A raw+thinned survive? NO  (c) G2 share_r=0.999 same direction as G1 and (a)+(b) also hold for G2's share? NO
+  [reference only] G3 share_r=1.001 (excludes malignant-specific genes by construction -- expected null-biased)
+================================================================================================
+HTA8_6009
+================================================================================================
+Gene set sizes: G1(all-cell HVG)=3000  G2(>=10% expressed)=6395  G3(normal-only HVG, reference)=3000
+
+[G1] n_normal=822 n_malignant=761 d=3000 genes
+  [G1] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 9.26e-04 (should be ~0)
+  mean E: normal=355.887 malignant=4414.027  delta_E_mean=+4058.140
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+4036.372  from_M_in=+5.946  from_const=+15.821  (sum=+4058.139 vs total +4058.140)
+  share_residual = from_residual/(from_residual+from_M_in) = 0.999
+
+[G2] n_normal=822 n_malignant=761 d=6395 genes
+  [G2] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 2.79e-04 (should be ~0)
+  mean E: normal=4656.639 malignant=7611.512  delta_E_mean=+2954.873
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+2921.610  from_M_in=+5.432  from_const=+27.831  (sum=+2954.873 vs total +2954.873)
+  share_residual = from_residual/(from_residual+from_M_in) = 0.998
+
+[G3 (reference only)] n_normal=822 n_malignant=761 d=3000 genes
+  [G3 (reference only)] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 2.62e-04 (should be ~0)
+  mean E: normal=1061.573 malignant=2366.510  delta_E_mean=+1304.937
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+1283.922  from_M_in=+2.687  from_const=+18.328  (sum=+1304.937 vs total +1304.937)
+  share_residual = from_residual/(from_residual+from_M_in) = 0.998
+  [G1] AUROC: E=0.928  r=0.929  M_in=0.785  n_genes=0.215
+  [G2] AUROC: E=0.879  r=0.880  M_in=0.809  n_genes=0.215
+  [G3 (reference only)] AUROC: E=0.798  r=0.799  M_in=0.716  n_genes=0.215
+
+  Test A on G1 (untransformed):
+
+--- TEST A: HTA8_6009_G1_raw ---
+  n_normal=822  n_malignant=761
+  median n_genes_by_counts: normal=2512  malignant=946
+  raw (unstratified) residual median ratio malignant/normal = 1.88x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [365, 791]          53        264         20.849          28.126          1.35
+  1         [792, 1279]         81        235         18.757          30.303          1.62
+  2         [1286, 2194]        205       112         15.798          23.105          1.46
+  3         [2197, 3191]        227       89          12.975          18.456          1.42
+  4         [3192, 5645]        256       61          10.321          16.573          1.61
+  Median of per-quintile ratios: 1.46x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 8.1382  95% CI=[7.5628, 8.7135]  p=2.398e-138
+    log(n_genes) coefficient = -6.0325  p=7.413e-135  R^2=0.658  n=1583
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+  Test A on G1 (binomial-thinned to common depth):
+
+--- TEST A: HTA8_6009_G1_thinned ---
+  n_normal=803  n_malignant=622
+  median n_genes_by_counts: normal=571  malignant=620
+  raw (unstratified) residual median ratio malignant/normal = 1.48x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [359, 530]          189       96          15.075          17.240          1.14
+  1         [531, 570]          212       74          13.410          18.035          1.34
+  2         [571, 603]          183       103         13.593          19.392          1.43
+  3         [604, 652]          164       121         13.799          19.784          1.43
+  4         [653, 949]          55        228         17.782          28.331          1.59
+  Median of per-quintile ratios: 1.43x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 5.8587  95% CI=[5.4223, 6.2951]  p=7.985e-125
+    log(n_genes) coefficient = 18.8620  p=3.585e-115  R^2=0.588  n=1425
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+  G1 principal angles: d(N,M)=5.6048  null p95: N-N=4.3365 M-M=5.1568  (half-split n=380) -> PASS
+
+Donor decision inputs: (a) G1 share_r=0.999 (>0.5? YES)  (b) Test A raw+thinned survive? YES  (c) G2 share_r=0.998 same direction as G1 and (a)+(b) also hold for G2's share? YES
+  [reference only] G3 share_r=0.998 (excludes malignant-specific genes by construction -- expected null-biased)
+================================================================================================
+HTA8_6013
+================================================================================================
+Gene set sizes: G1(all-cell HVG)=3000  G2(>=10% expressed)=9579  G3(normal-only HVG, reference)=3000
+
+[G1] n_normal=769 n_malignant=667 d=3000 genes
+  [G1] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 5.57e-04 (should be ~0)
+  mean E: normal=604.959 malignant=1029.967  delta_E_mean=+425.008
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+407.618  from_M_in=+1.855  from_const=+15.535  (sum=+425.008 vs total +425.008)
+  share_residual = from_residual/(from_residual+from_M_in) = 0.995
+
+[G2] n_normal=769 n_malignant=667 d=9579 genes
+  [G2] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 2.43e-04 (should be ~0)
+  mean E: normal=5002.548 malignant=5552.448  delta_E_mean=+549.900
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+498.514  from_M_in=+4.112  from_const=+47.273  (sum=+549.900 vs total +549.900)
+  share_residual = from_residual/(from_residual+from_M_in) = 0.992
+
+[G3 (reference only)] n_normal=769 n_malignant=667 d=3000 genes
+  [G3 (reference only)] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 3.80e-04 (should be ~0)
+  mean E: normal=662.028 malignant=909.181  delta_E_mean=+247.154
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+224.382  from_M_in=+1.375  from_const=+21.397  (sum=+247.153 vs total +247.154)
+  share_residual = from_residual/(from_residual+from_M_in) = 0.994
+  [G1] AUROC: E=0.678  r=0.679  M_in=0.707  n_genes=0.775
+  [G2] AUROC: E=0.567  r=0.566  M_in=0.870  n_genes=0.775
+  [G3 (reference only)] AUROC: E=0.711  r=0.711  M_in=0.740  n_genes=0.775
+
+  Test A on G1 (untransformed):
+
+--- TEST A: HTA8_6013_G1_raw ---
+  n_normal=769  n_malignant=667
+  median n_genes_by_counts: normal=2668  malignant=4990
+  raw (unstratified) residual median ratio malignant/normal = 1.16x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [495, 2039]         188       101         20.449          21.501          1.05
+  1         [2044, 2840]        243       43          14.904          19.116          1.28
+  2         [2841, 3810]        219       69          12.153          18.272          1.50
+  3         [3817, 5377]        104       182         10.879          16.203          1.49
+  4         [5378, 8538]        15        272         --              --              skipped (<20/group)
+  Median of per-quintile ratios: 1.39x  (n_quintiles_used=4/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 4.6479  95% CI=[4.3111, 4.9847]  p=1.128e-130
+    log(n_genes) coefficient = -5.6694  p=6.770e-211  R^2=0.521  n=1436
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+  Test A on G1 (binomial-thinned to common depth):
+
+--- TEST A: HTA8_6013_G1_thinned ---
+  n_normal=690  n_malignant=602
+  median n_genes_by_counts: normal=1311  malignant=1544
+  raw (unstratified) residual median ratio malignant/normal = 1.09x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [994, 1251]         237       23          14.730          15.513          1.05
+  1         [1252, 1359]        203       55          14.648          15.092          1.03
+  2         [1360, 1478]        130       127         14.133          15.291          1.08
+  3         [1479, 1605]        67        191         14.473          15.788          1.09
+  4         [1606, 2146]        53        206         18.598          17.021          0.92
+  Median of per-quintile ratios: 1.05x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 0.7159  95% CI=[0.4431, 0.9887]  p=3.037e-07
+    log(n_genes) coefficient = 6.5666  p=2.057e-35  R^2=0.217  n=1292
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): NO
+
+  G1 principal angles: d(N,M)=5.6941  null p95: N-N=4.6708 M-M=4.3369  (half-split n=333) -> PASS
+
+Donor decision inputs: (a) G1 share_r=0.995 (>0.5? YES)  (b) Test A raw+thinned survive? NO  (c) G2 share_r=0.992 same direction as G1 and (a)+(b) also hold for G2's share? NO
+  [reference only] G3 share_r=0.994 (excludes malignant-specific genes by construction -- expected null-biased)
+================================================================================================
+HTA8_6016
+================================================================================================
+Gene set sizes: G1(all-cell HVG)=3000  G2(>=10% expressed)=9548  G3(normal-only HVG, reference)=3000
+
+[G1] n_normal=1510 n_malignant=782 d=3000 genes
+  [G1] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 6.43e-04 (should be ~0)
+  mean E: normal=-80.249 malignant=2584.604  delta_E_mean=+2664.853
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+2652.512  from_M_in=+4.556  from_const=+7.785  (sum=+2664.853 vs total +2664.853)
+  share_residual = from_residual/(from_residual+from_M_in) = 0.998
+
+[G2] n_normal=1510 n_malignant=782 d=9548 genes
+  [G2] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 3.01e-04 (should be ~0)
+  mean E: normal=3988.113 malignant=7011.475  delta_E_mean=+3023.362
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+2994.235  from_M_in=+5.674  from_const=+23.453  (sum=+3023.362 vs total +3023.362)
+  share_residual = from_residual/(from_residual+from_M_in) = 0.998
+
+[G3 (reference only)] n_normal=1510 n_malignant=782 d=3000 genes
+  [G3 (reference only)] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 5.23e-04 (should be ~0)
+  mean E: normal=425.936 malignant=1640.549  delta_E_mean=+1214.613
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+1204.406  from_M_in=+2.255  from_const=+7.952  (sum=+1214.613 vs total +1214.613)
+  share_residual = from_residual/(from_residual+from_M_in) = 0.998
+  [G1] AUROC: E=0.919  r=0.919  M_in=0.760  n_genes=0.446
+  [G2] AUROC: E=0.714  r=0.714  M_in=0.844  n_genes=0.446
+  [G3 (reference only)] AUROC: E=0.823  r=0.823  M_in=0.698  n_genes=0.446
+
+  Test A on G1 (untransformed):
+
+--- TEST A: HTA8_6016_G1_raw ---
+  n_normal=1510  n_malignant=782
+  median n_genes_by_counts: normal=3814  malignant=3318
+  raw (unstratified) residual median ratio malignant/normal = 1.67x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [315, 1751]         173       286         18.386          23.636          1.29
+  1         [1753, 3341]        349       109         13.322          21.355          1.60
+  2         [3342, 4172]        378       80          11.484          17.980          1.57
+  3         [4176, 5160]        376       82          10.226          16.749          1.64
+  4         [5161, 8610]        234       225         9.258           14.959          1.62
+  Median of per-quintile ratios: 1.60x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 6.4950  95% CI=[6.2540, 6.7360]  p=0.000e+00
+    log(n_genes) coefficient = -4.2847  p=0.000e+00  R^2=0.760  n=2292
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+  Test A on G1 (binomial-thinned to common depth):
+
+--- TEST A: HTA8_6016_G1_thinned ---
+  n_normal=1432  n_malignant=630
+  median n_genes_by_counts: normal=777  malignant=753
+  raw (unstratified) residual median ratio malignant/normal = 1.28x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [442, 689]          258       158         16.596          17.070          1.03
+  1         [690, 746]          271       138         13.676          17.555          1.28
+  2         [747, 796]          313       107         13.323          18.109          1.36
+  3         [797, 839]          316       94          13.783          18.450          1.34
+  4         [840, 1122]         274       133         14.666          22.075          1.51
+  Median of per-quintile ratios: 1.34x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 4.5374  95% CI=[4.2966, 4.7783]  p=1.148e-229
+    log(n_genes) coefficient = 2.9276  p=1.585e-10  R^2=0.402  n=2062
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+  G1 principal angles: d(N,M)=5.4371  null p95: N-N=4.1727 M-M=4.6346  (half-split n=391) -> PASS
+
+Donor decision inputs: (a) G1 share_r=0.998 (>0.5? YES)  (b) Test A raw+thinned survive? YES  (c) G2 share_r=0.998 same direction as G1 and (a)+(b) also hold for G2's share? YES
+  [reference only] G3 share_r=0.998 (excludes malignant-specific genes by construction -- expected null-biased)
+================================================================================================
+HTA8_6018
+================================================================================================
+Gene set sizes: G1(all-cell HVG)=3000  G2(>=10% expressed)=9852  G3(normal-only HVG, reference)=3000
+
+[G1] n_normal=1256 n_malignant=2577 d=3000 genes
+  [G1] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 5.36e-04 (should be ~0)
+  mean E: normal=670.812 malignant=991.180  delta_E_mean=+320.367
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+306.093  from_M_in=+5.927  from_const=+8.347  (sum=+320.367 vs total +320.367)
+  share_residual = from_residual/(from_residual+from_M_in) = 0.981
+
+[G2] n_normal=1256 n_malignant=2577 d=9852 genes
+  [G2] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 2.41e-04 (should be ~0)
+  mean E: normal=4666.388 malignant=4757.605  delta_E_mean=+91.217
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+61.438  from_M_in=+4.533  from_const=+25.245  (sum=+91.217 vs total +91.217)
+  share_residual = from_residual/(from_residual+from_M_in) = 0.931
+
+[G3 (reference only)] n_normal=1256 n_malignant=2577 d=3000 genes
+  [G3 (reference only)] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 3.87e-04 (should be ~0)
+  mean E: normal=710.629 malignant=756.132  delta_E_mean=+45.504
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+33.603  from_M_in=+2.911  from_const=+8.990  (sum=+45.504 vs total +45.504)
+  share_residual = from_residual/(from_residual+from_M_in) = 0.920
+  [G1] AUROC: E=0.677  r=0.675  M_in=0.879  n_genes=0.820
+  [G2] AUROC: E=0.461  r=0.460  M_in=0.861  n_genes=0.820
+  [G3 (reference only)] AUROC: E=0.603  r=0.601  M_in=0.761  n_genes=0.820
+
+  Test A on G1 (untransformed):
+
+--- TEST A: HTA8_6018_G1_raw ---
+  n_normal=1256  n_malignant=2577
+  median n_genes_by_counts: normal=2852  malignant=4788
+  raw (unstratified) residual median ratio malignant/normal = 1.13x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [436, 2549]         476       291         19.258          21.475          1.12
+  1         [2550, 3554]        490       276         14.399          18.374          1.28
+  2         [3555, 4541]        206       561         13.210          16.816          1.27
+  3         [4542, 5651]        67        699         11.021          16.682          1.51
+  4         [5654, 9669]        17        750         --              --              skipped (<20/group)
+  Median of per-quintile ratios: 1.27x  (n_quintiles_used=4/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 3.5213  95% CI=[3.3507, 3.6920]  p=2.802e-298
+    log(n_genes) coefficient = -4.1517  p=0.000e+00  R^2=0.454  n=3833
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+  Test A on G1 (binomial-thinned to common depth):
+
+--- TEST A: HTA8_6018_G1_thinned ---
+  n_normal=1090  n_malignant=2359
+  median n_genes_by_counts: normal=1883  malignant=1933
+  raw (unstratified) residual median ratio malignant/normal = 1.13x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [1276, 1736]        198       499         15.939          15.171          0.95
+  1         [1737, 1862]        289       404         13.834          15.765          1.14
+  2         [1863, 1967]        286       394         14.021          16.152          1.15
+  3         [1968, 2091]        213       479         14.543          16.412          1.13
+  4         [2092, 3060]        104       583         14.983          17.444          1.16
+  Median of per-quintile ratios: 1.14x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 1.5493  95% CI=[1.4293, 1.6692]  p=6.399e-130
+    log(n_genes) coefficient = 6.1323  p=8.621e-118  R^2=0.282  n=3449
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): NO
+
+  G1 principal angles: d(N,M)=5.5399  null p95: N-N=3.6777 M-M=3.5856  (half-split n=628) -> PASS
+
+Donor decision inputs: (a) G1 share_r=0.981 (>0.5? YES)  (b) Test A raw+thinned survive? NO  (c) G2 share_r=0.931 same direction as G1 and (a)+(b) also hold for G2's share? NO
+  [reference only] G3 share_r=0.920 (excludes malignant-specific genes by construction -- expected null-biased)
+================================================================================================
+HTA8_6028
+================================================================================================
+Gene set sizes: G1(all-cell HVG)=3000  G2(>=10% expressed)=9890  G3(normal-only HVG, reference)=3000
+
+[G1] n_normal=206 n_malignant=1234 d=3000 genes
+  [G1] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 4.20e-04 (should be ~0)
+  mean E: normal=957.627 malignant=1152.776  delta_E_mean=+195.149
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+130.340  from_M_in=+2.092  from_const=+62.716  (sum=+195.149 vs total +195.149)
+  share_residual = from_residual/(from_residual+from_M_in) = 0.984
+
+[G2] n_normal=206 n_malignant=1234 d=9890 genes
+  [G2] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 2.47e-04 (should be ~0)
+  mean E: normal=5431.622 malignant=6072.579  delta_E_mean=+640.957
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+439.963  from_M_in=+2.621  from_const=+198.373  (sum=+640.956 vs total +640.957)
+  share_residual = from_residual/(from_residual+from_M_in) = 0.994
+
+[G3 (reference only)] n_normal=206 n_malignant=1234 d=3000 genes
+  [G3 (reference only)] decomposition check on a random 500-gene subset (full-matrix verification via geom_ppca_potential.ppca_energy): max|E_direct - E_decomp| = 3.69e-04 (should be ~0)
+  mean E: normal=1419.926 malignant=1587.666  delta_E_mean=+167.740
+  delta_E_mean decomposition (EXACT, mean-based): from_residual=+94.023  from_M_in=+2.339  from_const=+71.377  (sum=+167.740 vs total +167.740)
+  share_residual = from_residual/(from_residual+from_M_in) = 0.976
+  [G1] AUROC: E=0.524  r=0.527  M_in=0.837  n_genes=0.702
+  [G2] AUROC: E=0.550  r=0.553  M_in=0.928  n_genes=0.702
+  [G3 (reference only)] AUROC: E=0.611  r=0.616  M_in=0.875  n_genes=0.702
+
+  Test A on G1 (untransformed):
+
+--- TEST A: HTA8_6028_G1_raw ---
+  n_normal=206  n_malignant=1234
+  median n_genes_by_counts: normal=2651  malignant=4336
+  raw (unstratified) residual median ratio malignant/normal = 1.00x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [359, 2095]         64        224         20.633          22.434          1.09
+  1         [2097, 3484]        83        205         16.288          18.086          1.11
+  2         [3488, 4578]        36        252         13.496          16.218          1.20
+  3         [4582, 5558]        17        271         --              --              skipped (<20/group)
+  4         [5560, 9873]        6         282         --              --              skipped (<20/group)
+  Median of per-quintile ratios: 1.11x  (n_quintiles_used=3/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 2.0788  95% CI=[1.5977, 2.5599]  p=5.681e-17
+    log(n_genes) coefficient = -4.6907  p=1.534e-226  R^2=0.514  n=1440
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): NO
+
+  Test A on G1 (binomial-thinned to common depth):
+
+--- TEST A: HTA8_6028_G1_thinned ---
+  n_normal=196  n_malignant=1100
+  median n_genes_by_counts: normal=958  malignant=948
+  raw (unstratified) residual median ratio malignant/normal = 0.87x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [590, 840]          42        222         18.980          15.393          0.81
+  1         [841, 918]          36        224         18.951          15.911          0.84
+  2         [919, 985]          38        217         18.890          16.426          0.87
+  3         [986, 1074]         45        214         19.102          17.238          0.90
+  4         [1075, 1442]        35        223         19.527          18.419          0.94
+  Median of per-quintile ratios: 0.87x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = -2.0329  95% CI=[-2.3185, -1.7472]  p=2.308e-41
+    log(n_genes) coefficient = 8.6990  p=4.680e-106  R^2=0.374  n=1296
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): NO
+
+  G1 principal angles: d(N,M)=5.8983  null p95: N-N=5.2310 M-M=5.6699  (half-split n=103) -> PASS
+
+Donor decision inputs: (a) G1 share_r=0.984 (>0.5? YES)  (b) Test A raw+thinned survive? NO  (c) G2 share_r=0.994 same direction as G1 and (a)+(b) also hold for G2's share? NO
+  [reference only] G3 share_r=0.976 (excludes malignant-specific genes by construction -- expected null-biased)
+
+================================================================================================
+SUMMARY
+================================================================================================
+donor        share_G1  share_G2 share_G3(ref)  (a)  (b)  (c)  all3   B2a
+HTA8_6002       1.000     0.999         1.001    Y    N    N    no    no
+HTA8_6009       0.999     0.998         0.998    Y    Y    Y   YES   YES
+HTA8_6013       0.995     0.992         0.994    Y    N    N    no   YES
+HTA8_6016       0.998     0.998         0.998    Y    Y    Y   YES   YES
+HTA8_6018       0.981     0.931         0.920    Y    N    N    no   YES
+HTA8_6028       0.984     0.994         0.976    Y    N    N    no   YES
+
+B1' verdict: 2/6 donors satisfy (a)+(b)+(c) -> NOT SUPPORTED (need >=4/6)
+B2a' verdict: 5/6 donors -> SUPPORTED (need >=4/6)
+B2b: NOT retested (closed; see results/NOTE_r1_invalid.txt).
+
+================================================================================================
+CAVEATS
+================================================================================================
+- Label-blind HVG selection (G1) still uses malignant cells' variance to choose which
+  genes enter the analysis. This is NOT label leakage (no normal/malignant label is used
+  to select genes), but the result should not be assumed to generalize to an unseen
+  dataset without independent confirmation.
+- All scores (E, r, M_in) and gene selection are derived from the same expression matrix.
+  This is an internal-consistency test, not independent validation.
+- Residual quantiles/snapshot comparisons here are not a time axis.
+- G3 (normal-only HVG) is reported for reference only, expected to be biased toward the
+  null by construction (it excludes malignant-specific genes), and is not part of the
+  decision rule.

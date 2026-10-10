@@ -1,0 +1,208 @@
+Follow-up checks on scripts/cnv_clone_vs_residual.py
+versions: scanpy=1.11.5, infercnvpy=0.6.1, leidenalg=0.12.0, numpy=2.4.6, anndata=0.12.19, scipy=1.17.1
+var_names format: Ensembl gene id (e.g. ENSG00000238009)
+Genes with genomic position: 23885/24111 (99.1%); dropping the rest.
+
+==========================================================================================
+Reused pipeline results are identical in method to results/cnv_clone_vs_residual_patient{1,2}.txt (same code path, same random_state); only the checks below are new.
+==========================================================================================
+
+##########################################################################################
+CHECK A (Patient2): malignant-like vs normal-like CNV clones
+##########################################################################################
+
+What would change the earlier verdict: the earlier Patient2 verdict was 'neither
+rule cleanly satisfied' (max clone concentration 73.1%, eta^2=0.252 -- just under the
+clone rule's eta^2>0.5 bar). If some of the 4 clones are actually normal epithelial
+cells misassigned into the carcinoma sample (e.g. adjacent normal mucosa captured in
+the 10x carcinoma sample), diluting them out should raise eta^2 and clone concentration
+among the remaining, genuinely malignant clone(s) -- that would push the verdict toward
+CLONE. If instead a malignant-like clone still shows large internal residual spread and
+ASCL2/residual correlation *within* it, that continues to support a within-clone STATE
+component that clone identity alone doesn't explain.
+
+clone   n       cnv_score_med   vs_normal_p   n_arm_events  label
+0       1128    0.0036          2.157e-159    3             normal-like
+1       211     0.0040          2.531e-20     1             normal-like
+2       910     0.0032          1.032e-177    5             normal-like
+3       1056    0.0157          0.000e+00     7             malignant-like
+
+Label rule: malignant-like = CNV score > 1.1x normal median (p<0.01) AND >=4/7 CRC arm events significant vs normal (same test as main script).
+
+Normal colon epithelial marker means per clone (log-normalized, adata.raw):
+clone   label           CA1       CA2       SLC26A3   AQP8      GUCA2A    
+0       normal-like     0.493     1.027     0.421     0.096     0.504     
+1       normal-like     0.134     0.176     0.150     0.034     0.116     
+2       normal-like     0.216     0.722     0.160     0.011     0.178     
+3       malignant-like  0.028     0.161     0.076     0.003     0.125     
+(normal ref)--              0.644     1.375     0.783     0.614     1.865     
+
+Malignant-like clone(s): ['3'] (1056/3305 cells, 32.0%)
+
+Only one malignant-like clone (3, n=1056) -- reporting WITHIN-clone residual distribution and ASCL2-vs-residual correlation
+  instead of a between-clone eta^2/crosstab (which needs >=2 groups).
+  residual: median=5.518  IQR=[4.614, 7.249]  min=2.360  max=27.159  std=3.529
+  Spearman(residual, ASCL2 expression) within malignant clone: rho=-0.129  p=2.711e-05
+  %ASCL2+ in within-clone top-decile residual cells: 53.8%  vs bottom-decile: 67.0%
+
+  Interpretation (facts only): a large within-clone residual spread (std=3.529, range 24.799) and no clear residual-ASCL2 association within this single genetic clone means residual/ASCL2 status is not fully explained by clone identity alone.
+
+##########################################################################################
+CHECK B (Patient1): merging over-split CNV clones (correlation distance, avg linkage)
+##########################################################################################
+
+What would change the earlier verdict: the earlier Patient1 verdict was STATE
+(max clone concentration 44.6%, eta^2=0.071, 7 clones). If merging near-identical
+arm profiles collapses this into e.g. 2-3 clones with eta^2 rising substantially
+(>0.3-0.5) and one merged clone concentrating >70% of top-decile cells, that would
+shift the verdict toward CLONE -- i.e. the original 'state' result would have been an
+over-clustering artifact. If eta^2 and concentration stay low after merging, that
+confirms the earlier STATE verdict is not a clustering artifact.
+
+Arm-level profile matrix (7 clones x 7 events):
+clone   7         8q        13         20q        8p        17p        18         
+0       0.001     0.047     -0.001    0.042     -0.027    -0.034    -0.009    
+1       0.003     0.048     -0.001    0.143     -0.025    -0.026    -0.009    
+2       0.002     0.007     -0.001    0.008     -0.001    -0.004    0.001     
+3       0.002     0.008     0.000     0.000     -0.021    -0.001    0.000     
+4       0.002     0.049     0.001     0.022     -0.027    -0.038    -0.008    
+5       0.001     0.000     -0.000    0.012     -0.004    -0.001    0.000     
+6       0.001     0.043     -0.001    0.029     -0.027    -0.036    -0.007    
+
+Merge threshold: correlation > 0.9 (distance < 0.10), average linkage.
+Original clone -> merged clone: {'0': 'merged2', '1': 'merged1', '2': 'merged2', '3': 'merged3', '4': 'merged2', '5': 'merged1', '6': 'merged2'}
+Merged clone count: 3 (from 7 original clones)
+  merged1 (from clones ['1', '5']): n=510  arm events: 8q:+0.013, 20q:+0.047
+  merged2 (from clones ['0', '2', '4', '6']): n=2252  arm events: 8q:+0.041, 20q:+0.030, 8p:-0.023, 17p:-0.030
+  merged3 (from clones ['3']): n=210  arm events: 8p:-0.021
+
+One-way ANOVA residual ~ merged_clone: F=22.033  p=3.173e-10  eta^2=0.0146
+
+Crosstab residual_group x merged_clone:
+cnv_clone_merged  merged1  merged2  merged3
+row_0                                      
+bottom10               64      224       10
+middle80              420     1775      181
+top10                  26      253       19
+
+merged_clone  size      expected_top10  observed_top10  %ASCL2+
+merged1       510       51.14           26              74.1
+merged2       2252      225.81          253             73.3
+merged3       210       21.06           19              61.9
+
+Max concentration of top-decile cells in a single merged clone: 84.9%
+Verdict after merging: Neither rule set cleanly satisfied after merging (same as before).
+
+##########################################################################################
+CHECK C (Patient1): cell-cycle confound
+##########################################################################################
+
+What would change the earlier verdict: if residual correlates strongly with S/G2M
+scores (|rho| notably >0.3-0.4) and top-decile residual cells are strongly enriched for
+cycling phases, a meaningful part of the 'high residual = distinct state' signal could
+instead reflect proliferation rather than a CNV-independent malignant identity -- this
+would qualify (not overturn) the STATE reading: residual heterogeneity would still argue
+against a single clone explaining it, but part of what the residual captures would be
+cell cycle rather than a stable phenotype. If correlation is weak, cell cycle is ruled
+out as a confound for the earlier findings.
+
+S genes used: 42/43  G2M genes used: 52/54
+
+Spearman(residual, S_score)   = -0.325  p=4.941e-74
+Spearman(residual, G2M_score) = -0.403  p=2.704e-116
+
+Phase distribution among carcinoma epithelial cells: G1=2072 (69.7%), G2M=322 (10.8%), S=578 (19.4%)
+
+Crosstab residual_group x cell-cycle phase:
+col_0       G1  G2M    S
+row_0                   
+bottom10   175   55   68
+middle80  1622  263  491
+top10      275    4   19
+chi2 p=2.306e-20
+
+% cycling (S+G2M) in top-decile residual cells: 7.7%  vs rest: 32.8%
+
+##########################################################################################
+CHECK C (Patient2): cell-cycle confound
+##########################################################################################
+
+What would change the earlier verdict: if residual correlates strongly with S/G2M
+scores (|rho| notably >0.3-0.4) and top-decile residual cells are strongly enriched for
+cycling phases, a meaningful part of the 'high residual = distinct state' signal could
+instead reflect proliferation rather than a CNV-independent malignant identity -- this
+would qualify (not overturn) the STATE reading: residual heterogeneity would still argue
+against a single clone explaining it, but part of what the residual captures would be
+cell cycle rather than a stable phenotype. If correlation is weak, cell cycle is ruled
+out as a confound for the earlier findings.
+
+S genes used: 42/43  G2M genes used: 52/54
+
+Spearman(residual, S_score)   = -0.140  p=5.046e-16
+Spearman(residual, G2M_score) = -0.105  p=1.629e-09
+
+Phase distribution among carcinoma epithelial cells: G1=2617 (79.2%), G2M=234 (7.1%), S=454 (13.7%)
+
+Crosstab residual_group x cell-cycle phase:
+col_0       G1  G2M    S
+row_0                   
+bottom10   234   25   72
+middle80  2103  186  354
+top10      280   23   28
+chi2 p=2.159e-05
+
+% cycling (S+G2M) in top-decile residual cells: 15.4%  vs rest: 21.4%
+
+##########################################################################################
+OVERALL SUMMARY (facts only, no interpretation beyond the numbers above)
+##########################################################################################
+
+CHECK A (Patient2):
+- 3 of 4 clones (0, 1, 2 = 68% of carcinoma-sample epithelial cells) are normal-like: CNV
+  score not clearly above the normal reference or too few significant arm events, and normal
+  colon markers (CA1/CA2/SLC26A3/AQP8/GUCA2A) closer to the normal reference row than to
+  clone 3. Only clone 3 (1056 cells, 32%) is malignant-like (CNV score 2.9x normal median,
+  7/7 arm events significant).
+- This partly explains the earlier "neither hypothesis cleanly satisfied" verdict: a
+  substantial share of what was clustered as "carcinoma epithelial" is CNV-wise
+  indistinguishable from normal epithelium (likely adjacent normal tissue captured in the
+  carcinoma sample, or doublets/ambient contamination -- this analysis cannot distinguish
+  those causes).
+- Restricted to the single malignant clone, residual is still highly heterogeneous
+  (std=3.53, range 2.36-27.16) -- CNV clone membership does not collapse residual to a tight
+  distribution even within one genetic clone.
+- ASCL2 is NOT positively associated with residual inside the malignant clone: Spearman
+  rho=-0.129 (p=2.7e-5), weak and negative. %ASCL2+ is actually higher in the bottom-decile
+  (67.0%) than the top-decile (53.8%) residual cells within this clone. This complicates the
+  original Patient2 narrative that linked high residual to ASCL2+ status -- within the
+  confirmed-malignant population, that link does not hold; ASCL2 is broadly expressed
+  (60-70%+) across the residual spectrum in this clone rather than concentrated in the
+  highest-residual cells.
+
+CHECK B (Patient1):
+- Correlation-distance/average-linkage merging (threshold corr>0.9) collapses the 7 clones
+  to 3 merged clones: merged1 (n=510, weak 8q/20q gain only), merged2 (n=2252, full
+  8q+/20q+/8p-/17p- profile, 68% of cells), merged3 (n=210, only weak 8p loss).
+- eta^2 DECREASES after merging (0.0146 vs 0.0708 for the original 7 clones) -- merged CNV
+  clone identity explains even less of residual variance than the finer clustering did. This
+  rules out over-splitting as the reason the original analysis found a low eta^2; if
+  anything, the finer 7-clone split captured slightly more clone-related residual structure
+  than the coarser 3-clone merge.
+- Max top-decile concentration rises to 84.9% (merged2), but this is a size artifact: merged2
+  alone holds 68% of all cells, so a proportional share of top-decile cells there is expected
+  (expected 225.8, observed 253, obs/exp=1.12 -- barely above proportional, not a genuine
+  concentration). The other two merged clones are also near their proportional (obs/exp
+  0.51-1.4 range not shown at merged level but consistent with the small deviations here).
+- Net effect: merging does not change the Patient1 verdict in the clone direction; if
+  anything it reinforces that finer CNV substructure (7 clones) was not manufacturing the
+  earlier low eta^2 -- the true merged-clone-level eta^2 is even lower.
+
+CHECK C (both patients):
+- Residual correlates NEGATIVELY, not positively, with S_score and G2M_score in both
+  patients (Patient1: rho=-0.325/-0.403; Patient2: rho=-0.140/-0.105, all p<1e-8).
+- Top-decile residual cells are LESS often in a cycling phase (S or G2M) than the rest:
+  Patient1 7.7% cycling in top-decile vs 32.8% in the rest; Patient2 15.4% vs 21.4%.
+- This rules out cell-cycle/proliferation as a confound inflating the high-residual, ASCL2+
+  population identified earlier -- the opposite pattern is observed. High-residual carcinoma
+  cells skew toward G1 (non-cycling) rather than S/G2M, at least by these standard cell-cycle
+  gene-score markers.

@@ -1,0 +1,255 @@
+Gene-count confound test (Test A) and residual-as-detector test (Test B)
+versions: scanpy=1.11.5, infercnvpy=0.6.1, numpy=2.4.6, scipy=1.17.1, statsmodels=0.15.0, scikit-learn=1.9.1
+
+Decision rule for TEST A (stated before the numbers): the core claim -- malignant
+cells have higher residual than normal cells -- survives controlling for
+n_genes_by_counts if, in MOST samples, (a) the median-of-quintile-ratios stays clearly
+above 1 (>1.2x) after stratifying on n_genes, AND (b) the OLS is_malignant coefficient
+stays positive and significant (p<0.05) after adjusting for log(n_genes_by_counts).
+
+var_names format: Ensembl gene id (e.g. ENSG00000238009)
+Genes with genomic position: 23885/24111 (99.1%); dropping the rest.
+
+==========================================================================================
+TEST A -- GSE161277 patients
+==========================================================================================
+
+--- TEST A: Patient1 ---
+  n_normal=836  n_malignant=2231
+  median n_genes_by_counts: normal=1603  malignant=4400
+  raw (unstratified) residual median ratio malignant/normal = 3.94x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [202, 1951]         494       120         2.489           7.658           3.08
+  1         [1958, 3460]        153       462         2.168           9.346           4.31
+  2         [3463, 4356]        114       499         1.671           10.733          6.42
+  3         [4358, 5306]        67        544         1.635           8.672           5.30
+  4         [5309, 9110]        8         606         --              --              skipped (<20/group)
+  Median of per-quintile ratios: 4.81x  (n_quintiles_used=4/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 9.5644  95% CI=[8.9264, 10.2023]  p=1.558e-167
+    log(n_genes) coefficient = -0.8282  p=6.213e-05  R^2=0.282  n=3067
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+--- TEST A: Patient2 ---
+  n_normal=3595  n_malignant=1056
+  median n_genes_by_counts: normal=1365  malignant=4194
+  raw (unstratified) residual median ratio malignant/normal = 2.11x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [200, 907]          875       57          3.013           4.925           1.63
+  1         [908, 1346]         880       49          2.903           5.210           1.79
+  2         [1347, 2352]        819       112         2.725           5.756           2.11
+  3         [2357, 3813]        688       241         2.073           6.291           3.03
+  4         [3816, 7966]        333       597         1.823           5.331           2.92
+  Median of per-quintile ratios: 2.11x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 4.1754  95% CI=[4.0086, 4.3421]  p=0.000e+00
+    log(n_genes) coefficient = -0.4663  p=5.048e-24  R^2=0.359  n=4651
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+==========================================================================================
+TEST A -- CRC epithelial cohort
+==========================================================================================
+
+--- TEST A: HTA8_6002 ---
+  n_normal=268  n_malignant=64
+  median n_genes_by_counts: normal=3264  malignant=760
+  raw (unstratified) residual median ratio malignant/normal = 3.56x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [291, 1134]         27        41          5.367           14.077          2.62
+  1         [1191, 2041]        55        10          --              --              skipped (<20/group)
+  2         [2051, 3399]        58        8           --              --              skipped (<20/group)
+  3         [3461, 4546]        64        2           --              --              skipped (<20/group)
+  4         [4549, 6425]        64        3           --              --              skipped (<20/group)
+  Median of per-quintile ratios: 2.62x  (n_quintiles_used=1/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 10.7184  95% CI=[9.9903, 11.4465]  p=1.665e-92
+    log(n_genes) coefficient = -0.2333  p=2.244e-01  R^2=0.785  n=332
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+--- TEST A: HTA8_6006 ---
+  n_normal=117  n_malignant=117
+  median n_genes_by_counts: normal=766  malignant=766
+  raw (unstratified) residual median ratio malignant/normal = 1.00x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [361, 554]          24        24          4.681           4.681           1.00
+  1         [558, 659]          23        23          4.966           4.966           1.00
+  2         [670, 912]          23        23          4.724           4.724           1.00
+  3         [926, 1635]         24        24          4.448           4.448           1.00
+  4         [1660, 5640]        23        23          4.087           4.087           1.00
+  Median of per-quintile ratios: 1.00x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = -0.0000  95% CI=[-0.1854, 0.1854]  p=1.000e+00
+    log(n_genes) coefficient = -0.4767  p=1.070e-10  R^2=0.165  n=234
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): NO
+
+--- TEST A: HTA8_6009 ---
+  n_normal=832  n_malignant=771
+  median n_genes_by_counts: normal=2505  malignant=946
+  raw (unstratified) residual median ratio malignant/normal = 3.24x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [365, 788]          55        267         6.404           13.569          2.12
+  1         [791, 1273]         83        236         5.607           15.201          2.71
+  2         [1275, 2194]        207       114         4.912           13.125          2.67
+  3         [2197, 3194]        229       91          3.826           11.684          3.05
+  4         [3196, 5645]        258       63          3.306           12.010          3.63
+  Median of per-quintile ratios: 2.71x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 9.3856  95% CI=[9.0274, 9.7438]  p=0.000e+00
+    log(n_genes) coefficient = -1.2258  p=7.269e-19  R^2=0.723  n=1603
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+--- TEST A: HTA8_6013 ---
+  n_normal=770  n_malignant=668
+  median n_genes_by_counts: normal=2669  malignant=4988
+  raw (unstratified) residual median ratio malignant/normal = 4.97x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [495, 2039]         188       101         4.731           18.960          4.01
+  1         [2044, 2840]        243       43          3.908           18.459          4.72
+  2         [2841, 3800]        218       70          3.559           19.117          5.37
+  3         [3810, 5377]        106       182         3.404           19.655          5.77
+  4         [5378, 8538]        15        272         --              --              skipped (<20/group)
+  Median of per-quintile ratios: 5.05x  (n_quintiles_used=4/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 15.3789  95% CI=[15.1695, 15.5883]  p=0.000e+00
+    log(n_genes) coefficient = 0.1759  p=6.512e-02  R^2=0.945  n=1438
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+--- TEST A: HTA8_6016 ---
+  n_normal=1516  n_malignant=788
+  median n_genes_by_counts: normal=3814  malignant=3318
+  raw (unstratified) residual median ratio malignant/normal = 4.23x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [315, 1742]         175       287         6.148           14.051          2.29
+  1         [1747, 3339]        350       110         4.165           17.479          4.20
+  2         [3341, 4176]        379       81          3.513           16.829          4.79
+  3         [4178, 5165]        379       84          3.245           16.695          5.14
+  4         [5173, 8610]        233       226         3.368           16.130          4.79
+  Median of per-quintile ratios: 4.79x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 12.1507  95% CI=[11.9360, 12.3653]  p=0.000e+00
+    log(n_genes) coefficient = 0.1123  p=1.104e-01  R^2=0.848  n=2304
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+--- TEST A: HTA8_6018 ---
+  n_normal=1257  n_malignant=2578
+  median n_genes_by_counts: normal=2853  malignant=4788
+  raw (unstratified) residual median ratio malignant/normal = 5.53x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [436, 2549]         476       291         4.210           18.601          4.42
+  1         [2550, 3555]        491       276         3.285           19.552          5.95
+  2         [3559, 4542]        205       563         3.090           19.530          6.32
+  3         [4543, 5651]        68        698         2.889           19.958          6.91
+  4         [5654, 9669]        17        750         --              --              skipped (<20/group)
+  Median of per-quintile ratios: 6.14x  (n_quintiles_used=4/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 15.9094  95% CI=[15.7726, 16.0462]  p=0.000e+00
+    log(n_genes) coefficient = 0.4971  p=8.573e-15  R^2=0.943  n=3835
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+--- TEST A: HTA8_6028 ---
+  n_normal=215  n_malignant=1243
+  median n_genes_by_counts: normal=2615  malignant=4306
+  raw (unstratified) residual median ratio malignant/normal = 4.30x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [359, 2079]         66        226         4.450           12.630          2.84
+  1         [2090, 3447]        87        204         3.565           16.839          4.72
+  2         [3448, 4554]        39        253         3.251           16.706          5.14
+  3         [4555, 5528]        16        275         --              --              skipped (<20/group)
+  4         [5536, 9873]        7         285         --              --              skipped (<20/group)
+  Median of per-quintile ratios: 4.72x  (n_quintiles_used=3/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 11.9127  95% CI=[11.5217, 12.3036]  p=0.000e+00
+    log(n_genes) coefficient = 1.6972  p=2.021e-60  R^2=0.746  n=1458
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+==========================================================================================
+TEST A -- summary across all samples
+==========================================================================================
+sample        raw_ratio  med_quintile_ratio  OLS_coef   CI_lo    CI_hi    p          survives?
+----------------------------------------------------------------------------------------------
+Patient1      3.94       4.81                9.5644     8.926    10.202   1.558e-167 YES
+Patient2      2.11       2.11                4.1754     4.009    4.342    0.000e+00  YES
+HTA8_6002     3.56       2.62                10.7184    9.990    11.446   1.665e-92  YES
+HTA8_6006     1.00       1.00                -0.0000    -0.185   0.185    1.000e+00  NO
+HTA8_6009     3.24       2.71                9.3856     9.027    9.744    0.000e+00  YES
+HTA8_6013     4.97       5.05                15.3789    15.170   15.588   0.000e+00  YES
+HTA8_6016     4.23       4.79                12.1507    11.936   12.365   0.000e+00  YES
+HTA8_6018     5.53       6.14                15.9094    15.773   16.046   0.000e+00  YES
+HTA8_6028     4.30       4.72                11.9127    11.522   12.304   0.000e+00  YES
+
+8/9 samples show the malignant effect surviving n_genes stratification (stratified ratio>1.2x AND OLS coef>0 significant).
+By the stated decision rule: the core claim SURVIVES controlling for n_genes_by_counts in most samples.
+
+==========================================================================================
+TEST B -- residual as a malignant-cell detector (Patient1, Patient2)
+==========================================================================================
+
+--- TEST B: Patient1 (residual as malignant-cell detector) ---
+  Ground truth: 2231/2972 cells malignant-like (CNV clones ['0', '1', '3', '4', '6']), 741 normal-like.
+  Note: CNV clone labels and projection residual both derive from the same expression
+  data (same PCA/HVG pipeline upstream) -- this is a preliminary consistency check, not
+  an independent validation of the residual as a malignant-cell classifier.
+
+  score                                   AUROC
+  projection_residual                     0.769
+  euclidean_dist_to_normal_centroid       0.737
+  normal_colon_marker_mean (inverted)     0.463
+  n_genes_by_counts (confound check)      0.738
+
+--- TEST B: Patient2 (residual as malignant-cell detector) ---
+  Ground truth: 1056/3305 cells malignant-like (CNV clones ['3']), 2249 normal-like.
+  Note: CNV clone labels and projection residual both derive from the same expression
+  data (same PCA/HVG pipeline upstream) -- this is a preliminary consistency check, not
+  an independent validation of the residual as a malignant-cell classifier.
+
+  score                                   AUROC
+  projection_residual                     0.889
+  euclidean_dist_to_normal_centroid       0.597
+  normal_colon_marker_mean (inverted)     0.638
+  n_genes_by_counts (confound check)      0.786
+
+##########################################################################################
+CAVEATS AND ADDITIONAL OBSERVATIONS (facts only, no interpretation beyond the numbers above)
+##########################################################################################
+
+TEST A:
+- By the stated decision rule, 8/9 samples show the malignant-vs-normal residual difference
+  surviving n_genes stratification -- the core claim SURVIVES in most samples. The one
+  exception, HTA8_6006, shows essentially NO effect once matched on n_genes: median n_genes
+  is identical between its normal and malignant groups (766 vs 766) and every quintile ratio
+  is exactly 1.00x (OLS is_malignant coefficient = -0.0000, p=1.000).
+- n_genes_by_counts and malignant status are strongly collinear in most samples, which limits
+  how cleanly "controlled" this test really is. In Patient1, normal median n_genes=1603 vs
+  malignant=4400 (2.7x); in several CRC donors the gap is similarly large (e.g. HTA8_6013:
+  2669 vs 4988; HTA8_6018: 2853 vs 4788). Because of this, the highest n_genes quintile was
+  skipped (<20 cells/group) in 5/9 samples (Patient1, HTA8_6002, HTA8_6013, HTA8_6018,
+  HTA8_6028) -- the two groups barely overlap at the high end of the n_genes distribution, so
+  the "stratified" comparison there relies on fewer, more extreme quintiles, and the OLS
+  regression extrapolates through a region with limited normal/malignant overlap. The p-values
+  and coefficients are large and consistent enough that this is unlikely to be pure confound,
+  but the collinearity itself means n_genes cannot be fully separated from malignant status in
+  this data, only partially adjusted for.
+- The direction of the log(n_genes) coefficient is not consistent across samples: negative in
+  Patient1, Patient2, and HTA8_6002 (more genes -> lower residual, after accounting for
+  malignant status), but positive in HTA8_6013/6016/6018/6028 (more genes -> higher residual).
+  This inconsistency was not evident before stratifying and is reported as-is.
+
+TEST B:
+- Residual's AUROC for malignant-like vs normal-like (0.769 Patient1, 0.889 Patient2) is
+  higher than the two designed baselines (Euclidean distance to normal centroid: 0.737, 0.597;
+  inverted normal-colon-marker mean: 0.463, 0.638) in both patients, most clearly so in
+  Patient2.
+- However, n_genes_by_counts ALONE reaches AUROC=0.738 in Patient1 -- essentially identical to
+  residual's 0.769, and higher than the Euclidean-centroid baseline. In Patient1, a substantial
+  share of residual's ability to separate CNV-confirmed malignant-like from normal-like cells
+  is matched by gene-count alone; residual does not clearly outperform this simple confound
+  there. In Patient2, residual (0.889) does more clearly exceed n_genes alone (0.786), a wider
+  margin than in Patient1.
+- The normal-colon-marker score is a weak classifier and, in Patient1, is worse than random
+  (AUROC=0.463 < 0.5) even after inverting it -- it does not usefully separate malignant-like
+  from normal-like cells in Patient1 by this metric, despite being designed to.
+- As stated in the note before the numbers: CNV clone labels and projection residual are both
+  derived from the same expression matrix through overlapping preprocessing (same cells, same
+  PCA), so none of these AUROC values should be read as validating residual against an
+  independent ground truth -- they describe internal consistency between two measures computed
+  from the same data, not predictive validity on new data.

@@ -1,0 +1,276 @@
+DIAGNOSTIC -- mechanism of B1'(b)'s post-thinning collapse (depth artefact vs. high-dimensional noise dilution). Does NOT reopen B1' (still NOT SUPPORTED, 2/6).
+
+INTERPRETATION RULE, stated before the numbers:
+  D1 Test A rule holds in >=4/6 donors -> collapse is most likely noise dilution in the
+  high-dimensional space; the effect survives at low dimension after the same depth
+  equalization.
+  D1 holds in <=2/6 donors -> the residual difference is substantially driven by
+  depth/gene-count; the main claim is seriously weakened.
+  3/6 -> inconclusive.
+  D3 noise-floor share > 70% for a donor is flagged as evidence the 3000-D test lacked
+  power for that donor specifically.
+
+================================================================================================
+HTA8_6002
+================================================================================================
+  depth target (10th pct) = 1518; kept 291/324 cells
+
+  D1 -- low-dimensional (50D) check on the SAME thinned counts
+    fresh thinned-data label-blind HVG: 3000 genes selected
+
+--- TEST A: HTA8_6002_D1_thinned_50D ---
+  n_normal=258  n_malignant=33
+  median n_genes_by_counts: normal=686  malignant=766
+  raw (unstratified) residual median ratio malignant/normal = 1.83x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [427, 625]          55        4           --              --              skipped (<20/group)
+  1         [627, 674]          53        5           --              --              skipped (<20/group)
+  2         [675, 707]          57        4           --              --              skipped (<20/group)
+  3         [709, 755]          53        2           --              --              skipped (<20/group)
+  4         [757, 1034]         40        18          --              --              skipped (<20/group)
+  No quintile had >=20 cells in both groups.
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 7.8830  95% CI=[6.0589, 9.7071]  p=9.967e-16
+    log(n_genes) coefficient = 20.2353  p=9.037e-15  R^2=0.379  n=291
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): NO
+
+  D2 -- noise-normalized effect size (3000D thinned residual, same as B1'(b))
+    overall: mean(r2_mal-r2_norm)/Var(r2_norm_heldout) = 0.0101   Cliff's delta(mal,norm) = +0.8795
+    quintile  n_norm  n_mal   noise-norm effect   Cliff's delta
+    0         55      4       skipped (<20/group)
+    1         53      5       skipped (<20/group)
+    2         57      4       skipped (<20/group)
+    3         53      2       skipped (<20/group)
+    4         40      18      skipped (<20/group)
+
+  D3 -- noise floor (Poisson counting noise, delta-method, G1 genes, normal cells)
+    sum_g Poisson noise variance (delta-method, log-normalized space) = 2439.5171
+    observed held-out normal mean(r^2) = 1372.9038
+    noise floor share = 1.777 (177.7%)
+    NOTE: share exceeds 100% -- the delta-method linearization is known to overstate
+    noise for very sparsely-expressed genes (p_g near 0, where log1p is strongly
+    concave and the linear approximation breaks down); read as 'noise floor at least
+    comparable to the observed signal for this donor', not literally >100% real noise.
+================================================================================================
+HTA8_6009
+================================================================================================
+  depth target (10th pct) = 1176; kept 1425/1583 cells
+
+  D1 -- low-dimensional (50D) check on the SAME thinned counts
+    fresh thinned-data label-blind HVG: 3000 genes selected
+
+--- TEST A: HTA8_6009_D1_thinned_50D ---
+  n_normal=803  n_malignant=622
+  median n_genes_by_counts: normal=571  malignant=620
+  raw (unstratified) residual median ratio malignant/normal = 2.03x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [359, 530]          189       96          6.004           10.030          1.67
+  1         [531, 570]          212       74          5.779           10.394          1.80
+  2         [571, 603]          183       103         5.790           10.627          1.84
+  3         [604, 652]          164       121         5.765           11.429          1.98
+  4         [653, 949]          55        228         6.202           16.164          2.61
+  Median of per-quintile ratios: 1.84x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 5.7793  95% CI=[5.4974, 6.0611]  p=6.830e-237
+    log(n_genes) coefficient = 12.2073  p=1.401e-115  R^2=0.703  n=1425
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+  D2 -- noise-normalized effect size (3000D thinned residual, same as B1'(b))
+    overall: mean(r2_mal-r2_norm)/Var(r2_norm_heldout) = 0.0181   Cliff's delta(mal,norm) = +0.8465
+    quintile  n_norm  n_mal   noise-norm effect   Cliff's delta
+    0         189     96      0.0062              +0.5341
+    1         212     74      0.0149              +0.8475
+    2         183     103     0.0207              +0.8772
+    3         164     121     0.0149              +0.8860
+    4         55      228     0.0248              +0.9120
+
+  D3 -- noise floor (Poisson counting noise, delta-method, G1 genes, normal cells)
+    sum_g Poisson noise variance (delta-method, log-normalized space) = 2264.9888
+    observed held-out normal mean(r^2) = 874.4596
+    noise floor share = 2.590 (259.0%)
+    NOTE: share exceeds 100% -- the delta-method linearization is known to overstate
+    noise for very sparsely-expressed genes (p_g near 0, where log1p is strongly
+    concave and the linear approximation breaks down); read as 'noise floor at least
+    comparable to the observed signal for this donor', not literally >100% real noise.
+================================================================================================
+HTA8_6013
+================================================================================================
+  depth target (10th pct) = 4056; kept 1292/1436 cells
+
+  D1 -- low-dimensional (50D) check on the SAME thinned counts
+    fresh thinned-data label-blind HVG: 3000 genes selected
+
+--- TEST A: HTA8_6013_D1_thinned_50D ---
+  n_normal=690  n_malignant=602
+  median n_genes_by_counts: normal=1311  malignant=1544
+  raw (unstratified) residual median ratio malignant/normal = 2.49x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [994, 1251]         237       23          4.885           11.995          2.46
+  1         [1252, 1359]        203       55          4.644           11.072          2.38
+  2         [1360, 1478]        130       127         4.795           11.645          2.43
+  3         [1479, 1605]        67        191         4.912           11.879          2.42
+  4         [1606, 2146]        53        206         5.201           12.909          2.48
+  Median of per-quintile ratios: 2.43x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 7.1010  95% CI=[6.8742, 7.3278]  p=0.000e+00
+    log(n_genes) coefficient = 3.2769  p=3.004e-14  R^2=0.822  n=1292
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+  D2 -- noise-normalized effect size (3000D thinned residual, same as B1'(b))
+    overall: mean(r2_mal-r2_norm)/Var(r2_norm_heldout) = 0.0104   Cliff's delta(mal,norm) = +0.9033
+    quintile  n_norm  n_mal   noise-norm effect   Cliff's delta
+    0         237     23      0.0330              +0.9714
+    1         203     55      0.0215              +0.9617
+    2         130     127     0.0150              +0.9150
+    3         67      191     0.0062              +0.7471
+    4         53      206     0.0066              +0.6501
+
+  D3 -- noise floor (Poisson counting noise, delta-method, G1 genes, normal cells)
+    sum_g Poisson noise variance (delta-method, log-normalized space) = 579.3104
+    observed held-out normal mean(r^2) = 1425.7592
+    noise floor share = 0.406 (40.6%)
+================================================================================================
+HTA8_6016
+================================================================================================
+  depth target (10th pct) = 1752; kept 2062/2292 cells
+
+  D1 -- low-dimensional (50D) check on the SAME thinned counts
+    fresh thinned-data label-blind HVG: 3000 genes selected
+
+--- TEST A: HTA8_6016_D1_thinned_50D ---
+  n_normal=1432  n_malignant=630
+  median n_genes_by_counts: normal=777  malignant=753
+  raw (unstratified) residual median ratio malignant/normal = 2.01x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [442, 689]          258       158         6.196           10.408          1.68
+  1         [690, 746]          271       138         5.514           10.655          1.93
+  2         [747, 796]          313       107         5.287           10.760          2.04
+  3         [797, 839]          316       94          5.389           11.274          2.09
+  4         [840, 1122]         274       133         5.788           12.920          2.23
+  Median of per-quintile ratios: 2.04x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 6.0427  95% CI=[5.8779, 6.2076]  p=0.000e+00
+    log(n_genes) coefficient = 2.1700  p=4.483e-12  R^2=0.715  n=2062
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+  D2 -- noise-normalized effect size (3000D thinned residual, same as B1'(b))
+    overall: mean(r2_mal-r2_norm)/Var(r2_norm_heldout) = 0.0184   Cliff's delta(mal,norm) = +0.9131
+    quintile  n_norm  n_mal   noise-norm effect   Cliff's delta
+    0         258     158     0.0093              +0.7713
+    1         271     138     0.0169              +0.9470
+    2         313     107     0.0251              +0.9762
+    3         316     94      0.0263              +0.9711
+    4         274     133     0.0360              +0.9865
+
+  D3 -- noise floor (Poisson counting noise, delta-method, G1 genes, normal cells)
+    sum_g Poisson noise variance (delta-method, log-normalized space) = 1434.3901
+    observed held-out normal mean(r^2) = 1130.5407
+    noise floor share = 1.269 (126.9%)
+    NOTE: share exceeds 100% -- the delta-method linearization is known to overstate
+    noise for very sparsely-expressed genes (p_g near 0, where log1p is strongly
+    concave and the linear approximation breaks down); read as 'noise floor at least
+    comparable to the observed signal for this donor', not literally >100% real noise.
+================================================================================================
+HTA8_6018
+================================================================================================
+  depth target (10th pct) = 6363; kept 3449/3833 cells
+
+  D1 -- low-dimensional (50D) check on the SAME thinned counts
+    fresh thinned-data label-blind HVG: 3000 genes selected
+
+--- TEST A: HTA8_6018_D1_thinned_50D ---
+  n_normal=1090  n_malignant=2359
+  median n_genes_by_counts: normal=1883  malignant=1933
+  raw (unstratified) residual median ratio malignant/normal = 3.70x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [1276, 1736]        198       499         3.488           11.708          3.36
+  1         [1737, 1862]        289       404         3.275           12.074          3.69
+  2         [1863, 1967]        286       394         3.251           12.345          3.80
+  3         [1968, 2091]        213       479         3.263           12.491          3.83
+  4         [2092, 3060]        104       583         3.719           13.018          3.50
+  Median of per-quintile ratios: 3.69x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 9.1043  95% CI=[9.0003, 9.2083]  p=0.000e+00
+    log(n_genes) coefficient = 3.8021  p=2.025e-63  R^2=0.899  n=3449
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+  D2 -- noise-normalized effect size (3000D thinned residual, same as B1'(b))
+    overall: mean(r2_mal-r2_norm)/Var(r2_norm_heldout) = 0.0252   Cliff's delta(mal,norm) = +0.9891
+    quintile  n_norm  n_mal   noise-norm effect   Cliff's delta
+    0         198     499     0.0307              +0.9858
+    1         289     404     0.0395              +0.9969
+    2         286     394     0.0451              +0.9993
+    3         213     479     0.0391              +0.9934
+    4         104     583     0.0252              +0.9744
+
+  D3 -- noise floor (Poisson counting noise, delta-method, G1 genes, normal cells)
+    sum_g Poisson noise variance (delta-method, log-normalized space) = 377.0474
+    observed held-out normal mean(r^2) = 1610.9532
+    noise floor share = 0.234 (23.4%)
+================================================================================================
+HTA8_6028
+================================================================================================
+  depth target (10th pct) = 2464; kept 1296/1440 cells
+
+  D1 -- low-dimensional (50D) check on the SAME thinned counts
+    fresh thinned-data label-blind HVG: 3000 genes selected
+
+--- TEST A: HTA8_6028_D1_thinned_50D ---
+  n_normal=196  n_malignant=1100
+  median n_genes_by_counts: normal=958  malignant=948
+  raw (unstratified) residual median ratio malignant/normal = 1.95x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [590, 840]          42        222         5.899           11.227          1.90
+  1         [841, 918]          36        224         6.042           11.423          1.89
+  2         [919, 985]          38        217         5.712           11.634          2.04
+  3         [986, 1074]         45        214         6.155           12.136          1.97
+  4         [1075, 1442]        35        223         6.132           12.832          2.09
+  Median of per-quintile ratios: 1.97x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 5.9900  95% CI=[5.7301, 6.2499]  p=1.796e-268
+    log(n_genes) coefficient = 4.9731  p=1.095e-47  R^2=0.638  n=1296
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+  D2 -- noise-normalized effect size (3000D thinned residual, same as B1'(b))
+    overall: mean(r2_mal-r2_norm)/Var(r2_norm_heldout) = 0.0049   Cliff's delta(mal,norm) = +0.3701
+    quintile  n_norm  n_mal   noise-norm effect   Cliff's delta
+    0         42      222     -0.0017             -0.1562
+    1         36      224     0.0078              +0.4482
+    2         38      217     0.0092              +0.5217
+    3         45      214     0.0206              +0.7342
+    4         35      223     0.0084              +0.6728
+
+  D3 -- noise floor (Poisson counting noise, delta-method, G1 genes, normal cells)
+    sum_g Poisson noise variance (delta-method, log-normalized space) = 1075.9041
+    observed held-out normal mean(r^2) = 1562.3362
+    noise floor share = 0.689 (68.9%)
+
+================================================================================================
+SUMMARY
+================================================================================================
+donor        D1 survives?  D3 noise share
+HTA8_6002              NO          177.7%  <-- >70%, low power
+HTA8_6009             YES          259.0%  <-- >70%, low power
+HTA8_6013             YES           40.6%
+HTA8_6016             YES          126.9%  <-- >70%, low power
+HTA8_6018             YES           23.4%
+HTA8_6028             YES           68.9%
+
+D1 (low-dimensional Test A) survives in 5/6 donors.
+VERDICT: B1'(b)'s collapse is most likely noise dilution in the high-dimensional space; the effect survives at low dimension after the same depth equalization.
+D3 noise floor exceeds 70% in: ['HTA8_6002', 'HTA8_6009', 'HTA8_6016'] -- flagged as evidence the 3000-D test specifically lacked power for these donors.
+
+================================================================================================
+CAVEATS
+================================================================================================
+- D2's 'noise-normalized effect size' divides by VARIANCE, exactly as specified, not by
+  standard deviation -- it is not a standard Cohen's d and should not be read as one.
+- D3's Poisson noise floor is a delta-method approximation assuming every gene's
+  Poisson noise projects fully into the residual (out-of-subspace) term, which
+  overstates the noise floor somewhat since a small fraction of any gene's noise does
+  fall inside the top-20 subspace. It uses each gene's OWN mean thinned proportion, not
+  a shared dispersion model, and ignores any non-Poisson (over-dispersed) variance.
+- All quantities are derived from the same expression matrix as the residual being
+  diagnosed; this is an internal mechanism check, not independent validation.
+- This diagnostic does not change the B1' verdict (NOT SUPPORTED, 2/6, see
+  results/geom_r1_fullgene.txt); it only characterizes why (b) collapsed where it did.

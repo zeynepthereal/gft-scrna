@@ -1,0 +1,532 @@
+DNB monotonic-increase HETEROGENEITY CONTROL (score-distribution matching)
+n_subsample_reps=20; n_deciles=10; seed=0
+
+DECISION RULE (B3'), stated before the numbers: a confirmatory module 'survives the
+heterogeneity control' if, AFTER matching every bin's module-score distribution to Q1's
+(10 deciles, equal per-decile counts, 20 resampling reps), Spearman(PCC_in, bin order)
+> 0.8 (PCC_in, not I -- matching already equalizes SD_in) in >=4/6 donors. No Bonferroni
+across the 5 pre-registered confirmatory modules; the pass count is reported plainly.
+The other 45 Hallmark modules are EXPLORATORY and reported separately, not part of this
+decision rule. If no confirmatory module passes: 'the monotonic increase is explained by
+heterogeneity in module activity, not a genuine coordination increase.'
+HTA8_6002 uses 3 bins (terciles), as in the original DNB run.
+
+Loaded 50 MSigDB Hallmark gene sets from Enrichr.
+
+
+================================================================================================
+HTA8_6002
+================================================================================================
+bin sizes: {'normal': 258, 'Q1': 11, 'Q2': 11, 'Q3': 11} (3 bins/terciles, per instructions for this small donor)
+
+  [CONFIRMATORY] Glycolysis
+    raw I(normal,Q1,Q2,Q3)       = 0.848,0.745,0.874,1.014
+    raw SD_in                            = 0.901,0.743,0.837,0.915
+    raw PCC_in                            = 0.072,0.268,0.280,0.302
+    raw PCC_out                           = 0.077,0.267,0.268,0.273
+    raw module mean z-score               = -0.006,-0.077,-0.010,0.229
+    MATCHED PCC_in (median of 20 reps)    = 0.268,0.268,0.362,0.374
+    MATCHED I (median of 20 reps)         = 0.765,0.745,0.708,0.905
+    Spearman(raw I, bin order)            = +0.800
+    Spearman(MATCHED PCC_in, bin order)   = +0.800  p=2.000e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = +0.200  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(0, 1), (2, 6), (3, 7)]
+
+  [CONFIRMATORY] Hypoxia
+    raw I(normal,Q1,Q2,Q3)       = 1.051,0.795,0.785,1.001
+    raw SD_in                            = 0.968,0.803,0.801,0.837
+    raw PCC_in                            = 0.090,0.263,0.261,0.315
+    raw PCC_out                           = 0.083,0.266,0.266,0.264
+    raw module mean z-score               = 0.003,-0.054,-0.040,0.027
+    MATCHED PCC_in (median of 20 reps)    = 0.279,0.263,0.341,0.374
+    MATCHED I (median of 20 reps)         = 0.883,0.795,0.668,0.885
+    Spearman(raw I, bin order)            = -0.400
+    Spearman(MATCHED PCC_in, bin order)   = +0.800  p=2.000e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = +0.200  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 7), (3, 4)]
+
+  [CONFIRMATORY] TNF-alpha Signaling via NF-kB
+    raw I(normal,Q1,Q2,Q3)       = 1.096,0.849,0.766,0.756
+    raw SD_in                            = 0.895,0.789,0.765,0.676
+    raw PCC_in                            = 0.096,0.284,0.264,0.286
+    raw PCC_out                           = 0.078,0.264,0.264,0.256
+    raw module mean z-score               = 0.004,-0.024,-0.015,-0.059
+    MATCHED PCC_in (median of 20 reps)    = 0.292,0.284,0.333,0.326
+    MATCHED I (median of 20 reps)         = 0.879,0.849,0.713,0.721
+    Spearman(raw I, bin order)            = -1.000
+    Spearman(MATCHED PCC_in, bin order)   = +0.600  p=4.000e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = -0.800  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 8), (3, 3)]
+
+  [CONFIRMATORY] mTORC1 Signaling
+    raw I(normal,Q1,Q2,Q3)       = 0.768,0.839,0.852,0.992
+    raw SD_in                            = 0.843,0.871,0.857,0.997
+    raw PCC_in                            = 0.066,0.258,0.268,0.267
+    raw PCC_out                           = 0.072,0.268,0.270,0.268
+    raw module mean z-score               = -0.028,0.045,0.159,0.445
+    MATCHED PCC_in (median of 20 reps)    = 0.273,0.258,0.341,0.329
+    MATCHED I (median of 20 reps)         = 0.815,0.839,0.761,0.962
+    Spearman(raw I, bin order)            = +1.000
+    Spearman(MATCHED PCC_in, bin order)   = +0.600  p=4.000e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = +0.400  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 5), (3, 6)]
+
+  [CONFIRMATORY] UV Response Up
+    raw I(normal,Q1,Q2,Q3)       = 0.876,0.795,0.666,0.699
+    raw SD_in                            = 0.881,0.784,0.684,0.715
+    raw PCC_in                            = 0.072,0.267,0.257,0.258
+    raw PCC_out                           = 0.072,0.263,0.264,0.264
+    raw module mean z-score               = 0.009,-0.068,-0.139,-0.015
+    MATCHED PCC_in (median of 20 reps)    = 0.267,0.267,0.310,0.303
+    MATCHED I (median of 20 reps)         = 0.752,0.795,0.612,0.618
+    Spearman(raw I, bin order)            = -0.800
+    Spearman(MATCHED PCC_in, bin order)   = +0.800  p=2.000e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = -0.600  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 4), (3, 4)]
+
+================================================================================================
+HTA8_6009
+================================================================================================
+bin sizes: {'normal': 803, 'Q1': 125, 'Q2': 124, 'Q3': 124, 'Q4': 124, 'Q5': 125}
+
+  [CONFIRMATORY] Glycolysis
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.937,1.061,0.984,0.956,0.962,0.903
+    raw SD_in                            = 0.954,0.974,0.969,0.982,0.971,0.940
+    raw PCC_in                            = 0.047,0.104,0.089,0.080,0.083,0.081
+    raw PCC_out                           = 0.048,0.096,0.088,0.082,0.083,0.084
+    raw module mean z-score               = -0.006,-0.018,0.003,0.022,0.004,0.024
+    MATCHED PCC_in (median of 20 reps)    = 0.086,0.104,0.119,0.100,0.104,0.108
+    MATCHED I (median of 20 reps)         = 0.952,1.061,1.028,0.951,0.962,0.920
+    Spearman(raw I, bin order)            = -0.371
+    Spearman(MATCHED PCC_in, bin order)   = +0.371  p=4.685e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = -0.543  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 25), (3, 27), (4, 27), (5, 33)]
+
+  [CONFIRMATORY] Hypoxia
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 1.010,1.053,1.078,1.058,1.081,1.116
+    raw SD_in                            = 0.972,0.923,0.928,0.953,0.980,1.031
+    raw PCC_in                            = 0.050,0.103,0.098,0.090,0.091,0.094
+    raw PCC_out                           = 0.049,0.090,0.084,0.081,0.083,0.087
+    raw module mean z-score               = 0.003,-0.083,-0.051,-0.006,-0.008,0.127
+    MATCHED PCC_in (median of 20 reps)    = 0.084,0.103,0.104,0.099,0.102,0.116
+    MATCHED I (median of 20 reps)         = 0.943,1.053,0.982,0.930,0.941,0.890
+    Spearman(raw I, bin order)            = +0.943
+    Spearman(MATCHED PCC_in, bin order)   = +0.543  p=2.657e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = -0.771  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 18), (3, 26), (4, 27), (5, 45)]
+
+  [CONFIRMATORY] TNF-alpha Signaling via NF-kB
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.952,1.260,1.376,1.398,1.801,2.370
+    raw SD_in                            = 0.859,0.884,0.965,0.987,1.050,1.246
+    raw PCC_in                            = 0.050,0.120,0.119,0.109,0.132,0.153
+    raw PCC_out                           = 0.045,0.084,0.083,0.077,0.077,0.081
+    raw module mean z-score               = -0.102,-0.084,0.013,0.066,0.138,0.521
+    MATCHED PCC_in (median of 20 reps)    = 0.097,0.120,0.122,0.121,0.138,0.191
+    MATCHED I (median of 20 reps)         = 0.980,1.260,1.152,1.083,1.277,1.628
+    Spearman(raw I, bin order)            = +1.000
+    Spearman(MATCHED PCC_in, bin order)   = +0.943  p=4.805e-03  -> SURVIVES (>0.8)
+    Spearman(MATCHED I, bin order)        = +0.771  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 21), (3, 37), (4, 37), (5, 68)]
+
+  [CONFIRMATORY] mTORC1 Signaling
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.800,1.048,0.986,0.956,0.998,1.007
+    raw SD_in                            = 0.895,0.968,0.963,0.989,0.985,0.959
+    raw PCC_in                            = 0.041,0.101,0.086,0.080,0.084,0.087
+    raw PCC_out                           = 0.046,0.093,0.084,0.082,0.083,0.083
+    raw module mean z-score               = -0.043,0.025,0.045,0.081,0.070,0.059
+    MATCHED PCC_in (median of 20 reps)    = 0.082,0.101,0.103,0.098,0.103,0.099
+    MATCHED I (median of 20 reps)         = 0.929,1.048,0.999,0.937,0.972,0.986
+    Spearman(raw I, bin order)            = +0.371
+    Spearman(MATCHED PCC_in, bin order)   = +0.257  p=6.228e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = +0.086  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 13), (3, 27), (4, 23), (5, 15)]
+
+  [CONFIRMATORY] UV Response Up
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.849,0.974,1.007,1.045,1.166,1.301
+    raw SD_in                            = 0.885,0.889,0.918,0.948,1.006,1.073
+    raw PCC_in                            = 0.042,0.095,0.087,0.086,0.095,0.104
+    raw PCC_out                           = 0.044,0.087,0.079,0.078,0.082,0.086
+    raw module mean z-score               = -0.029,-0.096,-0.037,0.002,0.078,0.239
+    MATCHED PCC_in (median of 20 reps)    = 0.081,0.095,0.096,0.091,0.104,0.137
+    MATCHED I (median of 20 reps)         = 0.853,0.974,0.880,0.872,0.858,0.912
+    Spearman(raw I, bin order)            = +1.000
+    Spearman(MATCHED PCC_in, bin order)   = +0.829  p=4.156e-02  -> SURVIVES (>0.8)
+    Spearman(MATCHED I, bin order)        = +0.200  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 26), (3, 27), (4, 41), (5, 58)]
+
+================================================================================================
+HTA8_6013
+================================================================================================
+bin sizes: {'normal': 690, 'Q1': 121, 'Q2': 120, 'Q3': 120, 'Q4': 120, 'Q5': 121}
+
+  [CONFIRMATORY] Glycolysis
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.635,0.587,0.579,0.602,0.634,0.664
+    raw SD_in                            = 0.598,0.580,0.584,0.595,0.616,0.636
+    raw PCC_in                            = 0.062,0.078,0.076,0.080,0.081,0.085
+    raw PCC_out                           = 0.058,0.077,0.077,0.079,0.078,0.081
+    raw module mean z-score               = -0.043,-0.015,0.046,0.044,0.074,0.096
+    MATCHED PCC_in (median of 20 reps)    = 0.094,0.078,0.097,0.094,0.104,0.106
+    MATCHED I (median of 20 reps)         = 0.619,0.587,0.537,0.557,0.568,0.579
+    Spearman(raw I, bin order)            = +0.371
+    Spearman(MATCHED PCC_in, bin order)   = +0.886  p=1.885e-02  -> SURVIVES (>0.8)
+    Spearman(MATCHED I, bin order)        = -0.429  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 30), (3, 27), (4, 30), (5, 39)]
+
+  [CONFIRMATORY] Hypoxia
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.804,0.689,0.672,0.726,0.728,0.813
+    raw SD_in                            = 0.655,0.599,0.571,0.602,0.610,0.670
+    raw PCC_in                            = 0.075,0.090,0.092,0.095,0.096,0.103
+    raw PCC_out                           = 0.061,0.078,0.078,0.079,0.081,0.085
+    raw module mean z-score               = 0.014,-0.052,-0.055,-0.028,-0.006,0.061
+    MATCHED PCC_in (median of 20 reps)    = 0.108,0.090,0.106,0.104,0.107,0.116
+    MATCHED I (median of 20 reps)         = 0.706,0.689,0.627,0.650,0.647,0.660
+    Spearman(raw I, bin order)            = +0.371
+    Spearman(MATCHED PCC_in, bin order)   = +0.371  p=4.685e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = -0.486  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(0, 5), (2, 18), (3, 17), (4, 20), (5, 34)]
+
+  [CONFIRMATORY] TNF-alpha Signaling via NF-kB
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.970,0.902,0.889,1.012,1.046,1.087
+    raw SD_in                            = 0.671,0.636,0.606,0.645,0.650,0.710
+    raw PCC_in                            = 0.086,0.112,0.114,0.125,0.132,0.132
+    raw PCC_out                           = 0.060,0.079,0.078,0.079,0.082,0.086
+    raw module mean z-score               = 0.016,-0.035,-0.077,-0.019,-0.023,0.062
+    MATCHED PCC_in (median of 20 reps)    = 0.114,0.112,0.133,0.134,0.139,0.137
+    MATCHED I (median of 20 reps)         = 0.805,0.902,0.868,0.868,0.906,0.903
+    Spearman(raw I, bin order)            = +0.771
+    Spearman(MATCHED PCC_in, bin order)   = +0.886  p=1.885e-02  -> SURVIVES (>0.8)
+    Spearman(MATCHED I, bin order)        = +0.714  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 13), (3, 24), (4, 22), (5, 21)]
+
+  [CONFIRMATORY] mTORC1 Signaling
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.588,0.628,0.617,0.658,0.680,0.707
+    raw SD_in                            = 0.567,0.607,0.603,0.624,0.639,0.670
+    raw PCC_in                            = 0.053,0.079,0.079,0.082,0.083,0.086
+    raw PCC_out                           = 0.051,0.077,0.077,0.078,0.078,0.081
+    raw module mean z-score               = -0.109,0.043,0.085,0.142,0.157,0.198
+    MATCHED PCC_in (median of 20 reps)    = 0.091,0.079,0.098,0.112,0.108,0.115
+    MATCHED I (median of 20 reps)         = 0.614,0.628,0.589,0.591,0.595,0.619
+    Spearman(raw I, bin order)            = +0.943
+    Spearman(MATCHED PCC_in, bin order)   = +0.886  p=1.885e-02  -> SURVIVES (>0.8)
+    Spearman(MATCHED I, bin order)        = -0.086  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(0, 13), (2, 26), (3, 35), (4, 42), (5, 50)]
+
+  [CONFIRMATORY] UV Response Up
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.638,0.665,0.648,0.673,0.705,0.726
+    raw SD_in                            = 0.600,0.616,0.600,0.613,0.626,0.654
+    raw PCC_in                            = 0.059,0.083,0.083,0.084,0.088,0.091
+    raw PCC_out                           = 0.055,0.077,0.077,0.077,0.078,0.082
+    raw module mean z-score               = -0.024,-0.010,0.002,0.026,0.041,0.077
+    MATCHED PCC_in (median of 20 reps)    = 0.092,0.083,0.102,0.102,0.102,0.107
+    MATCHED I (median of 20 reps)         = 0.621,0.665,0.629,0.639,0.625,0.627
+    Spearman(raw I, bin order)            = +0.943
+    Spearman(MATCHED PCC_in, bin order)   = +0.714  p=1.108e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = -0.029  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 21), (3, 19), (4, 23), (5, 30)]
+
+================================================================================================
+HTA8_6016
+================================================================================================
+bin sizes: {'normal': 1432, 'Q1': 126, 'Q2': 126, 'Q3': 126, 'Q4': 126, 'Q5': 126}
+
+  [CONFIRMATORY] Glycolysis
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.844,0.763,0.767,0.822,0.856,0.859
+    raw SD_in                            = 0.842,0.747,0.771,0.811,0.818,0.835
+    raw PCC_in                            = 0.045,0.078,0.076,0.078,0.080,0.080
+    raw PCC_out                           = 0.045,0.076,0.077,0.077,0.076,0.078
+    raw module mean z-score               = 0.002,-0.073,-0.036,0.012,0.059,0.020
+    MATCHED PCC_in (median of 20 reps)    = 0.082,0.078,0.092,0.101,0.106,0.099
+    MATCHED I (median of 20 reps)         = 0.772,0.763,0.719,0.744,0.758,0.764
+    Spearman(raw I, bin order)            = +0.657
+    Spearman(MATCHED PCC_in, bin order)   = +0.771  p=7.240e-02  -> does not survive
+    Spearman(MATCHED I, bin order)        = -0.200  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 21), (3, 40), (4, 46), (5, 35)]
+
+  [CONFIRMATORY] Hypoxia
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 1.006,0.805,0.812,0.912,0.858,1.017
+    raw SD_in                            = 0.869,0.762,0.779,0.836,0.841,0.948
+    raw PCC_in                            = 0.062,0.081,0.082,0.084,0.079,0.085
+    raw PCC_out                           = 0.054,0.077,0.079,0.077,0.077,0.080
+    raw module mean z-score               = -0.007,-0.113,-0.064,0.019,0.072,0.167
+    MATCHED PCC_in (median of 20 reps)    = 0.087,0.081,0.090,0.112,0.111,0.126
+    MATCHED I (median of 20 reps)         = 0.818,0.805,0.712,0.782,0.698,0.730
+    Spearman(raw I, bin order)            = +0.371
+    Spearman(MATCHED PCC_in, bin order)   = +0.886  p=1.885e-02  -> SURVIVES (>0.8)
+    Spearman(MATCHED I, bin order)        = -0.714  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 23), (3, 44), (4, 52), (5, 71)]
+
+  [CONFIRMATORY] TNF-alpha Signaling via NF-kB
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.906,0.906,1.013,1.051,1.159,1.404
+    raw SD_in                            = 0.741,0.766,0.795,0.865,0.899,1.026
+    raw PCC_in                            = 0.062,0.091,0.096,0.092,0.096,0.109
+    raw PCC_out                           = 0.050,0.077,0.075,0.075,0.074,0.079
+    raw module mean z-score               = -0.073,-0.025,0.039,0.140,0.216,0.459
+    MATCHED PCC_in (median of 20 reps)    = 0.090,0.091,0.104,0.104,0.112,0.150
+    MATCHED I (median of 20 reps)         = 0.804,0.906,0.850,0.811,0.846,0.829
+    Spearman(raw I, bin order)            = +0.943
+    Spearman(MATCHED PCC_in, bin order)   = +0.943  p=4.805e-03  -> SURVIVES (>0.8)
+    Spearman(MATCHED I, bin order)        = +0.029  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 24), (3, 37), (4, 44), (5, 82)]
+
+  [CONFIRMATORY] mTORC1 Signaling
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.692,0.776,0.808,0.859,0.895,0.880
+    raw SD_in                            = 0.791,0.784,0.819,0.841,0.853,0.884
+    raw PCC_in                            = 0.037,0.074,0.077,0.078,0.080,0.076
+    raw PCC_out                           = 0.043,0.075,0.078,0.076,0.076,0.077
+    raw module mean z-score               = -0.034,-0.020,0.057,0.081,0.139,0.131
+    MATCHED PCC_in (median of 20 reps)    = 0.078,0.074,0.095,0.094,0.110,0.099
+    MATCHED I (median of 20 reps)         = 0.764,0.776,0.766,0.768,0.773,0.763
+    Spearman(raw I, bin order)            = +0.943
+    Spearman(MATCHED PCC_in, bin order)   = +0.829  p=4.156e-02  -> SURVIVES (>0.8)
+    Spearman(MATCHED I, bin order)        = -0.200  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 25), (3, 36), (4, 51), (5, 43)]
+
+  [CONFIRMATORY] UV Response Up
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.784,0.758,0.800,0.852,0.867,1.045
+    raw SD_in                            = 0.786,0.739,0.760,0.811,0.838,0.928
+    raw PCC_in                            = 0.044,0.075,0.078,0.078,0.077,0.089
+    raw PCC_out                           = 0.044,0.073,0.074,0.075,0.074,0.079
+    raw module mean z-score               = -0.024,-0.081,-0.026,0.035,0.109,0.234
+    MATCHED PCC_in (median of 20 reps)    = 0.081,0.075,0.094,0.097,0.106,0.117
+    MATCHED I (median of 20 reps)         = 0.737,0.758,0.712,0.707,0.694,0.854
+    Spearman(raw I, bin order)            = +0.943
+    Spearman(MATCHED PCC_in, bin order)   = +0.943  p=4.805e-03  -> SURVIVES (>0.8)
+    Spearman(MATCHED I, bin order)        = -0.086  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 22), (3, 40), (4, 51), (5, 77)]
+
+================================================================================================
+HTA8_6018
+================================================================================================
+bin sizes: {'normal': 1090, 'Q1': 472, 'Q2': 472, 'Q3': 471, 'Q4': 472, 'Q5': 472}
+
+  [CONFIRMATORY] Glycolysis
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.601,0.468,0.488,0.499,0.517,0.572
+    raw SD_in                            = 0.506,0.448,0.466,0.477,0.481,0.510
+    raw PCC_in                            = 0.063,0.042,0.042,0.042,0.043,0.050
+    raw PCC_out                           = 0.053,0.040,0.040,0.040,0.040,0.045
+    raw module mean z-score               = -0.007,-0.076,-0.012,0.013,0.029,0.063
+    MATCHED PCC_in (median of 20 reps)    = 0.072,0.042,0.051,0.057,0.058,0.062
+    MATCHED I (median of 20 reps)         = 0.540,0.468,0.459,0.461,0.466,0.480
+    Spearman(raw I, bin order)            = +0.143
+    Spearman(MATCHED PCC_in, bin order)   = +0.143  p=7.872e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = -0.200  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(0, 51), (2, 101), (3, 135), (4, 151), (5, 180)]
+
+  [CONFIRMATORY] Hypoxia
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.714,0.467,0.497,0.522,0.535,0.689
+    raw SD_in                            = 0.529,0.439,0.456,0.464,0.477,0.530
+    raw PCC_in                            = 0.079,0.042,0.044,0.046,0.045,0.059
+    raw PCC_out                           = 0.059,0.040,0.040,0.040,0.040,0.046
+    raw module mean z-score               = 0.035,-0.106,-0.046,-0.031,0.001,0.102
+    MATCHED PCC_in (median of 20 reps)    = 0.068,0.042,0.054,0.053,0.059,0.077
+    MATCHED I (median of 20 reps)         = 0.563,0.467,0.445,0.448,0.457,0.462
+    Spearman(raw I, bin order)            = +0.143
+    Spearman(MATCHED PCC_in, bin order)   = +0.371  p=4.685e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = -0.429  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(0, 44), (2, 84), (3, 103), (4, 145), (5, 213)]
+
+  [CONFIRMATORY] TNF-alpha Signaling via NF-kB
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.949,0.552,0.584,0.603,0.628,0.822
+    raw SD_in                            = 0.547,0.444,0.458,0.470,0.482,0.541
+    raw PCC_in                            = 0.105,0.049,0.050,0.051,0.052,0.067
+    raw PCC_out                           = 0.060,0.039,0.039,0.040,0.040,0.044
+    raw module mean z-score               = 0.063,-0.114,-0.079,-0.052,-0.023,0.122
+    MATCHED PCC_in (median of 20 reps)    = 0.080,0.049,0.053,0.059,0.057,0.072
+    MATCHED I (median of 20 reps)         = 0.740,0.552,0.522,0.507,0.508,0.518
+    Spearman(raw I, bin order)            = +0.143
+    Spearman(MATCHED PCC_in, bin order)   = +0.086  p=8.717e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = -0.771  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 51), (3, 86), (4, 107), (5, 202)]
+
+  [CONFIRMATORY] mTORC1 Signaling
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.487,0.518,0.540,0.563,0.588,0.590
+    raw SD_in                            = 0.460,0.476,0.496,0.507,0.516,0.526
+    raw PCC_in                            = 0.049,0.044,0.043,0.045,0.047,0.049
+    raw PCC_out                           = 0.046,0.040,0.040,0.041,0.041,0.044
+    raw module mean z-score               = -0.141,-0.029,0.052,0.081,0.119,0.103
+    MATCHED PCC_in (median of 20 reps)    = 0.068,0.044,0.055,0.059,0.062,0.062
+    MATCHED I (median of 20 reps)         = 0.524,0.518,0.495,0.503,0.495,0.507
+    Spearman(raw I, bin order)            = +1.000
+    Spearman(MATCHED PCC_in, bin order)   = +0.086  p=8.717e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = -0.486  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(0, 71), (2, 125), (3, 155), (4, 177), (5, 151)]
+
+  [CONFIRMATORY] UV Response Up
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.541,0.507,0.505,0.532,0.543,0.572
+    raw SD_in                            = 0.497,0.476,0.489,0.499,0.509,0.530
+    raw PCC_in                            = 0.058,0.042,0.041,0.043,0.043,0.048
+    raw PCC_out                           = 0.053,0.040,0.039,0.041,0.041,0.044
+    raw module mean z-score               = -0.033,-0.083,-0.016,0.018,0.053,0.102
+    MATCHED PCC_in (median of 20 reps)    = 0.061,0.042,0.052,0.059,0.061,0.070
+    MATCHED I (median of 20 reps)         = 0.511,0.507,0.471,0.468,0.462,0.472
+    Spearman(raw I, bin order)            = +0.600
+    Spearman(MATCHED PCC_in, bin order)   = +0.429  p=3.965e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = -0.657  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(2, 103), (3, 138), (4, 181), (5, 216)]
+
+================================================================================================
+HTA8_6028
+================================================================================================
+bin sizes: {'normal': 196, 'Q1': 220, 'Q2': 220, 'Q3': 220, 'Q4': 220, 'Q5': 220}
+
+  [CONFIRMATORY] Glycolysis
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.777,0.709,0.731,0.757,0.755,0.783
+    raw SD_in                            = 0.739,0.668,0.698,0.721,0.738,0.777
+    raw PCC_in                            = 0.074,0.061,0.059,0.060,0.058,0.060
+    raw PCC_out                           = 0.070,0.058,0.056,0.057,0.056,0.059
+    raw module mean z-score               = 0.017,-0.111,-0.033,-0.002,0.043,0.087
+    MATCHED PCC_in (median of 20 reps)    = 0.087,0.061,0.071,0.075,0.079,0.100
+    MATCHED I (median of 20 reps)         = 0.644,0.709,0.628,0.614,0.614,0.619
+    Spearman(raw I, bin order)            = +0.371
+    Spearman(MATCHED PCC_in, bin order)   = +0.429  p=3.965e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = -0.771  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(0, 83), (2, 50), (3, 65), (4, 94), (5, 111)]
+
+  [CONFIRMATORY] Hypoxia
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.946,0.775,0.801,0.865,0.853,0.960
+    raw SD_in                            = 0.823,0.690,0.723,0.730,0.751,0.814
+    raw PCC_in                            = 0.083,0.065,0.063,0.068,0.064,0.073
+    raw PCC_out                           = 0.072,0.058,0.057,0.057,0.057,0.062
+    raw module mean z-score               = 0.155,-0.133,-0.045,-0.046,-0.001,0.087
+    MATCHED PCC_in (median of 20 reps)    = 0.109,0.065,0.080,0.076,0.080,0.093
+    MATCHED I (median of 20 reps)         = 0.722,0.775,0.732,0.714,0.701,0.675
+    Spearman(raw I, bin order)            = +0.371
+    Spearman(MATCHED PCC_in, bin order)   = -0.029  p=9.572e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = -0.829  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(0, 128), (2, 54), (3, 48), (4, 73), (5, 101)]
+
+  [CONFIRMATORY] TNF-alpha Signaling via NF-kB
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.935,0.987,0.990,1.104,1.133,1.316
+    raw SD_in                            = 0.770,0.724,0.759,0.778,0.788,0.867
+    raw PCC_in                            = 0.082,0.078,0.073,0.081,0.082,0.092
+    raw PCC_out                           = 0.068,0.057,0.056,0.057,0.057,0.060
+    raw module mean z-score               = 0.050,-0.109,-0.030,-0.023,0.001,0.116
+    MATCHED PCC_in (median of 20 reps)    = 0.101,0.078,0.088,0.093,0.092,0.102
+    MATCHED I (median of 20 reps)         = 0.760,0.987,0.907,1.002,0.972,0.907
+    Spearman(raw I, bin order)            = +1.000
+    Spearman(MATCHED PCC_in, bin order)   = +0.371  p=4.685e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = +0.143  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(0, 74), (2, 40), (3, 40), (4, 46), (5, 74)]
+
+  [CONFIRMATORY] mTORC1 Signaling
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.627,0.683,0.712,0.729,0.769,0.833
+    raw SD_in                            = 0.629,0.662,0.698,0.723,0.748,0.793
+    raw PCC_in                            = 0.066,0.059,0.057,0.057,0.058,0.063
+    raw PCC_out                           = 0.067,0.058,0.056,0.057,0.056,0.060
+    raw module mean z-score               = -0.155,-0.106,-0.012,0.027,0.076,0.153
+    MATCHED PCC_in (median of 20 reps)    = 0.089,0.059,0.072,0.086,0.092,0.108
+    MATCHED I (median of 20 reps)         = 0.656,0.683,0.618,0.627,0.653,0.641
+    Spearman(raw I, bin order)            = +1.000
+    Spearman(MATCHED PCC_in, bin order)   = +0.657  p=1.562e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = -0.429  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(0, 49), (2, 68), (3, 86), (4, 102), (5, 131)]
+
+  [CONFIRMATORY] UV Response Up
+    raw I(normal,Q1,Q2,Q3,Q4,Q5)       = 0.762,0.781,0.789,0.800,0.797,0.871
+    raw SD_in                            = 0.710,0.692,0.723,0.737,0.747,0.802
+    raw PCC_in                            = 0.073,0.065,0.060,0.062,0.061,0.065
+    raw PCC_out                           = 0.068,0.057,0.055,0.057,0.057,0.060
+    raw module mean z-score               = 0.030,-0.101,-0.022,-0.008,0.004,0.099
+    MATCHED PCC_in (median of 20 reps)    = 0.083,0.065,0.076,0.077,0.073,0.090
+    MATCHED I (median of 20 reps)         = 0.619,0.781,0.698,0.696,0.692,0.675
+    Spearman(raw I, bin order)            = +0.943
+    Spearman(MATCHED PCC_in, bin order)   = +0.257  p=6.228e-01  -> does not survive
+    Spearman(MATCHED I, bin order)        = -0.143  [reference only]
+    NOTE: decile-count shortfall (sampled with replacement) in bins [(0, 80), (2, 47), (3, 56), (4, 57), (5, 100)]
+
+================================================================================================
+CROSS-DONOR SUMMARY -- CONFIRMATORY MODULES
+================================================================================================
+module                           n_donors_survive  donors
+Glycolysis                                      1  ['HTA8_6013']
+Hypoxia                                         1  ['HTA8_6016']
+TNF-alpha Signaling via NF-kB                   3  ['HTA8_6009', 'HTA8_6013', 'HTA8_6016']
+mTORC1 Signaling                                2  ['HTA8_6013', 'HTA8_6016']
+UV Response Up                                  2  ['HTA8_6009', 'HTA8_6016']
+
+0/5 confirmatory modules pass B3' (>=4/6 donors with Spearman(matched PCC_in, bin order)>0.8).
+
+================================================================================================
+PER-DONOR DETAIL -- raw vs matched Spearman, confirmatory modules
+================================================================================================
+donor      module                            rho_raw_I  rho_matched_PCC  rho_matched_Isurvives?
+HTA8_6002  Glycolysis                           +0.800           +0.800         +0.200        no
+HTA8_6002  Hypoxia                              -0.400           +0.800         +0.200        no
+HTA8_6002  TNF-alpha Signaling via NF-kB        -1.000           +0.600         -0.800        no
+HTA8_6002  mTORC1 Signaling                     +1.000           +0.600         +0.400        no
+HTA8_6002  UV Response Up                       -0.800           +0.800         -0.600        no
+HTA8_6009  Glycolysis                           -0.371           +0.371         -0.543        no
+HTA8_6009  Hypoxia                              +0.943           +0.543         -0.771        no
+HTA8_6009  TNF-alpha Signaling via NF-kB        +1.000           +0.943         +0.771       YES
+HTA8_6009  mTORC1 Signaling                     +0.371           +0.257         +0.086        no
+HTA8_6009  UV Response Up                       +1.000           +0.829         +0.200       YES
+HTA8_6013  Glycolysis                           +0.371           +0.886         -0.429       YES
+HTA8_6013  Hypoxia                              +0.371           +0.371         -0.486        no
+HTA8_6013  TNF-alpha Signaling via NF-kB        +0.771           +0.886         +0.714       YES
+HTA8_6013  mTORC1 Signaling                     +0.943           +0.886         -0.086       YES
+HTA8_6013  UV Response Up                       +0.943           +0.714         -0.029        no
+HTA8_6016  Glycolysis                           +0.657           +0.771         -0.200        no
+HTA8_6016  Hypoxia                              +0.371           +0.886         -0.714       YES
+HTA8_6016  TNF-alpha Signaling via NF-kB        +0.943           +0.943         +0.029       YES
+HTA8_6016  mTORC1 Signaling                     +0.943           +0.829         -0.200       YES
+HTA8_6016  UV Response Up                       +0.943           +0.943         -0.086       YES
+HTA8_6018  Glycolysis                           +0.143           +0.143         -0.200        no
+HTA8_6018  Hypoxia                              +0.143           +0.371         -0.429        no
+HTA8_6018  TNF-alpha Signaling via NF-kB        +0.143           +0.086         -0.771        no
+HTA8_6018  mTORC1 Signaling                     +1.000           +0.086         -0.486        no
+HTA8_6018  UV Response Up                       +0.600           +0.429         -0.657        no
+HTA8_6028  Glycolysis                           +0.371           +0.429         -0.771        no
+HTA8_6028  Hypoxia                              +0.371           -0.029         -0.829        no
+HTA8_6028  TNF-alpha Signaling via NF-kB        +1.000           +0.371         +0.143        no
+HTA8_6028  mTORC1 Signaling                     +1.000           +0.657         -0.429        no
+HTA8_6028  UV Response Up                       +0.943           +0.257         -0.143        no
+
+================================================================================================
+EXPLORATORY -- remaining Hallmark modules (not part of the decision rule)
+================================================================================================
+Adipogenesis                        survives (matched PCC_in rho>0.8) in 1/6: ['HTA8_6009']
+Androgen Response                   survives (matched PCC_in rho>0.8) in 1/6: ['HTA8_6002']
+Apical Junction                     survives (matched PCC_in rho>0.8) in 3/6: ['HTA8_6009', 'HTA8_6013', 'HTA8_6016']
+Apoptosis                           survives (matched PCC_in rho>0.8) in 3/6: ['HTA8_6009', 'HTA8_6013', 'HTA8_6016']
+Bile Acid Metabolism                survives (matched PCC_in rho>0.8) in 1/6: ['HTA8_6013']
+Cholesterol Homeostasis             survives (matched PCC_in rho>0.8) in 2/6: ['HTA8_6016', 'HTA8_6028']
+Coagulation                         survives (matched PCC_in rho>0.8) in 1/6: ['HTA8_6016']
+Complement                          survives (matched PCC_in rho>0.8) in 2/6: ['HTA8_6002', 'HTA8_6016']
+DNA Repair                          survives (matched PCC_in rho>0.8) in 1/6: ['HTA8_6013']
+E2F Targets                         survives (matched PCC_in rho>0.8) in 2/6: ['HTA8_6009', 'HTA8_6016']
+Epithelial Mesenchymal Transition   survives (matched PCC_in rho>0.8) in 1/6: ['HTA8_6009']
+Estrogen Response Early             survives (matched PCC_in rho>0.8) in 2/6: ['HTA8_6009', 'HTA8_6016']
+Estrogen Response Late              survives (matched PCC_in rho>0.8) in 1/6: ['HTA8_6016']
+Fatty Acid Metabolism               survives (matched PCC_in rho>0.8) in 2/6: ['HTA8_6002', 'HTA8_6013']
+G2-M Checkpoint                     survives (matched PCC_in rho>0.8) in 3/6: ['HTA8_6009', 'HTA8_6013', 'HTA8_6016']
+IL-2/STAT5 Signaling                survives (matched PCC_in rho>0.8) in 2/6: ['HTA8_6009', 'HTA8_6013']
+Mitotic Spindle                     survives (matched PCC_in rho>0.8) in 1/6: ['HTA8_6013']
+Myc Targets V1                      survives (matched PCC_in rho>0.8) in 1/6: ['HTA8_6002']
+Oxidative Phosphorylation           survives (matched PCC_in rho>0.8) in 2/6: ['HTA8_6009', 'HTA8_6016']
+PI3K/AKT/mTOR  Signaling            survives (matched PCC_in rho>0.8) in 2/6: ['HTA8_6013', 'HTA8_6018']
+Pperoxisome                         survives (matched PCC_in rho>0.8) in 1/6: ['HTA8_6009']
+Protein Secretion                   survives (matched PCC_in rho>0.8) in 3/6: ['HTA8_6002', 'HTA8_6009', 'HTA8_6013']
+Reactive Oxygen Species Pathway     survives (matched PCC_in rho>0.8) in 1/6: ['HTA8_6009']
+Unfolded Protein Response           survives (matched PCC_in rho>0.8) in 2/6: ['HTA8_6009', 'HTA8_6016']
+Xenobiotic Metabolism               survives (matched PCC_in rho>0.8) in 1/6: ['HTA8_6009']
+heme Metabolism                     survives (matched PCC_in rho>0.8) in 1/6: ['HTA8_6018']
+
+VERDICT (B3'):
+  No confirmatory module survives in >=4/6 donors after matching.
+  The monotonic increase is explained by heterogeneity in module activity between
+  bins, not a genuine increase in intra-module coordination.
+
+================================================================================================
+CAVEATS
+================================================================================================
+- Distribution matching equalizes SD_in (and the module-score range) between bins by
+  construction, so it is expected to shrink both I and PCC_in toward the reference (Q1)
+  bin's values; a genuine reduction in the raw-to-matched gap does not by itself prove
+  the raw finding was purely an artefact, only that heterogeneity explains part of it.
+- When a bin lacks enough cells in one of Q1's score deciles, cells are resampled WITH
+  replacement to keep counts equal across reps; donors/modules where this occurred are
+  flagged inline.
+- Residual, module scores and gene expression are derived from the same expression
+  matrix; this is an internal-consistency test, not independent validation.
+- Residual quantiles in this snapshot dataset are not a time axis.
+- HTA8_6002 has only 60 malignant cells and uses 3 bins; it has by far the lowest power.

@@ -8,3 +8,7 @@ data/GSE178341/
 #results/*.json
 *.log
 .ipynb_checkpoints/
+_ricci_tmp/
+data/GSE161277/
+data/GSE161277_RAW.tar
+data/reference/

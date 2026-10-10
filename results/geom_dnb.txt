@@ -1,0 +1,728 @@
+COMPONENT 3 -- Dynamic Network Biomarker (DNB) signature vs. residual (Chen et al. 2012)
+n_subsample_reps=20; n_perm=200; seed=0; min_module_genes=15
+
+DECISION RULE (B3), stated before the numbers:
+  'DNB transition signature exists': the SAME Hallmark module(s) show a transition peak
+  (max I in the middle bin(s) > both edge bins) with family-wise permutation p<0.05,
+  in >=4/6 donors.
+  'Monotonic increase' (reported separately -- NOT the same claim; DNB theory predicts a
+  peak, not monotonicity): the same module(s) show Spearman(I, bin order)>0.8 in >=4/6
+  donors.
+  If neither holds for any module, reported as-is (no signature).
+
+Loaded 50 MSigDB Hallmark gene sets from Enrichr.
+
+
+================================================================================================
+HTA8_6002
+================================================================================================
+Depth target (10th pct of included cells' total counts) = 1518; dropped 33 cells below target; kept 291; 1649 genes pass >=10% expressed filter
+  HTA8_6002: only 60 malignant cells -- using 3 bins (terciles) instead of 5, per instructions.
+  bin sizes: {'normal': 258, 'Q1': 11, 'Q2': 11, 'Q3': 11}; subsampling all bins to n=11, 20 reps
+  Hallmark modules with >=15 genes after donor gene filter: 37/50
+  Secondary (exploratory) hierarchical-clustering modules with >=15 genes: 9 (from top 2000 variable genes, 20-way cut)
+
+  Computing I scores (primary Hallmark modules)...
+  Computing I scores (secondary exploratory modules)...
+
+  Permutation null (200 reps, 1 subsample/rep, malignant bin-label shuffles; family-wise max over the 50 Hallmark modules)...
+
+  module                             I(normal,Q1,Q2,Q3)                                       peak?  peak_stat     fw_p  rho(mono)  mono?
+  TNF-alpha Signaling via NF-kB      0.869,0.854,0.769,0.743                                     no    -0.0152    1.000     -1.000     no
+  Hypoxia                            0.958,0.792,0.781,0.993                                     no    -0.2009    1.000     +0.500     no
+  Mitotic Spindle                    0.817,0.652,0.827,0.850                                     no    -0.0233    1.000     +1.000    YES
+  TGF-beta Signaling                 0.760,0.738,0.903,0.763                                    YES     0.1397    0.851     +0.500     no
+  DNA Repair                         0.645,0.727,0.753,0.735                                    YES     0.0179    1.000     +0.500     no
+  G2-M Checkpoint                    0.678,1.045,0.856,0.961                                    YES     0.0843    0.995     -0.500     no
+  Apoptosis                          0.767,0.666,0.847,0.768                                    YES     0.0790    1.000     +0.500     no
+  Adipogenesis                       0.845,0.690,0.661,0.858                                     no    -0.1686    1.000     +0.500     no
+  Estrogen Response Early            0.914,0.563,0.709,0.657                                     no    -0.2045    1.000     +0.500     no
+  Estrogen Response Late             0.903,0.593,0.729,0.680                                     no    -0.1738    1.000     +0.500     no
+  Androgen Response                  0.844,0.644,0.792,0.853                                     no    -0.0607    1.000     +1.000    YES
+  Myogenesis                         0.823,0.584,0.770,0.726                                     no    -0.0528    1.000     +0.500     no
+  Protein Secretion                  0.816,0.760,0.858,0.898                                     no    -0.0398    1.000     +1.000    YES
+  Interferon Alpha Response          1.008,0.512,0.571,0.696                                     no    -0.4368    1.000     +1.000    YES
+  Interferon Gamma Response          1.072,0.547,0.537,0.636                                     no    -0.5243    1.000     +0.500     no
+  Apical Junction                    0.880,0.613,0.950,0.948                                    YES     0.0013    1.000     +0.500     no
+  Complement                         0.791,0.685,0.564,0.599                                     no    -0.1055    1.000     -0.500     no
+  Unfolded Protein Response          0.836,0.769,1.018,0.933                                    YES     0.0850    0.990     +0.500     no
+  PI3K/AKT/mTOR  Signaling           0.941,0.753,1.019,0.894                                    YES     0.0781    1.000     +0.500     no
+  mTORC1 Signaling                   0.770,0.838,0.854,0.990                                     no    -0.1366    1.000     +1.000    YES
+  E2F Targets                        0.623,0.838,0.689,0.888                                     no    -0.0497    1.000     +0.500     no
+  Myc Targets V1                     0.881,1.031,0.980,1.028                                    YES     0.0036    1.000     -0.500     no
+  Epithelial Mesenchymal Transition  0.785,0.717,0.924,0.821                                    YES     0.1030    0.965     +0.500     no
+  Inflammatory Response              0.944,0.579,0.509,0.671                                     no    -0.3650    1.000     +0.500     no
+  Xenobiotic Metabolism              0.814,0.510,0.604,0.568                                     no    -0.2100    1.000     +0.500     no
+  Fatty Acid Metabolism              0.791,0.625,0.586,0.661                                     no    -0.1667    1.000     +0.500     no
+  Oxidative Phosphorylation          0.924,0.787,0.788,0.846                                     no    -0.1364    1.000     +1.000    YES
+  Glycolysis                         0.832,0.740,0.875,1.029                                     no    -0.1543    1.000     +1.000    YES
+  Reactive Oxygen Species Pathway    0.912,0.847,0.917,0.799                                    YES     0.0055    1.000     -0.500     no
+  p53 Pathway                        0.914,0.710,0.807,0.798                                     no    -0.1066    1.000     +0.500     no
+  UV Response Up                     0.796,0.797,0.667,0.702                                    YES     0.0004    1.000     -0.500     no
+  UV Response Dn                     0.815,0.657,0.754,0.691                                     no    -0.0610    1.000     +0.500     no
+  heme Metabolism                    0.723,0.610,0.578,0.770                                     no    -0.1604    1.000     +0.500     no
+  IL-2/STAT5 Signaling               0.767,0.611,0.539,0.758                                     no    -0.1555    1.000     +0.500     no
+  Pperoxisome                        0.801,0.512,0.683,0.598                                     no    -0.1180    1.000     +0.500     no
+  Allograft Rejection                1.130,0.839,1.076,0.940                                     no    -0.0531    1.000     +0.500     no
+  KRAS Signaling Up                  0.869,0.411,0.326,0.563                                     no    -0.4580    1.000     +0.500     no
+
+  Secondary (EXPLORATORY) modules -- not part of the pre-registered B3 decision rule:
+    cluster_3           0.693,0.595,0.535,0.647                                
+    cluster_4           0.955,0.543,0.584,0.653                                 mono
+    cluster_8           0.997,0.948,0.919,0.905                                
+    cluster_12          0.707,0.501,1.038,0.809                                peak
+    cluster_13          0.951,0.573,0.684,0.672                                
+    cluster_14          0.695,0.614,0.707,0.655                                peak
+    cluster_15          0.718,0.633,0.907,0.648                                peak
+    cluster_16          0.658,0.625,0.917,0.762                                peak
+    cluster_20          0.758,0.905,0.811,0.760                                peak
+
+  Normal-reference vs Q3 (last bin) I comparison, primary modules:
+    TNF-alpha Signaling via NF-kB       I_normal=0.8693  I_Q3=0.7426  ratio=0.85x
+    Hypoxia                             I_normal=0.9584  I_Q3=0.9927  ratio=1.04x
+    Mitotic Spindle                     I_normal=0.8172  I_Q3=0.8502  ratio=1.04x
+    TGF-beta Signaling                  I_normal=0.7598  I_Q3=0.7632  ratio=1.00x
+    DNA Repair                          I_normal=0.6451  I_Q3=0.7347  ratio=1.14x
+    G2-M Checkpoint                     I_normal=0.6782  I_Q3=0.9605  ratio=1.42x
+    Apoptosis                           I_normal=0.7669  I_Q3=0.7683  ratio=1.00x
+    Adipogenesis                        I_normal=0.8451  I_Q3=0.8583  ratio=1.02x
+    Estrogen Response Early             I_normal=0.9138  I_Q3=0.6568  ratio=0.72x
+    Estrogen Response Late              I_normal=0.9029  I_Q3=0.6805  ratio=0.75x
+    Androgen Response                   I_normal=0.8441  I_Q3=0.8526  ratio=1.01x
+    Myogenesis                          I_normal=0.8226  I_Q3=0.7259  ratio=0.88x
+    Protein Secretion                   I_normal=0.8158  I_Q3=0.8981  ratio=1.10x
+    Interferon Alpha Response           I_normal=1.0081  I_Q3=0.6957  ratio=0.69x
+    Interferon Gamma Response           I_normal=1.0715  I_Q3=0.6355  ratio=0.59x
+    Apical Junction                     I_normal=0.8804  I_Q3=0.9482  ratio=1.08x
+    Complement                          I_normal=0.7907  I_Q3=0.5992  ratio=0.76x
+    Unfolded Protein Response           I_normal=0.8360  I_Q3=0.9328  ratio=1.12x
+    PI3K/AKT/mTOR  Signaling            I_normal=0.9405  I_Q3=0.8942  ratio=0.95x
+    mTORC1 Signaling                    I_normal=0.7704  I_Q3=0.9903  ratio=1.29x
+    E2F Targets                         I_normal=0.6225  I_Q3=0.8880  ratio=1.43x
+    Myc Targets V1                      I_normal=0.8814  I_Q3=1.0278  ratio=1.17x
+    Epithelial Mesenchymal Transition   I_normal=0.7851  I_Q3=0.8212  ratio=1.05x
+    Inflammatory Response               I_normal=0.9435  I_Q3=0.6707  ratio=0.71x
+    Xenobiotic Metabolism               I_normal=0.8136  I_Q3=0.5685  ratio=0.70x
+    Fatty Acid Metabolism               I_normal=0.7914  I_Q3=0.6615  ratio=0.84x
+    Oxidative Phosphorylation           I_normal=0.9242  I_Q3=0.8464  ratio=0.92x
+    Glycolysis                          I_normal=0.8318  I_Q3=1.0289  ratio=1.24x
+    Reactive Oxygen Species Pathway     I_normal=0.9117  I_Q3=0.7991  ratio=0.88x
+    p53 Pathway                         I_normal=0.9140  I_Q3=0.7979  ratio=0.87x
+    UV Response Up                      I_normal=0.7964  I_Q3=0.7022  ratio=0.88x
+    UV Response Dn                      I_normal=0.8148  I_Q3=0.6907  ratio=0.85x
+    heme Metabolism                     I_normal=0.7235  I_Q3=0.7700  ratio=1.06x
+    IL-2/STAT5 Signaling                I_normal=0.7666  I_Q3=0.7576  ratio=0.99x
+    Pperoxisome                         I_normal=0.8006  I_Q3=0.5976  ratio=0.75x
+    Allograft Rejection                 I_normal=1.1296  I_Q3=0.9403  ratio=0.83x
+    KRAS Signaling Up                   I_normal=0.8689  I_Q3=0.5628  ratio=0.65x
+
+================================================================================================
+HTA8_6009
+================================================================================================
+Depth target (10th pct of included cells' total counts) = 1176; dropped 158 cells below target; kept 1425; 1247 genes pass >=10% expressed filter
+  bin sizes: {'normal': 803, 'Q1': 125, 'Q2': 124, 'Q3': 124, 'Q4': 124, 'Q5': 125}; subsampling all bins to n=124, 20 reps
+  Hallmark modules with >=15 genes after donor gene filter: 32/50
+  Secondary (exploratory) hierarchical-clustering modules with >=15 genes: 7 (from top 2000 variable genes, 20-way cut)
+
+  Computing I scores (primary Hallmark modules)...
+  Computing I scores (secondary exploratory modules)...
+
+  Permutation null (200 reps, 1 subsample/rep, malignant bin-label shuffles; family-wise max over the 50 Hallmark modules)...
+
+  module                             I(normal,Q1,Q2,Q3,Q4,Q5)                                 peak?  peak_stat     fw_p  rho(mono)  mono?
+  TNF-alpha Signaling via NF-kB      0.885,1.248,1.361,1.393,1.778,2.296                         no    -0.5179    1.000     +1.000    YES
+  Hypoxia                            0.968,1.053,1.072,1.057,1.079,1.122                         no    -0.0434    1.000     +0.900    YES
+  Mitotic Spindle                    0.902,0.710,0.812,0.803,0.813,0.850                         no    -0.0895    1.000     +0.900    YES
+  DNA Repair                         0.824,0.757,0.928,0.868,0.794,0.707                        YES     0.1044    0.980     -0.400     no
+  G2-M Checkpoint                    0.823,0.851,0.878,0.930,1.003,0.980                        YES     0.0234    1.000     +0.900    YES
+  Apoptosis                          0.875,0.939,0.893,0.966,1.001,1.161                         no    -0.1608    1.000     +0.900    YES
+  Adipogenesis                       1.012,0.853,0.887,0.817,0.859,0.745                         no    -0.1248    1.000     -0.500     no
+  Estrogen Response Early            1.029,0.860,0.930,0.940,0.978,0.992                         no    -0.0504    1.000     +1.000    YES
+  Estrogen Response Late             1.052,0.784,0.876,0.865,0.829,0.849                         no    -0.1767    1.000     +0.100     no
+  Androgen Response                  0.970,0.826,0.896,0.993,0.950,0.877                        YES     0.0233    1.000     +0.300     no
+  Protein Secretion                  0.980,0.915,0.927,0.888,0.873,0.992                         no    -0.0648    1.000     +0.100     no
+  Interferon Gamma Response          1.108,0.926,0.948,0.916,1.023,0.941                         no    -0.0847    1.000     +0.300     no
+  Apical Junction                    1.028,0.878,0.972,0.924,1.018,0.884                         no    -0.0098    1.000     +0.300     no
+  Complement                         0.965,0.751,0.800,0.904,0.838,0.803                         no    -0.0610    1.000     +0.600     no
+  Unfolded Protein Response          0.850,0.858,0.913,0.905,1.008,1.001                        YES     0.0074    1.000     +0.800     no
+  PI3K/AKT/mTOR  Signaling           1.050,0.948,1.003,1.153,0.860,0.978                        YES     0.1028    0.980     -0.100     no
+  mTORC1 Signaling                   0.864,1.050,0.990,0.966,1.002,1.007                        YES     0.0440    1.000     -0.100     no
+  E2F Targets                        0.893,0.977,0.925,1.096,0.937,0.948                        YES     0.1476    0.851     -0.100     no
+  Myc Targets V1                     1.026,1.119,1.094,1.132,1.074,0.985                        YES     0.1059    0.970     -0.700     no
+  Epithelial Mesenchymal Transition  0.921,0.810,0.883,1.275,0.995,1.253                        YES     0.0217    1.000     +0.700     no
+  Xenobiotic Metabolism              1.041,0.851,0.828,0.920,0.889,0.830                         no    -0.1209    1.000     +0.100     no
+  Fatty Acid Metabolism              0.973,0.896,0.888,0.864,0.767,0.734                         no    -0.0773    1.000     -1.000     no
+  Oxidative Phosphorylation          1.093,1.018,1.028,0.967,0.910,0.825                         no    -0.0658    1.000     -0.900     no
+  Glycolysis                         0.932,1.085,1.012,0.956,0.974,0.908                        YES     0.1522    0.836     -0.900     no
+  Reactive Oxygen Species Pathway    0.995,1.298,1.188,1.132,0.976,0.842                        YES     0.3032    0.274     -1.000     no
+  p53 Pathway                        1.136,1.035,1.252,1.160,1.103,1.230                        YES     0.0225    1.000     +0.300     no
+  UV Response Up                     0.881,0.991,1.012,1.054,1.191,1.329                         no    -0.1382    1.000     +1.000    YES
+  heme Metabolism                    0.975,0.782,0.762,0.706,0.821,0.724                         no    -0.1535    1.000     -0.200     no
+  IL-2/STAT5 Signaling               0.746,0.758,0.774,0.798,0.752,0.840                         no    -0.0417    1.000     +0.400     no
+  Pperoxisome                        0.911,0.771,0.840,0.778,0.813,0.846                         no    -0.0714    1.000     +0.700     no
+  Allograft Rejection                1.768,1.357,1.534,1.419,1.530,1.404                         no    -0.2341    1.000     +0.100     no
+  KRAS Signaling Up                  0.917,0.659,0.683,0.638,0.673,0.787                         no    -0.2337    1.000     +0.500     no
+
+  Secondary (EXPLORATORY) modules -- not part of the pre-registered B3 decision rule:
+    cluster_2           1.186,0.875,0.877,0.894,0.893,0.845                    
+    cluster_4           0.851,0.760,0.844,0.783,0.844,0.851                    
+    cluster_5           1.223,1.114,1.093,1.126,1.110,1.030                    
+    cluster_8           0.880,0.798,0.877,0.857,0.834,0.793                    
+    cluster_15          1.321,0.938,0.872,0.881,0.870,0.870                    
+    cluster_18          0.954,0.813,0.871,0.878,0.909,0.954                     mono
+    cluster_20          1.124,2.113,1.661,1.818,2.143,2.328                    
+
+  Normal-reference vs Q5 (last bin) I comparison, primary modules:
+    TNF-alpha Signaling via NF-kB       I_normal=0.8846  I_Q5=2.2961  ratio=2.60x
+    Hypoxia                             I_normal=0.9678  I_Q5=1.1221  ratio=1.16x
+    Mitotic Spindle                     I_normal=0.9021  I_Q5=0.8498  ratio=0.94x
+    DNA Repair                          I_normal=0.8239  I_Q5=0.7067  ratio=0.86x
+    G2-M Checkpoint                     I_normal=0.8228  I_Q5=0.9796  ratio=1.19x
+    Apoptosis                           I_normal=0.8755  I_Q5=1.1615  ratio=1.33x
+    Adipogenesis                        I_normal=1.0116  I_Q5=0.7451  ratio=0.74x
+    Estrogen Response Early             I_normal=1.0287  I_Q5=0.9920  ratio=0.96x
+    Estrogen Response Late              I_normal=1.0525  I_Q5=0.8489  ratio=0.81x
+    Androgen Response                   I_normal=0.9695  I_Q5=0.8767  ratio=0.90x
+    Protein Secretion                   I_normal=0.9804  I_Q5=0.9923  ratio=1.01x
+    Interferon Gamma Response           I_normal=1.1081  I_Q5=0.9413  ratio=0.85x
+    Apical Junction                     I_normal=1.0277  I_Q5=0.8842  ratio=0.86x
+    Complement                          I_normal=0.9651  I_Q5=0.8034  ratio=0.83x
+    Unfolded Protein Response           I_normal=0.8500  I_Q5=1.0005  ratio=1.18x
+    PI3K/AKT/mTOR  Signaling            I_normal=1.0504  I_Q5=0.9783  ratio=0.93x
+    mTORC1 Signaling                    I_normal=0.8640  I_Q5=1.0065  ratio=1.16x
+    E2F Targets                         I_normal=0.8927  I_Q5=0.9484  ratio=1.06x
+    Myc Targets V1                      I_normal=1.0259  I_Q5=0.9853  ratio=0.96x
+    Epithelial Mesenchymal Transition   I_normal=0.9210  I_Q5=1.2530  ratio=1.36x
+    Xenobiotic Metabolism               I_normal=1.0411  I_Q5=0.8303  ratio=0.80x
+    Fatty Acid Metabolism               I_normal=0.9728  I_Q5=0.7342  ratio=0.75x
+    Oxidative Phosphorylation           I_normal=1.0935  I_Q5=0.8251  ratio=0.75x
+    Glycolysis                          I_normal=0.9324  I_Q5=0.9080  ratio=0.97x
+    Reactive Oxygen Species Pathway     I_normal=0.9952  I_Q5=0.8419  ratio=0.85x
+    p53 Pathway                         I_normal=1.1362  I_Q5=1.2297  ratio=1.08x
+    UV Response Up                      I_normal=0.8814  I_Q5=1.3289  ratio=1.51x
+    heme Metabolism                     I_normal=0.9747  I_Q5=0.7236  ratio=0.74x
+    IL-2/STAT5 Signaling                I_normal=0.7463  I_Q5=0.8400  ratio=1.13x
+    Pperoxisome                         I_normal=0.9112  I_Q5=0.8459  ratio=0.93x
+    Allograft Rejection                 I_normal=1.7684  I_Q5=1.4040  ratio=0.79x
+    KRAS Signaling Up                   I_normal=0.9165  I_Q5=0.7869  ratio=0.86x
+
+================================================================================================
+HTA8_6013
+================================================================================================
+Depth target (10th pct of included cells' total counts) = 4056; dropped 144 cells below target; kept 1292; 4278 genes pass >=10% expressed filter
+  bin sizes: {'normal': 690, 'Q1': 121, 'Q2': 120, 'Q3': 120, 'Q4': 120, 'Q5': 121}; subsampling all bins to n=120, 20 reps
+  Hallmark modules with >=15 genes after donor gene filter: 44/50
+  Secondary (exploratory) hierarchical-clustering modules with >=15 genes: 6 (from top 2000 variable genes, 20-way cut)
+
+  Computing I scores (primary Hallmark modules)...
+  Computing I scores (secondary exploratory modules)...
+
+  Permutation null (200 reps, 1 subsample/rep, malignant bin-label shuffles; family-wise max over the 50 Hallmark modules)...
+
+  module                             I(normal,Q1,Q2,Q3,Q4,Q5)                                 peak?  peak_stat     fw_p  rho(mono)  mono?
+  TNF-alpha Signaling via NF-kB      0.807,0.902,0.897,1.019,1.051,1.086                         no    -0.0345    1.000     +0.900    YES
+  Hypoxia                            0.729,0.686,0.666,0.717,0.726,0.813                         no    -0.0874    1.000     +0.900    YES
+  Cholesterol Homeostasis            0.684,0.617,0.681,0.731,0.658,0.690                        YES     0.0410    0.985     +0.500     no
+  Mitotic Spindle                    0.561,0.518,0.510,0.545,0.546,0.564                         no    -0.0175    1.000     +0.900    YES
+  TGF-beta Signaling                 0.713,0.641,0.582,0.592,0.691,0.662                         no    -0.0226    1.000     +0.600     no
+  IL-6/JAK/STAT3 Signaling           0.623,0.471,0.504,0.519,0.513,0.568                         no    -0.1037    1.000     +0.900    YES
+  DNA Repair                         0.507,0.559,0.581,0.587,0.595,0.620                         no    -0.0257    1.000     +1.000    YES
+  G2-M Checkpoint                    0.551,0.590,0.633,0.631,0.658,0.649                        YES     0.0083    1.000     +0.800     no
+  Apoptosis                          0.705,0.636,0.611,0.651,0.699,0.766                         no    -0.0671    1.000     +0.900    YES
+  Adipogenesis                       0.674,0.606,0.612,0.613,0.607,0.605                         no    -0.0613    1.000     -0.300     no
+  Estrogen Response Early            0.706,0.609,0.614,0.614,0.633,0.647                         no    -0.0729    1.000     +0.900    YES
+  Estrogen Response Late             0.826,0.655,0.623,0.649,0.634,0.731                         no    -0.1709    1.000     +0.300     no
+  Androgen Response                  0.690,0.581,0.586,0.600,0.656,0.696                         no    -0.0403    1.000     +1.000    YES
+  Myogenesis                         0.633,0.539,0.526,0.549,0.591,0.655                         no    -0.0639    1.000     +0.900    YES
+  Protein Secretion                  0.584,0.562,0.559,0.578,0.593,0.630                         no    -0.0368    1.000     +0.900    YES
+  Interferon Alpha Response          1.483,0.446,0.412,0.419,0.458,0.502                         no    -1.0249    1.000     +0.700     no
+  Interferon Gamma Response          1.254,0.481,0.423,0.454,0.480,0.515                         no    -0.7727    1.000     +0.400     no
+  Apical Junction                    0.659,0.595,0.610,0.646,0.656,0.788                         no    -0.1319    1.000     +1.000    YES
+  Complement                         0.656,0.558,0.530,0.581,0.579,0.713                         no    -0.1323    1.000     +0.800     no
+  Unfolded Protein Response          0.580,0.630,0.631,0.647,0.646,0.734                         no    -0.0874    1.000     +0.900    YES
+  PI3K/AKT/mTOR  Signaling           0.567,0.563,0.572,0.555,0.610,0.639                         no    -0.0290    1.000     +0.700     no
+  mTORC1 Signaling                   0.554,0.625,0.616,0.660,0.677,0.705                         no    -0.0280    1.000     +0.900    YES
+  E2F Targets                        0.541,0.701,0.720,0.713,0.725,0.714                        YES     0.0109    1.000     +0.500     no
+  Myc Targets V1                     0.753,0.754,0.774,0.783,0.808,0.860                         no    -0.0522    1.000     +1.000    YES
+  Myc Targets V2                     0.616,0.688,0.820,0.773,0.860,0.844                        YES     0.0154    1.000     +0.800     no
+  Epithelial Mesenchymal Transition  0.740,0.672,0.659,0.758,0.740,0.985                         no    -0.2266    1.000     +0.800     no
+  Inflammatory Response              0.700,0.585,0.578,0.631,0.630,0.690                         no    -0.0689    1.000     +0.800     no
+  Xenobiotic Metabolism              0.638,0.566,0.599,0.585,0.572,0.609                         no    -0.0395    1.000     +0.600     no
+  Fatty Acid Metabolism              0.655,0.565,0.606,0.600,0.602,0.603                         no    -0.0488    1.000     +0.400     no
+  Oxidative Phosphorylation          0.895,0.714,0.714,0.718,0.693,0.686                         no    -0.1774    1.000     -0.700     no
+  Glycolysis                         0.617,0.588,0.576,0.606,0.637,0.666                         no    -0.0289    1.000     +0.900    YES
+  Reactive Oxygen Species Pathway    0.719,0.720,0.728,0.805,0.680,0.753                        YES     0.0517    0.970     +0.200     no
+  p53 Pathway                        0.732,0.663,0.622,0.664,0.761,0.817                         no    -0.0563    1.000     +0.900    YES
+  UV Response Up                     0.610,0.658,0.646,0.669,0.705,0.719                         no    -0.0140    1.000     +0.900    YES
+  UV Response Dn                     0.558,0.549,0.564,0.544,0.566,0.564                        YES     0.0015    1.000     +0.600     no
+  heme Metabolism                    0.586,0.520,0.523,0.526,0.548,0.610                         no    -0.0617    1.000     +1.000    YES
+  Coagulation                        0.654,0.519,0.535,0.540,0.557,0.731                         no    -0.1747    1.000     +1.000    YES
+  IL-2/STAT5 Signaling               0.683,0.534,0.518,0.560,0.611,0.656                         no    -0.0727    1.000     +0.900    YES
+  Bile Acid Metabolism               0.528,0.486,0.533,0.596,0.536,0.590                        YES     0.0053    1.000     +0.700     no
+  Pperoxisome                        0.611,0.536,0.540,0.592,0.564,0.600                         no    -0.0181    1.000     +0.900    YES
+  Allograft Rejection                0.864,0.614,0.617,0.587,0.650,0.846                         no    -0.2136    1.000     +0.700     no
+  Spermatogenesis                    0.582,0.431,0.563,0.507,0.609,0.567                        YES     0.0269    1.000     +0.800     no
+  KRAS Signaling Up                  0.741,0.611,0.558,0.600,0.636,0.758                         no    -0.1220    1.000     +0.700     no
+  KRAS Signaling Dn                  0.797,0.434,0.370,0.431,0.472,0.428                         no    -0.3251    1.000     +0.000     no
+
+  Secondary (EXPLORATORY) modules -- not part of the pre-registered B3 decision rule:
+    cluster_1           0.720,0.547,0.582,0.611,0.523,0.585                    
+    cluster_5           1.051,0.551,0.532,0.561,0.581,0.668                     mono
+    cluster_10          1.073,0.633,0.526,0.519,0.537,0.576                    
+    cluster_11          0.711,0.643,0.623,0.646,0.627,0.627                    
+    cluster_16          0.748,0.626,0.613,0.612,0.626,0.657                    
+    cluster_20          1.095,0.875,0.797,0.836,0.786,0.869                    
+
+  Normal-reference vs Q5 (last bin) I comparison, primary modules:
+    TNF-alpha Signaling via NF-kB       I_normal=0.8071  I_Q5=1.0856  ratio=1.35x
+    Hypoxia                             I_normal=0.7292  I_Q5=0.8134  ratio=1.12x
+    Cholesterol Homeostasis             I_normal=0.6839  I_Q5=0.6898  ratio=1.01x
+    Mitotic Spindle                     I_normal=0.5613  I_Q5=0.5636  ratio=1.00x
+    TGF-beta Signaling                  I_normal=0.7133  I_Q5=0.6621  ratio=0.93x
+    IL-6/JAK/STAT3 Signaling            I_normal=0.6226  I_Q5=0.5683  ratio=0.91x
+    DNA Repair                          I_normal=0.5072  I_Q5=0.6203  ratio=1.22x
+    G2-M Checkpoint                     I_normal=0.5507  I_Q5=0.6492  ratio=1.18x
+    Apoptosis                           I_normal=0.7045  I_Q5=0.7663  ratio=1.09x
+    Adipogenesis                        I_normal=0.6739  I_Q5=0.6050  ratio=0.90x
+    Estrogen Response Early             I_normal=0.7062  I_Q5=0.6465  ratio=0.92x
+    Estrogen Response Late              I_normal=0.8260  I_Q5=0.7306  ratio=0.88x
+    Androgen Response                   I_normal=0.6897  I_Q5=0.6963  ratio=1.01x
+    Myogenesis                          I_normal=0.6325  I_Q5=0.6551  ratio=1.04x
+    Protein Secretion                   I_normal=0.5844  I_Q5=0.6301  ratio=1.08x
+    Interferon Alpha Response           I_normal=1.4827  I_Q5=0.5017  ratio=0.34x
+    Interferon Gamma Response           I_normal=1.2539  I_Q5=0.5155  ratio=0.41x
+    Apical Junction                     I_normal=0.6590  I_Q5=0.7876  ratio=1.20x
+    Complement                          I_normal=0.6562  I_Q5=0.7130  ratio=1.09x
+    Unfolded Protein Response           I_normal=0.5799  I_Q5=0.7344  ratio=1.27x
+    PI3K/AKT/mTOR  Signaling            I_normal=0.5672  I_Q5=0.6394  ratio=1.13x
+    mTORC1 Signaling                    I_normal=0.5539  I_Q5=0.7046  ratio=1.27x
+    E2F Targets                         I_normal=0.5410  I_Q5=0.7139  ratio=1.32x
+    Myc Targets V1                      I_normal=0.7534  I_Q5=0.8597  ratio=1.14x
+    Myc Targets V2                      I_normal=0.6164  I_Q5=0.8444  ratio=1.37x
+    Epithelial Mesenchymal Transition   I_normal=0.7402  I_Q5=0.9846  ratio=1.33x
+    Inflammatory Response               I_normal=0.7000  I_Q5=0.6901  ratio=0.99x
+    Xenobiotic Metabolism               I_normal=0.6380  I_Q5=0.6087  ratio=0.95x
+    Fatty Acid Metabolism               I_normal=0.6550  I_Q5=0.6027  ratio=0.92x
+    Oxidative Phosphorylation           I_normal=0.8950  I_Q5=0.6856  ratio=0.77x
+    Glycolysis                          I_normal=0.6172  I_Q5=0.6657  ratio=1.08x
+    Reactive Oxygen Species Pathway     I_normal=0.7193  I_Q5=0.7529  ratio=1.05x
+    p53 Pathway                         I_normal=0.7318  I_Q5=0.8169  ratio=1.12x
+    UV Response Up                      I_normal=0.6096  I_Q5=0.7190  ratio=1.18x
+    UV Response Dn                      I_normal=0.5584  I_Q5=0.5644  ratio=1.01x
+    heme Metabolism                     I_normal=0.5856  I_Q5=0.6096  ratio=1.04x
+    Coagulation                         I_normal=0.6539  I_Q5=0.7314  ratio=1.12x
+    IL-2/STAT5 Signaling                I_normal=0.6832  I_Q5=0.6560  ratio=0.96x
+    Bile Acid Metabolism                I_normal=0.5275  I_Q5=0.5904  ratio=1.12x
+    Pperoxisome                         I_normal=0.6105  I_Q5=0.6003  ratio=0.98x
+    Allograft Rejection                 I_normal=0.8637  I_Q5=0.8456  ratio=0.98x
+    Spermatogenesis                     I_normal=0.5820  I_Q5=0.5672  ratio=0.97x
+    KRAS Signaling Up                   I_normal=0.7414  I_Q5=0.7578  ratio=1.02x
+    KRAS Signaling Dn                   I_normal=0.7970  I_Q5=0.4284  ratio=0.54x
+
+================================================================================================
+HTA8_6016
+================================================================================================
+Depth target (10th pct of included cells' total counts) = 1752; dropped 230 cells below target; kept 2062; 1847 genes pass >=10% expressed filter
+  bin sizes: {'normal': 1432, 'Q1': 126, 'Q2': 126, 'Q3': 126, 'Q4': 126, 'Q5': 126}; subsampling all bins to n=126, 20 reps
+  Hallmark modules with >=15 genes after donor gene filter: 39/50
+  Secondary (exploratory) hierarchical-clustering modules with >=15 genes: 7 (from top 2000 variable genes, 20-way cut)
+
+  Computing I scores (primary Hallmark modules)...
+  Computing I scores (secondary exploratory modules)...
+
+  Permutation null (200 reps, 1 subsample/rep, malignant bin-label shuffles; family-wise max over the 50 Hallmark modules)...
+
+  module                             I(normal,Q1,Q2,Q3,Q4,Q5)                                 peak?  peak_stat     fw_p  rho(mono)  mono?
+  TNF-alpha Signaling via NF-kB      0.813,0.912,1.016,1.056,1.155,1.388                         no    -0.2334    1.000     +1.000    YES
+  Hypoxia                            0.918,0.806,0.811,0.916,0.867,1.009                         no    -0.0924    1.000     +0.900    YES
+  Cholesterol Homeostasis            0.882,0.780,0.705,0.878,0.963,1.018                         no    -0.0551    1.000     +0.900    YES
+  Mitotic Spindle                    0.782,0.679,0.710,0.738,0.699,0.796                         no    -0.0585    1.000     +0.700     no
+  TGF-beta Signaling                 0.850,0.690,0.699,0.806,0.792,0.922                         no    -0.1162    1.000     +0.900    YES
+  DNA Repair                         0.713,0.681,0.761,0.778,0.755,0.788                         no    -0.0105    1.000     +0.700     no
+  G2-M Checkpoint                    0.813,0.790,0.850,0.873,0.797,0.847                        YES     0.0266    1.000     +0.200     no
+  Apoptosis                          0.829,0.814,0.816,0.839,0.917,1.069                         no    -0.1520    1.000     +1.000    YES
+  Adipogenesis                       0.873,0.730,0.797,0.801,0.828,0.766                         no    -0.0445    1.000     +0.400     no
+  Estrogen Response Early            0.905,0.856,0.784,0.837,0.866,0.939                         no    -0.0728    1.000     +0.700     no
+  Estrogen Response Late             0.977,0.735,0.728,0.804,0.905,0.851                         no    -0.0725    1.000     +0.800     no
+  Androgen Response                  0.830,0.723,0.725,0.696,0.739,0.905                         no    -0.1657    1.000     +0.700     no
+  Myogenesis                         0.826,0.828,0.752,0.749,0.771,0.927                         no    -0.0994    1.000     +0.300     no
+  Protein Secretion                  0.835,0.720,0.761,0.847,0.819,0.806                        YES     0.0118    1.000     +0.600     no
+  Interferon Alpha Response          0.951,0.712,0.732,0.871,0.920,1.133                         no    -0.2137    1.000     +1.000    YES
+  Interferon Gamma Response          0.951,0.765,0.799,0.842,0.877,1.172                         no    -0.2953    1.000     +1.000    YES
+  Apical Junction                    0.911,0.741,0.834,0.778,0.790,0.964                         no    -0.1303    1.000     +0.700     no
+  Complement                         0.812,0.665,0.691,0.734,0.802,0.948                         no    -0.1459    1.000     +1.000    YES
+  Unfolded Protein Response          0.780,0.788,0.784,0.869,0.823,0.987                         no    -0.1177    1.000     +0.800     no
+  PI3K/AKT/mTOR  Signaling           0.820,0.787,0.862,0.848,0.866,0.921                         no    -0.0548    1.000     +0.900    YES
+  mTORC1 Signaling                   0.756,0.771,0.814,0.857,0.896,0.877                        YES     0.0192    1.000     +0.900    YES
+  E2F Targets                        0.894,0.797,0.851,0.861,0.823,0.778                         no    -0.0330    1.000     -0.300     no
+  Myc Targets V1                     0.913,0.931,0.947,0.985,0.963,0.924                        YES     0.0617    1.000     -0.100     no
+  Epithelial Mesenchymal Transition  0.906,0.851,0.836,0.894,0.885,1.492                         no    -0.5973    1.000     +0.800     no
+  Inflammatory Response              0.960,0.739,0.752,0.642,0.723,0.894                         no    -0.2077    1.000     +0.200     no
+  Xenobiotic Metabolism              0.824,0.658,0.723,0.717,0.728,0.738                         no    -0.0964    1.000     +0.900    YES
+  Fatty Acid Metabolism              0.914,0.676,0.687,0.724,0.741,0.719                         no    -0.1731    1.000     +0.700     no
+  Oxidative Phosphorylation          1.021,0.903,0.926,0.893,0.887,0.836                         no    -0.0947    1.000     -0.900     no
+  Glycolysis                         0.842,0.759,0.769,0.823,0.858,0.856                        YES     0.0017    1.000     +0.900    YES
+  Reactive Oxygen Species Pathway    0.959,0.909,0.860,1.127,1.057,0.980                        YES     0.1466    0.577     +0.500     no
+  p53 Pathway                        0.964,0.815,0.885,0.836,0.919,1.065                         no    -0.1453    1.000     +0.900    YES
+  UV Response Up                     0.771,0.746,0.794,0.848,0.866,1.045                         no    -0.1795    1.000     +1.000    YES
+  UV Response Dn                     0.831,0.645,0.696,0.731,0.658,0.852                         no    -0.1202    1.000     +0.700     no
+  heme Metabolism                    0.780,0.680,0.679,0.687,0.696,0.761                         no    -0.0841    1.000     +0.900    YES
+  Coagulation                        0.761,0.653,0.697,0.716,0.643,0.990                         no    -0.2745    1.000     +0.400     no
+  IL-2/STAT5 Signaling               0.795,0.579,0.578,0.573,0.623,0.739                         no    -0.1720    1.000     +0.600     no
+  Pperoxisome                        0.792,0.730,0.692,0.762,0.706,0.749                         no    -0.0296    1.000     +0.300     no
+  Allograft Rejection                1.268,0.940,0.929,0.998,0.996,1.136                         no    -0.2695    1.000     +0.800     no
+  KRAS Signaling Up                  0.917,0.635,0.678,0.730,0.790,0.820                         no    -0.1264    1.000     +1.000    YES
+
+  Secondary (EXPLORATORY) modules -- not part of the pre-registered B3 decision rule:
+    cluster_5           0.907,0.825,0.843,0.824,0.840,0.831                    
+    cluster_11          0.708,0.655,0.631,0.685,0.677,0.742                    
+    cluster_12          0.706,0.730,0.722,0.711,0.718,0.837                    
+    cluster_13          0.740,0.704,0.666,0.709,0.725,0.794                     mono
+    cluster_15          0.771,0.652,0.771,0.778,0.677,0.858                    
+    cluster_17          0.772,0.581,0.632,0.646,0.678,0.686                     mono
+    cluster_20          1.012,0.677,0.675,0.733,0.748,0.860                     mono
+
+  Normal-reference vs Q5 (last bin) I comparison, primary modules:
+    TNF-alpha Signaling via NF-kB       I_normal=0.8126  I_Q5=1.3879  ratio=1.71x
+    Hypoxia                             I_normal=0.9181  I_Q5=1.0089  ratio=1.10x
+    Cholesterol Homeostasis             I_normal=0.8821  I_Q5=1.0182  ratio=1.15x
+    Mitotic Spindle                     I_normal=0.7820  I_Q5=0.7964  ratio=1.02x
+    TGF-beta Signaling                  I_normal=0.8496  I_Q5=0.9219  ratio=1.09x
+    DNA Repair                          I_normal=0.7127  I_Q5=0.7885  ratio=1.11x
+    G2-M Checkpoint                     I_normal=0.8126  I_Q5=0.8469  ratio=1.04x
+    Apoptosis                           I_normal=0.8289  I_Q5=1.0687  ratio=1.29x
+    Adipogenesis                        I_normal=0.8729  I_Q5=0.7661  ratio=0.88x
+    Estrogen Response Early             I_normal=0.9046  I_Q5=0.9387  ratio=1.04x
+    Estrogen Response Late              I_normal=0.9773  I_Q5=0.8513  ratio=0.87x
+    Androgen Response                   I_normal=0.8296  I_Q5=0.9048  ratio=1.09x
+    Myogenesis                          I_normal=0.8257  I_Q5=0.9272  ratio=1.12x
+    Protein Secretion                   I_normal=0.8350  I_Q5=0.8060  ratio=0.97x
+    Interferon Alpha Response           I_normal=0.9506  I_Q5=1.1332  ratio=1.19x
+    Interferon Gamma Response           I_normal=0.9507  I_Q5=1.1721  ratio=1.23x
+    Apical Junction                     I_normal=0.9108  I_Q5=0.9639  ratio=1.06x
+    Complement                          I_normal=0.8118  I_Q5=0.9476  ratio=1.17x
+    Unfolded Protein Response           I_normal=0.7796  I_Q5=0.9868  ratio=1.27x
+    PI3K/AKT/mTOR  Signaling            I_normal=0.8196  I_Q5=0.9205  ratio=1.12x
+    mTORC1 Signaling                    I_normal=0.7560  I_Q5=0.8770  ratio=1.16x
+    E2F Targets                         I_normal=0.8943  I_Q5=0.7779  ratio=0.87x
+    Myc Targets V1                      I_normal=0.9127  I_Q5=0.9236  ratio=1.01x
+    Epithelial Mesenchymal Transition   I_normal=0.9065  I_Q5=1.4915  ratio=1.65x
+    Inflammatory Response               I_normal=0.9598  I_Q5=0.8941  ratio=0.93x
+    Xenobiotic Metabolism               I_normal=0.8241  I_Q5=0.7384  ratio=0.90x
+    Fatty Acid Metabolism               I_normal=0.9142  I_Q5=0.7195  ratio=0.79x
+    Oxidative Phosphorylation           I_normal=1.0209  I_Q5=0.8363  ratio=0.82x
+    Glycolysis                          I_normal=0.8424  I_Q5=0.8564  ratio=1.02x
+    Reactive Oxygen Species Pathway     I_normal=0.9594  I_Q5=0.9803  ratio=1.02x
+    p53 Pathway                         I_normal=0.9639  I_Q5=1.0646  ratio=1.10x
+    UV Response Up                      I_normal=0.7706  I_Q5=1.0451  ratio=1.36x
+    UV Response Dn                      I_normal=0.8305  I_Q5=0.8515  ratio=1.03x
+    heme Metabolism                     I_normal=0.7800  I_Q5=0.7607  ratio=0.98x
+    Coagulation                         I_normal=0.7614  I_Q5=0.9902  ratio=1.30x
+    IL-2/STAT5 Signaling                I_normal=0.7948  I_Q5=0.7390  ratio=0.93x
+    Pperoxisome                         I_normal=0.7920  I_Q5=0.7491  ratio=0.95x
+    Allograft Rejection                 I_normal=1.2678  I_Q5=1.1361  ratio=0.90x
+    KRAS Signaling Up                   I_normal=0.9166  I_Q5=0.8202  ratio=0.89x
+
+================================================================================================
+HTA8_6018
+================================================================================================
+Depth target (10th pct of included cells' total counts) = 6363; dropped 384 cells below target; kept 3449; 5620 genes pass >=10% expressed filter
+  bin sizes: {'normal': 1090, 'Q1': 472, 'Q2': 472, 'Q3': 471, 'Q4': 472, 'Q5': 472}; subsampling all bins to n=471, 20 reps
+  Hallmark modules with >=15 genes after donor gene filter: 46/50
+  Secondary (exploratory) hierarchical-clustering modules with >=15 genes: 6 (from top 2000 variable genes, 20-way cut)
+
+  Computing I scores (primary Hallmark modules)...
+  Computing I scores (secondary exploratory modules)...
+
+  Permutation null (200 reps, 1 subsample/rep, malignant bin-label shuffles; family-wise max over the 50 Hallmark modules)...
+
+  module                             I(normal,Q1,Q2,Q3,Q4,Q5)                                 peak?  peak_stat     fw_p  rho(mono)  mono?
+  TNF-alpha Signaling via NF-kB      0.852,0.547,0.583,0.597,0.624,0.807                         no    -0.2287    1.000     +1.000    YES
+  Hypoxia                            0.686,0.468,0.498,0.520,0.531,0.681                         no    -0.1544    1.000     +1.000    YES
+  Cholesterol Homeostasis            0.496,0.632,0.693,0.621,0.676,0.669                        YES     0.0244    1.000     +0.100     no
+  Mitotic Spindle                    0.499,0.435,0.472,0.467,0.525,0.524                        YES     0.0015    1.000     +0.800     no
+  Wnt-beta Catenin Signaling         0.359,0.458,0.460,0.470,0.437,0.585                         no    -0.1153    1.000     +0.400     no
+  TGF-beta Signaling                 0.736,0.545,0.567,0.537,0.566,0.643                         no    -0.1692    1.000     +0.500     no
+  IL-6/JAK/STAT3 Signaling           0.559,0.422,0.460,0.418,0.440,0.454                         no    -0.0992    1.000     +0.200     no
+  DNA Repair                         0.405,0.467,0.478,0.474,0.479,0.464                        YES     0.0149    1.000     -0.100     no
+  G2-M Checkpoint                    0.626,0.711,0.820,0.917,0.932,0.869                        YES     0.0625    0.821     +0.700     no
+  Apoptosis                          0.714,0.485,0.516,0.534,0.564,0.607                         no    -0.1498    1.000     +1.000    YES
+  Notch Signaling                    0.395,0.453,0.444,0.446,0.457,0.519                         no    -0.0623    1.000     +0.700     no
+  Adipogenesis                       0.593,0.491,0.512,0.526,0.535,0.555                         no    -0.0580    1.000     +1.000    YES
+  Estrogen Response Early            0.606,0.490,0.497,0.514,0.548,0.634                         no    -0.0858    1.000     +1.000    YES
+  Estrogen Response Late             0.688,0.507,0.513,0.538,0.562,0.634                         no    -0.1268    1.000     +1.000    YES
+  Androgen Response                  0.603,0.484,0.504,0.498,0.552,0.556                         no    -0.0515    1.000     +0.900    YES
+  Myogenesis                         0.488,0.460,0.479,0.479,0.511,0.595                         no    -0.0835    1.000     +0.900    YES
+  Protein Secretion                  0.481,0.448,0.464,0.465,0.463,0.496                         no    -0.0304    1.000     +0.700     no
+  Interferon Alpha Response          1.448,0.506,0.510,0.504,0.556,0.600                         no    -0.8918    1.000     +0.700     no
+  Interferon Gamma Response          1.115,0.481,0.487,0.478,0.516,0.566                         no    -0.5988    1.000     +0.700     no
+  Apical Junction                    0.522,0.450,0.450,0.463,0.497,0.541                         no    -0.0442    1.000     +1.000    YES
+  Complement                         0.517,0.420,0.428,0.456,0.473,0.520                         no    -0.0468    1.000     +1.000    YES
+  Unfolded Protein Response          0.485,0.487,0.496,0.518,0.533,0.541                         no    -0.0081    1.000     +1.000    YES
+  PI3K/AKT/mTOR  Signaling           0.467,0.470,0.478,0.487,0.497,0.520                         no    -0.0231    1.000     +1.000    YES
+  mTORC1 Signaling                   0.472,0.518,0.539,0.564,0.585,0.590                         no    -0.0057    1.000     +1.000    YES
+  E2F Targets                        0.697,0.935,1.030,1.111,1.064,0.913                        YES     0.1980    0.005     -0.100     no
+  Myc Targets V1                     0.860,0.685,0.697,0.785,0.767,0.780                         no    -0.0750    1.000     +0.700     no
+  Myc Targets V2                     0.582,0.584,0.657,0.692,0.612,0.626                        YES     0.0659    0.796     +0.200     no
+  Epithelial Mesenchymal Transition  0.633,0.517,0.512,0.573,0.602,0.694                         no    -0.0917    1.000     +0.900    YES
+  Inflammatory Response              0.662,0.429,0.440,0.453,0.465,0.543                         no    -0.1970    1.000     +1.000    YES
+  Xenobiotic Metabolism              0.534,0.470,0.476,0.508,0.513,0.504                         no    -0.0209    1.000     +0.700     no
+  Fatty Acid Metabolism              0.542,0.467,0.490,0.489,0.500,0.509                         no    -0.0417    1.000     +0.900    YES
+  Oxidative Phosphorylation          0.847,0.618,0.652,0.665,0.663,0.677                         no    -0.1818    1.000     +0.900    YES
+  Glycolysis                         0.580,0.466,0.487,0.497,0.512,0.570                         no    -0.0677    1.000     +1.000    YES
+  Reactive Oxygen Species Pathway    0.656,0.595,0.588,0.632,0.652,0.642                         no    -0.0042    1.000     +0.800     no
+  p53 Pathway                        0.667,0.491,0.490,0.507,0.528,0.642                         no    -0.1397    1.000     +0.900    YES
+  UV Response Up                     0.548,0.506,0.506,0.533,0.548,0.579                         no    -0.0313    1.000     +0.900    YES
+  UV Response Dn                     0.465,0.424,0.440,0.435,0.463,0.495                         no    -0.0325    1.000     +0.900    YES
+  heme Metabolism                    0.482,0.422,0.436,0.445,0.452,0.498                         no    -0.0465    1.000     +1.000    YES
+  Coagulation                        0.551,0.402,0.418,0.450,0.463,0.526                         no    -0.0878    1.000     +1.000    YES
+  IL-2/STAT5 Signaling               0.633,0.417,0.426,0.439,0.449,0.514                         no    -0.1844    1.000     +1.000    YES
+  Bile Acid Metabolism               0.464,0.414,0.410,0.412,0.425,0.478                         no    -0.0531    1.000     +0.700     no
+  Pperoxisome                        0.567,0.445,0.484,0.498,0.497,0.516                         no    -0.0687    1.000     +0.900    YES
+  Allograft Rejection                0.848,0.513,0.528,0.508,0.549,0.625                         no    -0.2995    1.000     +0.700     no
+  Spermatogenesis                    0.443,0.489,0.474,0.492,0.522,0.490                        YES     0.0318    1.000     +0.600     no
+  KRAS Signaling Up                  0.618,0.448,0.458,0.480,0.467,0.582                         no    -0.1379    1.000     +0.900    YES
+  KRAS Signaling Dn                  0.669,0.405,0.370,0.410,0.422,0.475                         no    -0.2460    1.000     +0.900    YES
+
+  Secondary (EXPLORATORY) modules -- not part of the pre-registered B3 decision rule:
+    cluster_3           1.313,0.673,0.676,0.704,0.694,0.790                     mono
+    cluster_7           0.890,0.465,0.474,0.476,0.485,0.540                     mono
+    cluster_9           0.647,0.512,0.519,0.530,0.582,0.546                     mono
+    cluster_10          0.633,0.533,0.549,0.549,0.576,0.657                     mono
+    cluster_18          1.334,0.497,0.505,0.515,0.534,0.620                     mono
+    cluster_20          0.939,0.653,0.645,0.679,0.699,0.739                     mono
+
+  Normal-reference vs Q5 (last bin) I comparison, primary modules:
+    TNF-alpha Signaling via NF-kB       I_normal=0.8522  I_Q5=0.8067  ratio=0.95x
+    Hypoxia                             I_normal=0.6859  I_Q5=0.6812  ratio=0.99x
+    Cholesterol Homeostasis             I_normal=0.4961  I_Q5=0.6690  ratio=1.35x
+    Mitotic Spindle                     I_normal=0.4987  I_Q5=0.5238  ratio=1.05x
+    Wnt-beta Catenin Signaling          I_normal=0.3594  I_Q5=0.5853  ratio=1.63x
+    TGF-beta Signaling                  I_normal=0.7361  I_Q5=0.6433  ratio=0.87x
+    IL-6/JAK/STAT3 Signaling            I_normal=0.5593  I_Q5=0.4536  ratio=0.81x
+    DNA Repair                          I_normal=0.4053  I_Q5=0.4644  ratio=1.15x
+    G2-M Checkpoint                     I_normal=0.6259  I_Q5=0.8690  ratio=1.39x
+    Apoptosis                           I_normal=0.7139  I_Q5=0.6066  ratio=0.85x
+    Notch Signaling                     I_normal=0.3952  I_Q5=0.5188  ratio=1.31x
+    Adipogenesis                        I_normal=0.5930  I_Q5=0.5551  ratio=0.94x
+    Estrogen Response Early             I_normal=0.6063  I_Q5=0.6340  ratio=1.05x
+    Estrogen Response Late              I_normal=0.6884  I_Q5=0.6339  ratio=0.92x
+    Androgen Response                   I_normal=0.6032  I_Q5=0.5557  ratio=0.92x
+    Myogenesis                          I_normal=0.4878  I_Q5=0.5946  ratio=1.22x
+    Protein Secretion                   I_normal=0.4813  I_Q5=0.4957  ratio=1.03x
+    Interferon Alpha Response           I_normal=1.4477  I_Q5=0.6003  ratio=0.41x
+    Interferon Gamma Response           I_normal=1.1152  I_Q5=0.5656  ratio=0.51x
+    Apical Junction                     I_normal=0.5223  I_Q5=0.5407  ratio=1.04x
+    Complement                          I_normal=0.5166  I_Q5=0.5200  ratio=1.01x
+    Unfolded Protein Response           I_normal=0.4854  I_Q5=0.5412  ratio=1.11x
+    PI3K/AKT/mTOR  Signaling            I_normal=0.4672  I_Q5=0.5197  ratio=1.11x
+    mTORC1 Signaling                    I_normal=0.4724  I_Q5=0.5904  ratio=1.25x
+    E2F Targets                         I_normal=0.6968  I_Q5=0.9126  ratio=1.31x
+    Myc Targets V1                      I_normal=0.8597  I_Q5=0.7799  ratio=0.91x
+    Myc Targets V2                      I_normal=0.5822  I_Q5=0.6261  ratio=1.08x
+    Epithelial Mesenchymal Transition   I_normal=0.6335  I_Q5=0.6941  ratio=1.10x
+    Inflammatory Response               I_normal=0.6620  I_Q5=0.5431  ratio=0.82x
+    Xenobiotic Metabolism               I_normal=0.5339  I_Q5=0.5040  ratio=0.94x
+    Fatty Acid Metabolism               I_normal=0.5416  I_Q5=0.5089  ratio=0.94x
+    Oxidative Phosphorylation           I_normal=0.8470  I_Q5=0.6766  ratio=0.80x
+    Glycolysis                          I_normal=0.5796  I_Q5=0.5698  ratio=0.98x
+    Reactive Oxygen Species Pathway     I_normal=0.6561  I_Q5=0.6416  ratio=0.98x
+    p53 Pathway                         I_normal=0.6674  I_Q5=0.6417  ratio=0.96x
+    UV Response Up                      I_normal=0.5476  I_Q5=0.5790  ratio=1.06x
+    UV Response Dn                      I_normal=0.4654  I_Q5=0.4953  ratio=1.06x
+    heme Metabolism                     I_normal=0.4823  I_Q5=0.4984  ratio=1.03x
+    Coagulation                         I_normal=0.5510  I_Q5=0.5259  ratio=0.95x
+    IL-2/STAT5 Signaling                I_normal=0.6330  I_Q5=0.5141  ratio=0.81x
+    Bile Acid Metabolism                I_normal=0.4643  I_Q5=0.4776  ratio=1.03x
+    Pperoxisome                         I_normal=0.5666  I_Q5=0.5155  ratio=0.91x
+    Allograft Rejection                 I_normal=0.8483  I_Q5=0.6247  ratio=0.74x
+    Spermatogenesis                     I_normal=0.4426  I_Q5=0.4899  ratio=1.11x
+    KRAS Signaling Up                   I_normal=0.6178  I_Q5=0.5815  ratio=0.94x
+    KRAS Signaling Dn                   I_normal=0.6685  I_Q5=0.4752  ratio=0.71x
+
+================================================================================================
+HTA8_6028
+================================================================================================
+Depth target (10th pct of included cells' total counts) = 2464; dropped 144 cells below target; kept 1296; 2474 genes pass >=10% expressed filter
+  bin sizes: {'normal': 196, 'Q1': 220, 'Q2': 220, 'Q3': 220, 'Q4': 220, 'Q5': 220}; subsampling all bins to n=196, 20 reps
+  Hallmark modules with >=15 genes after donor gene filter: 39/50
+  Secondary (exploratory) hierarchical-clustering modules with >=15 genes: 19 (from top 2000 variable genes, 20-way cut)
+
+  Computing I scores (primary Hallmark modules)...
+  Computing I scores (secondary exploratory modules)...
+
+  Permutation null (200 reps, 1 subsample/rep, malignant bin-label shuffles; family-wise max over the 50 Hallmark modules)...
+
+  module                             I(normal,Q1,Q2,Q3,Q4,Q5)                                 peak?  peak_stat     fw_p  rho(mono)  mono?
+  TNF-alpha Signaling via NF-kB      0.928,0.970,0.967,1.065,1.127,1.276                         no    -0.1493    1.000     +0.900    YES
+  Hypoxia                            0.951,0.769,0.794,0.857,0.847,0.947                         no    -0.0936    1.000     +0.900    YES
+  Cholesterol Homeostasis            0.690,0.636,0.647,0.744,0.812,0.891                         no    -0.0794    1.000     +1.000    YES
+  Mitotic Spindle                    0.664,0.594,0.620,0.632,0.693,0.734                         no    -0.0407    1.000     +1.000    YES
+  TGF-beta Signaling                 0.853,0.726,0.678,0.821,0.821,0.861                         no    -0.0401    1.000     +0.900    YES
+  DNA Repair                         0.539,0.585,0.600,0.647,0.662,0.656                        YES     0.0058    1.000     +0.900    YES
+  G2-M Checkpoint                    0.583,0.679,0.705,0.767,0.782,0.847                         no    -0.0648    1.000     +1.000    YES
+  Apoptosis                          0.795,0.728,0.725,0.791,0.772,0.905                         no    -0.1142    1.000     +0.800     no
+  Adipogenesis                       0.941,0.632,0.674,0.682,0.712,0.711                         no    -0.2297    1.000     +0.900    YES
+  Estrogen Response Early            0.841,0.699,0.702,0.732,0.744,0.783                         no    -0.0967    1.000     +1.000    YES
+  Estrogen Response Late             0.981,0.681,0.693,0.725,0.719,0.792                         no    -0.2556    1.000     +0.900    YES
+  Androgen Response                  0.807,0.646,0.702,0.723,0.741,0.830                         no    -0.0891    1.000     +1.000    YES
+  Myogenesis                         0.733,0.649,0.631,0.663,0.699,0.745                         no    -0.0459    1.000     +0.900    YES
+  Protein Secretion                  0.702,0.619,0.668,0.710,0.701,0.710                         no    -0.0004    1.000     +0.900    YES
+  Interferon Alpha Response          0.885,0.673,0.798,0.744,0.885,0.919                         no    -0.0337    1.000     +0.900    YES
+  Interferon Gamma Response          0.931,0.720,0.709,0.702,0.811,0.865                         no    -0.1200    1.000     +0.600     no
+  Apical Junction                    0.722,0.658,0.641,0.677,0.695,0.858                         no    -0.1634    1.000     +0.900    YES
+  Complement                         0.745,0.581,0.665,0.694,0.687,0.825                         no    -0.1309    1.000     +0.900    YES
+  Unfolded Protein Response          0.643,0.651,0.703,0.750,0.754,0.806                         no    -0.0523    1.000     +1.000    YES
+  PI3K/AKT/mTOR  Signaling           0.758,0.712,0.720,0.713,0.727,0.833                         no    -0.1063    1.000     +0.900    YES
+  mTORC1 Signaling                   0.628,0.685,0.710,0.724,0.768,0.832                         no    -0.0639    1.000     +1.000    YES
+  E2F Targets                        0.562,0.647,0.736,0.738,0.775,0.840                         no    -0.0652    1.000     +1.000    YES
+  Myc Targets V1                     0.718,0.752,0.779,0.813,0.836,0.945                         no    -0.1085    1.000     +1.000    YES
+  Epithelial Mesenchymal Transition  0.614,0.696,0.748,0.790,0.820,1.124                         no    -0.3033    1.000     +1.000    YES
+  Inflammatory Response              0.717,0.642,0.627,0.793,0.789,0.840                         no    -0.0467    1.000     +0.800     no
+  Xenobiotic Metabolism              0.809,0.627,0.647,0.650,0.661,0.720                         no    -0.1479    1.000     +1.000    YES
+  Fatty Acid Metabolism              0.878,0.654,0.642,0.660,0.654,0.705                         no    -0.2180    1.000     +0.800     no
+  Oxidative Phosphorylation          1.209,0.759,0.772,0.781,0.804,0.818                         no    -0.4045    1.000     +1.000    YES
+  Glycolysis                         0.771,0.708,0.730,0.759,0.755,0.785                         no    -0.0262    1.000     +0.900    YES
+  Reactive Oxygen Species Pathway    1.110,0.760,0.808,0.828,0.854,0.921                         no    -0.2561    1.000     +1.000    YES
+  p53 Pathway                        0.834,0.714,0.721,0.775,0.806,0.901                         no    -0.0950    1.000     +1.000    YES
+  UV Response Up                     0.769,0.773,0.775,0.801,0.799,0.890                         no    -0.0889    1.000     +0.900    YES
+  UV Response Dn                     0.680,0.610,0.621,0.619,0.682,0.634                        YES     0.0016    1.000     +0.800     no
+  heme Metabolism                    0.736,0.620,0.604,0.632,0.663,0.675                         no    -0.0730    1.000     +0.900    YES
+  Coagulation                        0.805,0.579,0.586,0.729,0.662,0.846                         no    -0.1176    1.000     +0.900    YES
+  IL-2/STAT5 Signaling               0.652,0.605,0.634,0.664,0.670,0.780                         no    -0.1093    1.000     +1.000    YES
+  Pperoxisome                        0.790,0.605,0.656,0.636,0.651,0.667                         no    -0.1346    1.000     +0.700     no
+  Allograft Rejection                0.985,0.735,0.716,0.761,0.806,1.069                         no    -0.2627    1.000     +0.900    YES
+  KRAS Signaling Up                  0.696,0.579,0.569,0.651,0.612,0.721                         no    -0.0703    1.000     +0.800     no
+
+  Secondary (EXPLORATORY) modules -- not part of the pre-registered B3 decision rule:
+    cluster_1           0.942,0.549,0.577,0.639,0.646,0.660                     mono
+    cluster_2           0.915,0.586,0.579,0.589,0.686,0.711                     mono
+    cluster_3           1.054,0.519,0.632,0.645,0.625,0.669                    
+    cluster_4           0.824,0.582,0.666,0.649,0.657,0.639                    
+    cluster_5           1.072,0.560,0.551,0.632,0.704,0.711                     mono
+    cluster_6           1.050,0.751,0.745,0.780,0.790,0.873                     mono
+    cluster_7           0.874,0.593,0.573,0.606,0.696,0.661                    
+    cluster_8           1.186,0.705,0.725,0.746,0.757,0.813                     mono
+    cluster_9           0.763,0.555,0.582,0.589,0.625,0.661                     mono
+    cluster_11          0.867,0.572,0.608,0.633,0.653,0.713                     mono
+    cluster_12          0.844,0.562,0.579,0.593,0.579,0.629                     mono
+    cluster_13          0.948,0.653,0.654,0.646,0.691,0.728                    
+    cluster_14          0.900,0.599,0.592,0.639,0.649,0.692                     mono
+    cluster_15          0.730,0.662,0.646,0.686,0.690,0.707                     mono
+    cluster_16          0.839,0.560,0.562,0.597,0.601,0.672                     mono
+    cluster_17          0.928,0.634,0.659,0.650,0.677,0.681                     mono
+    cluster_18          0.845,0.563,0.610,0.619,0.647,0.683                     mono
+    cluster_19          1.023,0.613,0.628,0.644,0.662,0.708                     mono
+    cluster_20          0.962,0.568,0.587,0.617,0.641,0.697                     mono
+
+  Normal-reference vs Q5 (last bin) I comparison, primary modules:
+    TNF-alpha Signaling via NF-kB       I_normal=0.9276  I_Q5=1.2759  ratio=1.38x
+    Hypoxia                             I_normal=0.9506  I_Q5=0.9473  ratio=1.00x
+    Cholesterol Homeostasis             I_normal=0.6904  I_Q5=0.8912  ratio=1.29x
+    Mitotic Spindle                     I_normal=0.6642  I_Q5=0.7341  ratio=1.11x
+    TGF-beta Signaling                  I_normal=0.8532  I_Q5=0.8613  ratio=1.01x
+    DNA Repair                          I_normal=0.5389  I_Q5=0.6562  ratio=1.22x
+    G2-M Checkpoint                     I_normal=0.5826  I_Q5=0.8467  ratio=1.45x
+    Apoptosis                           I_normal=0.7947  I_Q5=0.9049  ratio=1.14x
+    Adipogenesis                        I_normal=0.9415  I_Q5=0.7115  ratio=0.76x
+    Estrogen Response Early             I_normal=0.8408  I_Q5=0.7833  ratio=0.93x
+    Estrogen Response Late              I_normal=0.9810  I_Q5=0.7921  ratio=0.81x
+    Androgen Response                   I_normal=0.8072  I_Q5=0.8302  ratio=1.03x
+    Myogenesis                          I_normal=0.7333  I_Q5=0.7448  ratio=1.02x
+    Protein Secretion                   I_normal=0.7021  I_Q5=0.7103  ratio=1.01x
+    Interferon Alpha Response           I_normal=0.8846  I_Q5=0.9189  ratio=1.04x
+    Interferon Gamma Response           I_normal=0.9309  I_Q5=0.8648  ratio=0.93x
+    Apical Junction                     I_normal=0.7225  I_Q5=0.8583  ratio=1.19x
+    Complement                          I_normal=0.7449  I_Q5=0.8253  ratio=1.11x
+    Unfolded Protein Response           I_normal=0.6432  I_Q5=0.8060  ratio=1.25x
+    PI3K/AKT/mTOR  Signaling            I_normal=0.7583  I_Q5=0.8333  ratio=1.10x
+    mTORC1 Signaling                    I_normal=0.6280  I_Q5=0.8322  ratio=1.33x
+    E2F Targets                         I_normal=0.5621  I_Q5=0.8404  ratio=1.50x
+    Myc Targets V1                      I_normal=0.7179  I_Q5=0.9447  ratio=1.32x
+    Epithelial Mesenchymal Transition   I_normal=0.6141  I_Q5=1.1238  ratio=1.83x
+    Inflammatory Response               I_normal=0.7168  I_Q5=0.8398  ratio=1.17x
+    Xenobiotic Metabolism               I_normal=0.8093  I_Q5=0.7198  ratio=0.89x
+    Fatty Acid Metabolism               I_normal=0.8777  I_Q5=0.7047  ratio=0.80x
+    Oxidative Phosphorylation           I_normal=1.2087  I_Q5=0.8185  ratio=0.68x
+    Glycolysis                          I_normal=0.7709  I_Q5=0.7848  ratio=1.02x
+    Reactive Oxygen Species Pathway     I_normal=1.1099  I_Q5=0.9210  ratio=0.83x
+    p53 Pathway                         I_normal=0.8338  I_Q5=0.9009  ratio=1.08x
+    UV Response Up                      I_normal=0.7691  I_Q5=0.8899  ratio=1.16x
+    UV Response Dn                      I_normal=0.6805  I_Q5=0.6342  ratio=0.93x
+    heme Metabolism                     I_normal=0.7362  I_Q5=0.6749  ratio=0.92x
+    Coagulation                         I_normal=0.8055  I_Q5=0.8462  ratio=1.05x
+    IL-2/STAT5 Signaling                I_normal=0.6516  I_Q5=0.7796  ratio=1.20x
+    Pperoxisome                         I_normal=0.7903  I_Q5=0.6669  ratio=0.84x
+    Allograft Rejection                 I_normal=0.9850  I_Q5=1.0690  ratio=1.09x
+    KRAS Signaling Up                   I_normal=0.6958  I_Q5=0.7212  ratio=1.04x
+
+================================================================================================
+CROSS-DONOR SUMMARY (primary Hallmark modules)
+================================================================================================
+module                              n_donors_peak_sigdonors                                         n_donors_monodonors
+Adipogenesis                                        0  []                                                       2  ['HTA8_6018', 'HTA8_6028']
+Allograft Rejection                                 0  []                                                       1  ['HTA8_6028']
+Androgen Response                                   0  []                                                       4  ['HTA8_6002', 'HTA8_6013', 'HTA8_6018', 'HTA8_6028']
+Apical Junction                                     0  []                                                       3  ['HTA8_6013', 'HTA8_6018', 'HTA8_6028']
+Apoptosis                                           0  []                                                       4  ['HTA8_6009', 'HTA8_6013', 'HTA8_6016', 'HTA8_6018']
+Cholesterol Homeostasis                             0  []                                                       2  ['HTA8_6016', 'HTA8_6028']
+Coagulation                                         0  []                                                       3  ['HTA8_6013', 'HTA8_6018', 'HTA8_6028']
+Complement                                          0  []                                                       3  ['HTA8_6016', 'HTA8_6018', 'HTA8_6028']
+DNA Repair                                          0  []                                                       2  ['HTA8_6013', 'HTA8_6028']
+E2F Targets                                         1  ['HTA8_6018']                                            1  ['HTA8_6028']
+Epithelial Mesenchymal Transition                   0  []                                                       2  ['HTA8_6018', 'HTA8_6028']
+Estrogen Response Early                             0  []                                                       4  ['HTA8_6009', 'HTA8_6013', 'HTA8_6018', 'HTA8_6028']
+Estrogen Response Late                              0  []                                                       2  ['HTA8_6018', 'HTA8_6028']
+Fatty Acid Metabolism                               0  []                                                       1  ['HTA8_6018']
+G2-M Checkpoint                                     0  []                                                       2  ['HTA8_6009', 'HTA8_6028']
+Glycolysis                                          0  []                                                       5  ['HTA8_6002', 'HTA8_6013', 'HTA8_6016', 'HTA8_6018', 'HTA8_6028']
+Hypoxia                                             0  []                                                       5  ['HTA8_6009', 'HTA8_6013', 'HTA8_6016', 'HTA8_6018', 'HTA8_6028']
+IL-2/STAT5 Signaling                                0  []                                                       3  ['HTA8_6013', 'HTA8_6018', 'HTA8_6028']
+IL-6/JAK/STAT3 Signaling                            0  []                                                       1  ['HTA8_6013']
+Inflammatory Response                               0  []                                                       1  ['HTA8_6018']
+Interferon Alpha Response                           0  []                                                       3  ['HTA8_6002', 'HTA8_6016', 'HTA8_6028']
+Interferon Gamma Response                           0  []                                                       1  ['HTA8_6016']
+KRAS Signaling Dn                                   0  []                                                       1  ['HTA8_6018']
+KRAS Signaling Up                                   0  []                                                       2  ['HTA8_6016', 'HTA8_6018']
+Mitotic Spindle                                     0  []                                                       4  ['HTA8_6002', 'HTA8_6009', 'HTA8_6013', 'HTA8_6028']
+Myc Targets V1                                      0  []                                                       2  ['HTA8_6013', 'HTA8_6028']
+Myogenesis                                          0  []                                                       3  ['HTA8_6013', 'HTA8_6018', 'HTA8_6028']
+Oxidative Phosphorylation                           0  []                                                       3  ['HTA8_6002', 'HTA8_6018', 'HTA8_6028']
+PI3K/AKT/mTOR  Signaling                            0  []                                                       3  ['HTA8_6016', 'HTA8_6018', 'HTA8_6028']
+Pperoxisome                                         0  []                                                       2  ['HTA8_6013', 'HTA8_6018']
+Protein Secretion                                   0  []                                                       3  ['HTA8_6002', 'HTA8_6013', 'HTA8_6028']
+Reactive Oxygen Species Pathway                     0  []                                                       1  ['HTA8_6028']
+TGF-beta Signaling                                  0  []                                                       2  ['HTA8_6016', 'HTA8_6028']
+TNF-alpha Signaling via NF-kB                       0  []                                                       5  ['HTA8_6009', 'HTA8_6013', 'HTA8_6016', 'HTA8_6018', 'HTA8_6028']
+UV Response Dn                                      0  []                                                       1  ['HTA8_6018']
+UV Response Up                                      0  []                                                       5  ['HTA8_6009', 'HTA8_6013', 'HTA8_6016', 'HTA8_6018', 'HTA8_6028']
+Unfolded Protein Response                           0  []                                                       3  ['HTA8_6013', 'HTA8_6018', 'HTA8_6028']
+Xenobiotic Metabolism                               0  []                                                       2  ['HTA8_6016', 'HTA8_6028']
+heme Metabolism                                     0  []                                                       4  ['HTA8_6013', 'HTA8_6016', 'HTA8_6018', 'HTA8_6028']
+mTORC1 Signaling                                    0  []                                                       5  ['HTA8_6002', 'HTA8_6013', 'HTA8_6016', 'HTA8_6018', 'HTA8_6028']
+p53 Pathway                                         0  []                                                       4  ['HTA8_6013', 'HTA8_6016', 'HTA8_6018', 'HTA8_6028']
+
+Best module for 'transition peak': 'E2F Targets' in 1/6 donors ['HTA8_6018'] -> NOT SUPPORTED
+Best module for 'monotonic increase': 'Glycolysis' in 5/6 donors ['HTA8_6002', 'HTA8_6013', 'HTA8_6016', 'HTA8_6018', 'HTA8_6028'] -> SUPPORTED
+
+VERDICT (B3):
+  No Hallmark module shows a transition peak with family-wise p<0.05 in >=4/6 donors.
+  DNB transition signature: NOT SUPPORTED.
+  Monotonic increase found separately for module 'Glycolysis' (NOT the same claim as a transition peak).
+
+================================================================================================
+CAVEATS
+================================================================================================
+- Residual, module scores, and gene expression are all derived from the same expression
+  matrix. This is an internal-consistency test, not independent validation.
+- scRNA dropout depresses correlation estimates. Binomial thinning to a common depth
+  equalizes this effect across bins, but does not remove the dropout floor itself.
+- Residual quantiles in this snapshot dataset are not a time axis. A Q1->Q5 ordering can
+  only be read as a hypothesized trajectory, not an observed one.
+- HTA8_6002 has only 60 malignant cells: 3 bins (terciles) were used instead of 5, and
+  its per-bin subsample size (after matching to the smallest group) is small -- this
+  donor has by far the lowest power in Component 3.
+- The secondary (exploratory) hierarchical-clustering modules are capped to the top
+  2000 most variable donor-expressed genes for computational tractability; this is a
+  narrower gene universe than the full >=10%-expressed filter used for Hallmark modules,
+  and is not part of the pre-registered B3 decision rule.

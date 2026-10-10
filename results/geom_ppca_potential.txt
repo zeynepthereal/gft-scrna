@@ -1,0 +1,254 @@
+COMPONENT 1 -- residual as PPCA potential (Tipping & Bishop closed form)
+q values: [10, 20, 30] (primary/decision q=20); normal cells 5-fold held-out; seed=0
+
+DECISION RULE (B1), stated before the numbers: 'residual is the dominant component' is
+SUPPORTED if, in >=4/6 donors AND IN BOTH SPACES (cohort PCA, normal-only): residual term
+explains >50% of the malignant-vs-normal median delta-E, AND AUROC(E) >= AUROC(r) - 0.02.
+Otherwise the potential is driven mainly by M_in (extremeness within the normal subspace).
+
+================================================================================================
+HTA8_6002
+================================================================================================
+n_normal=264 n_malignant=60
+  [cohort_pca, q=10] PPCA decomposition check: max|E_direct - E_decomp| = 2.16e-12 (should be ~0)
+  [cohort_pca, q=10] median E: normal=93.683 malignant=227.535 delta_E=+133.852
+  [cohort_pca, q=10] delta_E decomposition: from_residual=+130.620 from_M_in=+3.965  share_residual=0.971  (sum=+134.584 vs total +133.852, small median-nonlinearity gap expected)
+  [cohort_pca, q=10] AUROC: E=0.991  r=0.992  M_in=0.787  n_genes=0.157
+  [normal_only, q=10] PPCA decomposition check: max|E_direct - E_decomp| = 4.59e-05 (should be ~0)
+  [normal_only, q=10] median E: normal=87.879 malignant=84.927 delta_E=-2.952
+  [normal_only, q=10] delta_E decomposition: from_residual=-1.621 from_M_in=-1.167  share_residual=0.582  (sum=-2.788 vs total -2.952, small median-nonlinearity gap expected)
+  [normal_only, q=10] AUROC: E=0.374  r=0.404  M_in=0.302  n_genes=0.157
+  [cohort_pca, q=20] PPCA decomposition check: max|E_direct - E_decomp| = 4.77e-12 (should be ~0)
+  [cohort_pca, q=20] median E: normal=88.840 malignant=287.451 delta_E=+198.612
+  [cohort_pca, q=20] delta_E decomposition: from_residual=+172.993 from_M_in=+25.601  share_residual=0.871  (sum=+198.594 vs total +198.612, small median-nonlinearity gap expected)
+  [cohort_pca, q=20] AUROC: E=0.997  r=0.997  M_in=0.959  n_genes=0.157
+  [normal_only, q=20] PPCA decomposition check: max|E_direct - E_decomp| = 4.91e-05 (should be ~0)
+  [normal_only, q=20] median E: normal=87.391 malignant=84.346 delta_E=-3.045
+  [normal_only, q=20] delta_E decomposition: from_residual=-1.712 from_M_in=-1.261  share_residual=0.576  (sum=-2.973 vs total -3.045, small median-nonlinearity gap expected)
+  [normal_only, q=20] AUROC: E=0.398  r=0.392  M_in=0.354  n_genes=0.157
+  [cohort_pca, q=30] PPCA decomposition check: max|E_direct - E_decomp| = 7.96e-12 (should be ~0)
+  [cohort_pca, q=30] median E: normal=87.213 malignant=336.786 delta_E=+249.574
+  [cohort_pca, q=30] delta_E decomposition: from_residual=+190.596 from_M_in=+53.956  share_residual=0.779  (sum=+244.551 vs total +249.574, small median-nonlinearity gap expected)
+  [cohort_pca, q=30] AUROC: E=0.998  r=0.999  M_in=0.981  n_genes=0.157
+  [normal_only, q=30] PPCA decomposition check: max|E_direct - E_decomp| = 6.05e-05 (should be ~0)
+  [normal_only, q=30] median E: normal=87.218 malignant=84.189 delta_E=-3.028
+  [normal_only, q=30] delta_E decomposition: from_residual=-1.523 from_M_in=-1.297  share_residual=0.540  (sum=-2.820 vs total -3.028, small median-nonlinearity gap expected)
+  [normal_only, q=30] AUROC: E=0.418  r=0.385  M_in=0.361  n_genes=0.157
+================================================================================================
+HTA8_6009
+================================================================================================
+n_normal=822 n_malignant=761
+  [cohort_pca, q=10] PPCA decomposition check: max|E_direct - E_decomp| = 3.58e-12 (should be ~0)
+  [cohort_pca, q=10] median E: normal=90.650 malignant=213.506 delta_E=+122.856
+  [cohort_pca, q=10] delta_E decomposition: from_residual=+120.120 from_M_in=+3.294  share_residual=0.973  (sum=+123.414 vs total +122.856, small median-nonlinearity gap expected)
+  [cohort_pca, q=10] AUROC: E=0.997  r=0.998  M_in=0.715  n_genes=0.215
+  [normal_only, q=10] PPCA decomposition check: max|E_direct - E_decomp| = 4.36e-05 (should be ~0)
+  [normal_only, q=10] median E: normal=76.355 malignant=80.771 delta_E=+4.416
+  [normal_only, q=10] delta_E decomposition: from_residual=+2.768 from_M_in=+0.922  share_residual=0.750  (sum=+3.690 vs total +4.416, small median-nonlinearity gap expected)
+  [normal_only, q=10] AUROC: E=0.583  r=0.573  M_in=0.573  n_genes=0.215
+  [cohort_pca, q=20] PPCA decomposition check: max|E_direct - E_decomp| = 4.09e-12 (should be ~0)
+  [cohort_pca, q=20] median E: normal=84.933 malignant=289.784 delta_E=+204.851
+  [cohort_pca, q=20] delta_E decomposition: from_residual=+188.283 from_M_in=+17.776  share_residual=0.914  (sum=+206.060 vs total +204.851, small median-nonlinearity gap expected)
+  [cohort_pca, q=20] AUROC: E=1.000  r=1.000  M_in=0.917  n_genes=0.215
+  [normal_only, q=20] PPCA decomposition check: max|E_direct - E_decomp| = 6.01e-05 (should be ~0)
+  [normal_only, q=20] median E: normal=75.649 malignant=79.309 delta_E=+3.660
+  [normal_only, q=20] delta_E decomposition: from_residual=+0.727 from_M_in=+2.704  share_residual=0.212  (sum=+3.432 vs total +3.660, small median-nonlinearity gap expected)
+  [normal_only, q=20] AUROC: E=0.575  r=0.520  M_in=0.633  n_genes=0.215
+  [cohort_pca, q=30] PPCA decomposition check: max|E_direct - E_decomp| = 5.23e-12 (should be ~0)
+  [cohort_pca, q=30] median E: normal=82.900 malignant=333.631 delta_E=+250.731
+  [cohort_pca, q=30] delta_E decomposition: from_residual=+188.360 from_M_in=+62.861  share_residual=0.750  (sum=+251.221 vs total +250.731, small median-nonlinearity gap expected)
+  [cohort_pca, q=30] AUROC: E=1.000  r=1.000  M_in=0.990  n_genes=0.215
+  [normal_only, q=30] PPCA decomposition check: max|E_direct - E_decomp| = 1.21e-04 (should be ~0)
+  [normal_only, q=30] median E: normal=75.620 malignant=79.324 delta_E=+3.704
+  [normal_only, q=30] delta_E decomposition: from_residual=+0.254 from_M_in=+3.183  share_residual=0.074  (sum=+3.436 vs total +3.704, small median-nonlinearity gap expected)
+  [normal_only, q=30] AUROC: E=0.574  r=0.506  M_in=0.619  n_genes=0.215
+================================================================================================
+HTA8_6013
+================================================================================================
+n_normal=769 n_malignant=667
+  [cohort_pca, q=10] PPCA decomposition check: max|E_direct - E_decomp| = 3.30e-12 (should be ~0)
+  [cohort_pca, q=10] median E: normal=86.597 malignant=291.148 delta_E=+204.551
+  [cohort_pca, q=10] delta_E decomposition: from_residual=+202.194 from_M_in=+2.225  share_residual=0.989  (sum=+204.419 vs total +204.551, small median-nonlinearity gap expected)
+  [cohort_pca, q=10] AUROC: E=0.999  r=1.000  M_in=0.750  n_genes=0.775
+  [normal_only, q=10] PPCA decomposition check: max|E_direct - E_decomp| = 6.22e-05 (should be ~0)
+  [normal_only, q=10] median E: normal=70.532 malignant=70.825 delta_E=+0.293
+  [normal_only, q=10] delta_E decomposition: from_residual=-0.003 from_M_in=+0.674  share_residual=-0.004  (sum=+0.671 vs total +0.293, small median-nonlinearity gap expected)
+  [normal_only, q=10] AUROC: E=0.483  r=0.450  M_in=0.597  n_genes=0.775
+  [cohort_pca, q=20] PPCA decomposition check: max|E_direct - E_decomp| = 8.64e-12 (should be ~0)
+  [cohort_pca, q=20] median E: normal=82.274 malignant=401.920 delta_E=+319.646
+  [cohort_pca, q=20] delta_E decomposition: from_residual=+295.105 from_M_in=+22.503  share_residual=0.929  (sum=+317.608 vs total +319.646, small median-nonlinearity gap expected)
+  [cohort_pca, q=20] AUROC: E=1.000  r=1.000  M_in=0.926  n_genes=0.775
+  [normal_only, q=20] PPCA decomposition check: max|E_direct - E_decomp| = 6.49e-05 (should be ~0)
+  [normal_only, q=20] median E: normal=70.056 malignant=70.388 delta_E=+0.333
+  [normal_only, q=20] delta_E decomposition: from_residual=-0.512 from_M_in=+0.632  share_residual=-4.250  (sum=+0.120 vs total +0.333, small median-nonlinearity gap expected)
+  [normal_only, q=20] AUROC: E=0.490  r=0.438  M_in=0.589  n_genes=0.775
+  [cohort_pca, q=30] PPCA decomposition check: max|E_direct - E_decomp| = 1.81e-11 (should be ~0)
+  [cohort_pca, q=30] median E: normal=81.294 malignant=522.474 delta_E=+441.180
+  [cohort_pca, q=30] delta_E decomposition: from_residual=+385.475 from_M_in=+44.199  share_residual=0.897  (sum=+429.674 vs total +441.180, small median-nonlinearity gap expected)
+  [cohort_pca, q=30] AUROC: E=1.000  r=1.000  M_in=0.976  n_genes=0.775
+  [normal_only, q=30] PPCA decomposition check: max|E_direct - E_decomp| = 7.21e-05 (should be ~0)
+  [normal_only, q=30] median E: normal=69.929 malignant=70.360 delta_E=+0.432
+  [normal_only, q=30] delta_E decomposition: from_residual=-0.474 from_M_in=+0.837  share_residual=-1.307  (sum=+0.363 vs total +0.432, small median-nonlinearity gap expected)
+  [normal_only, q=30] AUROC: E=0.493  r=0.434  M_in=0.564  n_genes=0.775
+================================================================================================
+HTA8_6016
+================================================================================================
+n_normal=1510 n_malignant=782
+  [cohort_pca, q=10] PPCA decomposition check: max|E_direct - E_decomp| = 1.93e-12 (should be ~0)
+  [cohort_pca, q=10] median E: normal=85.751 malignant=239.801 delta_E=+154.050
+  [cohort_pca, q=10] delta_E decomposition: from_residual=+153.740 from_M_in=+1.864  share_residual=0.988  (sum=+155.604 vs total +154.050, small median-nonlinearity gap expected)
+  [cohort_pca, q=10] AUROC: E=0.995  r=0.995  M_in=0.678  n_genes=0.446
+  [normal_only, q=10] PPCA decomposition check: max|E_direct - E_decomp| = 4.83e-05 (should be ~0)
+  [normal_only, q=10] median E: normal=69.821 malignant=79.663 delta_E=+9.842
+  [normal_only, q=10] delta_E decomposition: from_residual=+9.115 from_M_in=+0.923  share_residual=0.908  (sum=+10.038 vs total +9.842, small median-nonlinearity gap expected)
+  [normal_only, q=10] AUROC: E=0.735  r=0.770  M_in=0.601  n_genes=0.446
+  [cohort_pca, q=20] PPCA decomposition check: max|E_direct - E_decomp| = 6.82e-12 (should be ~0)
+  [cohort_pca, q=20] median E: normal=80.381 malignant=320.255 delta_E=+239.873
+  [cohort_pca, q=20] delta_E decomposition: from_residual=+225.049 from_M_in=+16.824  share_residual=0.930  (sum=+241.874 vs total +239.873, small median-nonlinearity gap expected)
+  [cohort_pca, q=20] AUROC: E=0.998  r=0.999  M_in=0.941  n_genes=0.446
+  [normal_only, q=20] PPCA decomposition check: max|E_direct - E_decomp| = 8.48e-05 (should be ~0)
+  [normal_only, q=20] median E: normal=68.109 malignant=79.895 delta_E=+11.786
+  [normal_only, q=20] delta_E decomposition: from_residual=+10.062 from_M_in=+1.635  share_residual=0.860  (sum=+11.697 vs total +11.786, small median-nonlinearity gap expected)
+  [normal_only, q=20] AUROC: E=0.762  r=0.809  M_in=0.623  n_genes=0.446
+  [cohort_pca, q=30] PPCA decomposition check: max|E_direct - E_decomp| = 7.73e-12 (should be ~0)
+  [cohort_pca, q=30] median E: normal=77.733 malignant=387.389 delta_E=+309.656
+  [cohort_pca, q=30] delta_E decomposition: from_residual=+241.972 from_M_in=+63.142  share_residual=0.793  (sum=+305.114 vs total +309.656, small median-nonlinearity gap expected)
+  [cohort_pca, q=30] AUROC: E=0.999  r=1.000  M_in=0.987  n_genes=0.446
+  [normal_only, q=30] PPCA decomposition check: max|E_direct - E_decomp| = 4.00e-05 (should be ~0)
+  [normal_only, q=30] median E: normal=68.062 malignant=79.877 delta_E=+11.816
+  [normal_only, q=30] delta_E decomposition: from_residual=+5.994 from_M_in=+5.531  share_residual=0.520  (sum=+11.525 vs total +11.816, small median-nonlinearity gap expected)
+  [normal_only, q=30] AUROC: E=0.761  r=0.774  M_in=0.737  n_genes=0.446
+================================================================================================
+HTA8_6018
+================================================================================================
+n_normal=1256 n_malignant=2577
+  [cohort_pca, q=10] PPCA decomposition check: max|E_direct - E_decomp| = 5.12e-12 (should be ~0)
+  [cohort_pca, q=10] median E: normal=78.427 malignant=349.194 delta_E=+270.767
+  [cohort_pca, q=10] delta_E decomposition: from_residual=+266.521 from_M_in=+3.944  share_residual=0.985  (sum=+270.465 vs total +270.767, small median-nonlinearity gap expected)
+  [cohort_pca, q=10] AUROC: E=0.997  r=0.997  M_in=0.819  n_genes=0.820
+  [normal_only, q=10] PPCA decomposition check: max|E_direct - E_decomp| = 3.30e-05 (should be ~0)
+  [normal_only, q=10] median E: normal=72.429 malignant=75.864 delta_E=+3.435
+  [normal_only, q=10] delta_E decomposition: from_residual=+2.240 from_M_in=+1.829  share_residual=0.550  (sum=+4.069 vs total +3.435, small median-nonlinearity gap expected)
+  [normal_only, q=10] AUROC: E=0.583  r=0.553  M_in=0.691  n_genes=0.820
+  [cohort_pca, q=20] PPCA decomposition check: max|E_direct - E_decomp| = 1.82e-11 (should be ~0)
+  [cohort_pca, q=20] median E: normal=75.162 malignant=494.799 delta_E=+419.638
+  [cohort_pca, q=20] delta_E decomposition: from_residual=+398.940 from_M_in=+20.042  share_residual=0.952  (sum=+418.981 vs total +419.638, small median-nonlinearity gap expected)
+  [cohort_pca, q=20] AUROC: E=0.998  r=0.998  M_in=0.964  n_genes=0.820
+  [normal_only, q=20] PPCA decomposition check: max|E_direct - E_decomp| = 2.63e-05 (should be ~0)
+  [normal_only, q=20] median E: normal=71.019 malignant=74.119 delta_E=+3.100
+  [normal_only, q=20] delta_E decomposition: from_residual=+1.011 from_M_in=+2.133  share_residual=0.321  (sum=+3.144 vs total +3.100, small median-nonlinearity gap expected)
+  [normal_only, q=20] AUROC: E=0.571  r=0.529  M_in=0.650  n_genes=0.820
+  [cohort_pca, q=30] PPCA decomposition check: max|E_direct - E_decomp| = 1.73e-11 (should be ~0)
+  [cohort_pca, q=30] median E: normal=73.769 malignant=667.044 delta_E=+593.275
+  [cohort_pca, q=30] delta_E decomposition: from_residual=+544.781 from_M_in=+47.723  share_residual=0.919  (sum=+592.504 vs total +593.275, small median-nonlinearity gap expected)
+  [cohort_pca, q=30] AUROC: E=0.998  r=0.998  M_in=0.986  n_genes=0.820
+  [normal_only, q=30] PPCA decomposition check: max|E_direct - E_decomp| = 7.54e-05 (should be ~0)
+  [normal_only, q=30] median E: normal=70.962 malignant=73.722 delta_E=+2.760
+  [normal_only, q=30] delta_E decomposition: from_residual=-0.604 from_M_in=+3.123  share_residual=-0.240  (sum=+2.520 vs total +2.760, small median-nonlinearity gap expected)
+  [normal_only, q=30] AUROC: E=0.564  r=0.418  M_in=0.651  n_genes=0.820
+================================================================================================
+HTA8_6028
+================================================================================================
+n_normal=206 n_malignant=1234
+  [cohort_pca, q=10] PPCA decomposition check: max|E_direct - E_decomp| = 3.52e-12 (should be ~0)
+  [cohort_pca, q=10] median E: normal=88.212 malignant=274.892 delta_E=+186.680
+  [cohort_pca, q=10] delta_E decomposition: from_residual=+182.588 from_M_in=+4.398  share_residual=0.976  (sum=+186.987 vs total +186.680, small median-nonlinearity gap expected)
+  [cohort_pca, q=10] AUROC: E=0.996  r=0.997  M_in=0.884  n_genes=0.702
+  [normal_only, q=10] PPCA decomposition check: max|E_direct - E_decomp| = 2.30e-05 (should be ~0)
+  [normal_only, q=10] median E: normal=90.601 malignant=87.025 delta_E=-3.577
+  [normal_only, q=10] delta_E decomposition: from_residual=-5.931 from_M_in=+2.305  share_residual=1.636  (sum=-3.626 vs total -3.577, small median-nonlinearity gap expected)
+  [normal_only, q=10] AUROC: E=0.318  r=0.148  M_in=0.817  n_genes=0.702
+  [cohort_pca, q=20] PPCA decomposition check: max|E_direct - E_decomp| = 6.48e-12 (should be ~0)
+  [cohort_pca, q=20] median E: normal=84.130 malignant=470.652 delta_E=+386.523
+  [cohort_pca, q=20] delta_E decomposition: from_residual=+374.041 from_M_in=+13.397  share_residual=0.965  (sum=+387.438 vs total +386.523, small median-nonlinearity gap expected)
+  [cohort_pca, q=20] AUROC: E=0.998  r=0.999  M_in=0.928  n_genes=0.702
+  [normal_only, q=20] PPCA decomposition check: max|E_direct - E_decomp| = 7.59e-05 (should be ~0)
+  [normal_only, q=20] median E: normal=90.860 malignant=86.224 delta_E=-4.636
+  [normal_only, q=20] delta_E decomposition: from_residual=-6.331 from_M_in=+1.982  share_residual=1.456  (sum=-4.349 vs total -4.636, small median-nonlinearity gap expected)
+  [normal_only, q=20] AUROC: E=0.309  r=0.097  M_in=0.772  n_genes=0.702
+  [cohort_pca, q=30] PPCA decomposition check: max|E_direct - E_decomp| = 2.00e-11 (should be ~0)
+  [cohort_pca, q=30] median E: normal=83.923 malignant=598.917 delta_E=+514.994
+  [cohort_pca, q=30] delta_E decomposition: from_residual=+424.947 from_M_in=+89.981  share_residual=0.825  (sum=+514.929 vs total +514.994, small median-nonlinearity gap expected)
+  [cohort_pca, q=30] AUROC: E=0.997  r=0.998  M_in=0.998  n_genes=0.702
+  [normal_only, q=30] PPCA decomposition check: max|E_direct - E_decomp| = 6.74e-05 (should be ~0)
+  [normal_only, q=30] median E: normal=91.830 malignant=86.040 delta_E=-5.790
+  [normal_only, q=30] delta_E decomposition: from_residual=-6.173 from_M_in=+1.594  share_residual=1.348  (sum=-4.580 vs total -5.790, small median-nonlinearity gap expected)
+  [normal_only, q=30] AUROC: E=0.297  r=0.064  M_in=0.705  n_genes=0.702
+
+================================================================================================
+SUMMARY (q=20, primary)
+================================================================================================
+donor      space          share_resid  AUROC_E  AUROC_r AUROC_Min AUROC_ng
+HTA8_6002  cohort_pca           0.871    0.997    0.997     0.959    0.157  PASS
+HTA8_6002  normal_only          0.576    0.398    0.392     0.354    0.157  PASS
+HTA8_6009  cohort_pca           0.914    1.000    1.000     0.917    0.215  PASS
+HTA8_6009  normal_only          0.212    0.575    0.520     0.633    0.215  FAIL
+HTA8_6013  cohort_pca           0.929    1.000    1.000     0.926    0.775  PASS
+HTA8_6013  normal_only         -4.250    0.490    0.438     0.589    0.775  FAIL
+HTA8_6016  cohort_pca           0.930    0.998    0.999     0.941    0.446  PASS
+HTA8_6016  normal_only          0.860    0.762    0.809     0.623    0.446  FAIL
+HTA8_6018  cohort_pca           0.952    0.998    0.998     0.964    0.820  PASS
+HTA8_6018  normal_only          0.321    0.571    0.529     0.650    0.820  FAIL
+HTA8_6028  cohort_pca           0.965    0.998    0.999     0.928    0.702  PASS
+HTA8_6028  normal_only          1.456    0.309    0.097     0.772    0.702  PASS
+
+Donors passing B1 criteria: cohort_pca=6/6, normal_only=2/6
+VERDICT (B1): NOT SUPPORTED (need >=4/6 in BOTH spaces)
+-> potential is driven substantially by M_in (in-subspace extremeness) in at least one space, not solely by the out-of-subspace residual.
+NOTE: pass counts differ between the two spaces -- the two spaces give a DIFFERENT answer to B1 and this is flagged explicitly, per the R1 instruction.
+
+================================================================================================
+q-ROBUSTNESS (all q in [10, 20, 30], both spaces)
+================================================================================================
+donor      space            q share_resid  AUROC_E  AUROC_r
+HTA8_6002  cohort_pca      10       0.971    0.991    0.992
+HTA8_6002  cohort_pca      20       0.871    0.997    0.997
+HTA8_6002  cohort_pca      30       0.779    0.998    0.999
+HTA8_6002  normal_only     10       0.582    0.374    0.404
+HTA8_6002  normal_only     20       0.576    0.398    0.392
+HTA8_6002  normal_only     30       0.540    0.418    0.385
+HTA8_6009  cohort_pca      10       0.973    0.997    0.998
+HTA8_6009  cohort_pca      20       0.914    1.000    1.000
+HTA8_6009  cohort_pca      30       0.750    1.000    1.000
+HTA8_6009  normal_only     10       0.750    0.583    0.573
+HTA8_6009  normal_only     20       0.212    0.575    0.520
+HTA8_6009  normal_only     30       0.074    0.574    0.506
+HTA8_6013  cohort_pca      10       0.989    0.999    1.000
+HTA8_6013  cohort_pca      20       0.929    1.000    1.000
+HTA8_6013  cohort_pca      30       0.897    1.000    1.000
+HTA8_6013  normal_only     10      -0.004    0.483    0.450
+HTA8_6013  normal_only     20      -4.250    0.490    0.438
+HTA8_6013  normal_only     30      -1.307    0.493    0.434
+HTA8_6016  cohort_pca      10       0.988    0.995    0.995
+HTA8_6016  cohort_pca      20       0.930    0.998    0.999
+HTA8_6016  cohort_pca      30       0.793    0.999    1.000
+HTA8_6016  normal_only     10       0.908    0.735    0.770
+HTA8_6016  normal_only     20       0.860    0.762    0.809
+HTA8_6016  normal_only     30       0.520    0.761    0.774
+HTA8_6018  cohort_pca      10       0.985    0.997    0.997
+HTA8_6018  cohort_pca      20       0.952    0.998    0.998
+HTA8_6018  cohort_pca      30       0.919    0.998    0.998
+HTA8_6018  normal_only     10       0.550    0.583    0.553
+HTA8_6018  normal_only     20       0.321    0.571    0.529
+HTA8_6018  normal_only     30      -0.240    0.564    0.418
+HTA8_6028  cohort_pca      10       0.976    0.996    0.997
+HTA8_6028  cohort_pca      20       0.965    0.998    0.999
+HTA8_6028  cohort_pca      30       0.825    0.997    0.998
+HTA8_6028  normal_only     10       1.636    0.318    0.148
+HTA8_6028  normal_only     20       1.456    0.309    0.097
+HTA8_6028  normal_only     30       1.348    0.297    0.064
+
+================================================================================================
+CAVEATS
+================================================================================================
+- E, r, and M_in are all derived from the same normal-cell PPCA fit and the same PCA
+  coordinates as the residual itself; this is an internal decomposition, not an
+  independent measurement.
+- The malignant-vs-normal separation is an easy problem in general (both terms and
+  n_genes alone give high AUROC in most donors); the comparison of AUROCs to each other,
+  not their absolute level, is what the decision rule uses.
+- HTA8_6002 has only 60 malignant cells and 264 normal cells -- its per-fold held-out
+  normal groups (~53 cells/fold) are small, and its estimates are the least stable.
+- The normal-only space's HVG selection and PCA are refit independently for this
+  script; they are not guaranteed to match the exact cohort PCA subspace used elsewhere
+  in the repo even for the same donor, by construction (that is the point of space ii).

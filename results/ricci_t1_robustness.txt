@@ -1,0 +1,165 @@
+T1 robustness check (density / spread / intrinsic-dimension artefact test)
+versions: numpy=2.4.6, scipy=1.17.1, statsmodels=0.15.0, scikit-learn=1.9.1, POT=0.9.7.post1
+k values: [10, 20, 30]  (primary/decision k=20)  n_seeds=20  n_workers=12
+
+DECISION RULE (stated before the numbers): T1 is robust if, in a MAJORITY of donors
+(>=4/6), ALL THREE hold: (a) 1a k=20: malignant median ORC < normal median ORC in
+>=80% of 20 seeds; (b) 1b k=20: is_malignant OLS coefficient <0, p<0.05; (c) 1d:
+malignant median ORC < tumor-nonmalignant median ORC (only for donors that have a
+tumor-nonmalignant group -- otherwise (c) is not-applicable for that donor).
+Otherwise T1 is treated as an artefact and Step 2 is not run.
+
+Donors passing >=50/50 normal/malignant filter: [np.str_('HTA8_6002'), np.str_('HTA8_6009'), np.str_('HTA8_6013'), np.str_('HTA8_6016'), np.str_('HTA8_6018'), np.str_('HTA8_6028')]
+
+================================================================================================
+1a -- separate graphs, equal N (removes bridging/boundary effects)
+================================================================================================
+
+HTA8_6002: N_normal=264 N_malignant=60 N_tumor_nonmal=0 (n_matched=60, third_group=no)
+  k=10: median diff (mal-norm)=-0.0600  frac_seeds_mal<norm=1.00  median MWU p=1.14e-03  (2s, 40 graphs)
+  k=20: median diff (mal-norm)=-0.1200  frac_seeds_mal<norm=1.00  median MWU p=6.79e-12  (1s, 40 graphs)
+  k=30: median diff (mal-norm)=-0.0790  frac_seeds_mal<norm=1.00  median MWU p=4.03e-10  (1s, 40 graphs)
+
+HTA8_6009: N_normal=822 N_malignant=761 N_tumor_nonmal=238 (n_matched=761, third_group=yes)
+  k=10: median diff (mal-norm)=-0.1055  frac_seeds_mal<norm=1.00  median MWU p=3.79e-66  (4s, 60 graphs)
+  k=20: median diff (mal-norm)=-0.0829  frac_seeds_mal<norm=1.00  median MWU p=2.57e-53  (10s, 60 graphs)
+  k=30: median diff (mal-norm)=-0.0705  frac_seeds_mal<norm=1.00  median MWU p=9.81e-39  (19s, 60 graphs)
+
+HTA8_6013: N_normal=769 N_malignant=667 N_tumor_nonmal=165 (n_matched=667, third_group=yes)
+  k=10: median diff (mal-norm)=-0.1190  frac_seeds_mal<norm=1.00  median MWU p=1.32e-62  (4s, 60 graphs)
+  k=20: median diff (mal-norm)=-0.1089  frac_seeds_mal<norm=1.00  median MWU p=1.89e-75  (9s, 60 graphs)
+  k=30: median diff (mal-norm)=-0.1007  frac_seeds_mal<norm=1.00  median MWU p=2.17e-89  (16s, 60 graphs)
+
+HTA8_6016: N_normal=1510 N_malignant=782 N_tumor_nonmal=699 (n_matched=782, third_group=yes)
+  k=10: median diff (mal-norm)=-0.0583  frac_seeds_mal<norm=1.00  median MWU p=4.90e-18  (5s, 60 graphs)
+  k=20: median diff (mal-norm)=-0.0399  frac_seeds_mal<norm=1.00  median MWU p=5.71e-20  (12s, 60 graphs)
+  k=30: median diff (mal-norm)=-0.0346  frac_seeds_mal<norm=1.00  median MWU p=6.18e-21  (24s, 60 graphs)
+
+HTA8_6018: N_normal=1256 N_malignant=2577 N_tumor_nonmal=54 (n_matched=1256, third_group=yes)
+  k=10: median diff (mal-norm)=-0.1041  frac_seeds_mal<norm=1.00  median MWU p=9.79e-92  (7s, 60 graphs)
+  k=20: median diff (mal-norm)=-0.0874  frac_seeds_mal<norm=1.00  median MWU p=8.61e-108  (17s, 60 graphs)
+  k=30: median diff (mal-norm)=-0.0785  frac_seeds_mal<norm=1.00  median MWU p=8.19e-112  (34s, 60 graphs)
+
+HTA8_6028: N_normal=206 N_malignant=1234 N_tumor_nonmal=208 (n_matched=206, third_group=yes)
+  k=10: median diff (mal-norm)=-0.1200  frac_seeds_mal<norm=1.00  median MWU p=1.26e-17  (1s, 60 graphs)
+  k=20: median diff (mal-norm)=-0.0749  frac_seeds_mal<norm=1.00  median MWU p=1.83e-13  (3s, 60 graphs)
+  k=30: median diff (mal-norm)=-0.0382  frac_seeds_mal<norm=1.00  median MWU p=3.72e-08  (6s, 60 graphs)
+
+================================================================================================
+1b -- local geometry covariates on the FULL combined (normal+malignant) graph
+================================================================================================
+
+HTA8_6002: spread (trace cov, 50D PCA) normal=838.91 malignant=680.36
+  k=10: mean local_ID=3.60  mean knn_dist=0.1313
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=+0.0949  CI=[+0.0494,+0.1405]  p=5.23e-05  coef_localID=-0.0090 p=3.70e-03  R2=0.302
+  k=20: mean local_ID=2.60  mean knn_dist=0.1688
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=+0.0756  CI=[+0.0382,+0.1130]  p=8.63e-05  coef_localID=-0.0296 p=2.80e-11  R2=0.523
+  k=30: mean local_ID=2.21  mean knn_dist=0.2082
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=+0.0420  CI=[+0.0167,+0.0673]  p=1.22e-03  coef_localID=-0.0255 p=4.65e-12  R2=0.612
+
+HTA8_6009: spread (trace cov, 50D PCA) normal=630.17 malignant=619.33
+  k=10: mean local_ID=5.36  mean knn_dist=0.1065
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=-0.0125  CI=[-0.0253,+0.0003]  p=5.57e-02  coef_localID=-0.0159 p=4.41e-60  R2=0.486
+  k=20: mean local_ID=4.39  mean knn_dist=0.1260
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=+0.0190  CI=[+0.0078,+0.0301]  p=8.80e-04  coef_localID=-0.0144 p=4.33e-37  R2=0.512
+  k=30: mean local_ID=3.97  mean knn_dist=0.1407
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=+0.0242  CI=[+0.0131,+0.0353]  p=2.15e-05  coef_localID=-0.0163 p=1.09e-37  R2=0.474
+
+HTA8_6013: spread (trace cov, 50D PCA) normal=682.68 malignant=395.89
+  k=10: mean local_ID=4.98  mean knn_dist=0.0980
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=-0.0960  CI=[-0.1128,-0.0792]  p=4.43e-28  coef_localID=-0.0216 p=1.51e-60  R2=0.333
+  k=20: mean local_ID=4.07  mean knn_dist=0.1183
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=-0.0429  CI=[-0.0561,-0.0297]  p=2.72e-10  coef_localID=-0.0266 p=4.15e-75  R2=0.419
+  k=30: mean local_ID=3.69  mean knn_dist=0.1335
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=-0.0231  CI=[-0.0359,-0.0102]  p=4.48e-04  coef_localID=-0.0297 p=3.48e-79  R2=0.430
+
+HTA8_6016: spread (trace cov, 50D PCA) normal=621.48 malignant=498.27
+  k=10: mean local_ID=5.14  mean knn_dist=0.0912
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=+0.0606  CI=[+0.0469,+0.0743]  p=7.88e-18  coef_localID=-0.0207 p=3.50e-116  R2=0.348
+  k=20: mean local_ID=4.31  mean knn_dist=0.1090
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=+0.0587  CI=[+0.0467,+0.0706]  p=1.39e-21  coef_localID=-0.0276 p=3.49e-150  R2=0.402
+  k=30: mean local_ID=3.92  mean knn_dist=0.1231
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=+0.0614  CI=[+0.0517,+0.0712]  p=5.03e-34  coef_localID=-0.0289 p=2.98e-194  R2=0.492
+
+HTA8_6018: spread (trace cov, 50D PCA) normal=563.94 malignant=233.67
+  k=10: mean local_ID=6.47  mean knn_dist=0.0707
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=-0.0971  CI=[-0.1050,-0.0892]  p=2.17e-119  coef_localID=-0.0145 p=4.89e-156  R2=0.447
+  k=20: mean local_ID=5.57  mean knn_dist=0.0813
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=-0.0717  CI=[-0.0775,-0.0659]  p=2.81e-120  coef_localID=-0.0203 p=7.41e-247  R2=0.541
+  k=30: mean local_ID=5.18  mean knn_dist=0.0888
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=-0.0613  CI=[-0.0663,-0.0562]  p=3.26e-116  coef_localID=-0.0218 p=1.73e-277  R2=0.582
+
+HTA8_6028: spread (trace cov, 50D PCA) normal=615.47 malignant=335.99
+  k=10: mean local_ID=5.57  mean knn_dist=0.1131
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=-0.1134  CI=[-0.1309,-0.0959]  p=3.67e-35  coef_localID=-0.0126 p=1.31e-32  R2=0.468
+  k=20: mean local_ID=4.69  mean knn_dist=0.1333
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=-0.0848  CI=[-0.0976,-0.0720]  p=1.35e-36  coef_localID=-0.0159 p=6.64e-41  R2=0.588
+  k=30: mean local_ID=4.31  mean knn_dist=0.1483
+    OLS ORC ~ is_mal + log_deg + log_ngenes + log_knndist + local_ID: coef_mal=-0.0562  CI=[-0.0676,-0.0448]  p=1.69e-21  coef_localID=-0.0216 p=5.04e-62  R2=0.613
+
+================================================================================================
+1c -- k-robustness summary (1a and 1b across k=10,20,30)
+================================================================================================
+donor         k  1a frac<   1a diff   1a MWUp   1b coef      1b p
+HTA8_6002    10      1.00   -0.0600   1.1e-03    0.0949   5.2e-05
+HTA8_6002    20      1.00   -0.1200   6.8e-12    0.0756   8.6e-05
+HTA8_6002    30      1.00   -0.0790   4.0e-10    0.0420   1.2e-03
+HTA8_6009    10      1.00   -0.1055   3.8e-66   -0.0125   5.6e-02
+HTA8_6009    20      1.00   -0.0829   2.6e-53    0.0190   8.8e-04
+HTA8_6009    30      1.00   -0.0705   9.8e-39    0.0242   2.2e-05
+HTA8_6013    10      1.00   -0.1190   1.3e-62   -0.0960   4.4e-28
+HTA8_6013    20      1.00   -0.1089   1.9e-75   -0.0429   2.7e-10
+HTA8_6013    30      1.00   -0.1007   2.2e-89   -0.0231   4.5e-04
+HTA8_6016    10      1.00   -0.0583   4.9e-18    0.0606   7.9e-18
+HTA8_6016    20      1.00   -0.0399   5.7e-20    0.0587   1.4e-21
+HTA8_6016    30      1.00   -0.0346   6.2e-21    0.0614   5.0e-34
+HTA8_6018    10      1.00   -0.1041   9.8e-92   -0.0971  2.2e-119
+HTA8_6018    20      1.00   -0.0874  8.6e-108   -0.0717  2.8e-120
+HTA8_6018    30      1.00   -0.0785  8.2e-112   -0.0613  3.3e-116
+HTA8_6028    10      1.00   -0.1200   1.3e-17   -0.1134   3.7e-35
+HTA8_6028    20      1.00   -0.0749   1.8e-13   -0.0848   1.3e-36
+HTA8_6028    30      1.00   -0.0382   3.7e-08   -0.0562   1.7e-21
+
+================================================================================================
+1d -- batch/sample control: normal vs malignant vs tumor-non-malignant (k=20, mean over 20 seeds)
+================================================================================================
+donor        mean_ORC_normal  mean_ORC_malignant  mean_ORC_tumor_nonmal
+HTA8_6002             0.3831              0.2682        n/a (<50 cells)
+HTA8_6009             0.1294              0.0465                 0.1435
+HTA8_6013             0.1411              0.0330                 0.1984
+HTA8_6016             0.0878              0.0471                 0.1238
+HTA8_6018             0.0657             -0.0215                 0.2832
+HTA8_6028             0.1765              0.1011                 0.1644
+
+================================================================================================
+DECISION TABLE (k=20)
+================================================================================================
+donor        (a) frac<0.8?  (b) coef<0,p<.05?  (c) mal<tnm?  all 3?
+HTA8_6002              YES                 NO           N/A     NO
+HTA8_6009              YES                 NO           YES     NO
+HTA8_6013              YES                YES           YES    YES
+HTA8_6016              YES                 NO           YES     NO
+HTA8_6018              YES                YES           YES    YES
+HTA8_6028              YES                YES           YES    YES
+
+3/6 donors satisfy all three T1-robust conditions.
+VERDICT: T1 is TREATED AS AN ARTEFACT (<4/6 donors pass).
+Step 2 (scripts/ricci_cnv_ascl2.py) will NOT be run, per the decision rule.
+
+================================================================================================
+CAVEATS
+================================================================================================
+- HTA8_6002 has only 60 malignant cells (smallest donor) and no tumor-non-malignant
+  group (0 cells) -- criterion (c) is not-applicable there, and all its per-seed graphs
+  are built on only 60 cells per group, so its per-donor estimates are noisier than the
+  other 5 donors.
+- The tumor-non-malignant group's sample size is capped at min(n, N_tumor_nonmal); for
+  HTA8_6018 (n=54 available) and HTA8_6009/6013/6028 this is well below the matched
+  normal/malignant n, so its per-seed graphs are smaller and its ORC estimates in 1d
+  are correspondingly less stable than the normal/malignant comparison.
+- 1b's OLS is fit on the same combined graph the pilot used for its own T1 (no
+  subsampling) -- it is not independent of the pilot's original T1 result, only an
+  extension of the same regression with two more covariates.
+- local_ID (Levina-Bickel) and knn_dist are themselves computed from the same 50-D PCA
+  coordinates that the kNN graph and curvature are built from -- they are covariates of
+  the same geometry, not an independent measurement.

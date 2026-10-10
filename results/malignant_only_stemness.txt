@@ -1,0 +1,238 @@
+Malignant-only residual-stemness test
+versions: scanpy=1.11.5, infercnvpy=0.6.1, leidenalg=0.12.0, numpy=2.4.6, anndata=0.12.19, scipy=1.17.1
+var_names format: Ensembl gene id (e.g. ENSG00000238009)
+Genes with genomic position: 23885/24111 (99.1%); dropping the rest.
+
+==========================================================================================
+STEP 1 -- Patient1
+==========================================================================================
+
+CNV clone labeling (malignant-like vs normal-like, same rule as Check A):
+
+clone   n       cnv_score_med   vs_normal_p   n_arm_events  label
+0       1056    0.0077          2.926e-42     6             malignant-like
+1       135     0.0102          4.651e-49     7             malignant-like
+2       366     0.0051          1.765e-14     5             normal-like
+3       210     0.0083          5.587e-22     5             malignant-like
+4       636     0.0086          1.784e-70     6             malignant-like
+5       375     0.0054          2.780e-14     5             normal-like
+6       194     0.0087          3.882e-36     6             malignant-like
+
+Malignant-like clone(s): ['0', '1', '3', '4', '6']  n_malignant=2231/2972  fraction normal-like = 24.9%
+
+CHECK 1 -- formula sanity check: residual function used is paper_final_verification.residual() (centered: subtracts the normal-cell mean before projecting), imported directly, not reimplemented.
+  Ratio on ALL carcinoma epithelial cells (same code path, no malignant restriction) = 3.67x  (Mac rebuild reference: ~3.67x)  -> MATCH: centered formula confirmed, no fix needed.
+
+Within malignant-like cells only (n=2231):
+  residual median = 8.6627  (normal median = 2.1978, ratio = 3.94x)
+  Spearman(residual, ASCL2) = 0.285  p=7.239e-43
+  Spearman(residual, SOX4)  = 0.557  p=2.258e-182
+  %ASCL2+ top decile = 94.2%   bottom decile = 81.2%
+
+Quality confound check (malignant-like cells only, 13 MT genes found; 0 cells missing raw-count match):
+  Spearman(residual, pct_counts_mt)     = -0.003  p=8.862e-01
+  Spearman(residual, n_genes_by_counts) = -0.172  p=3.116e-16
+
+==========================================================================================
+STEP 1 -- Patient2
+==========================================================================================
+
+CNV clone labeling (malignant-like vs normal-like, same rule as Check A):
+
+clone   n       cnv_score_med   vs_normal_p   n_arm_events  label
+0       1128    0.0036          2.157e-159    3             normal-like
+1       211     0.0040          2.531e-20     1             normal-like
+2       910     0.0032          1.032e-177    5             normal-like
+3       1056    0.0157          0.000e+00     7             malignant-like
+
+Malignant-like clone(s): ['3']  n_malignant=1056/3305  fraction normal-like = 68.0%
+
+CHECK 1 -- formula sanity check: residual function used is paper_final_verification.residual() (centered: subtracts the normal-cell mean before projecting), imported directly, not reimplemented.
+  Ratio on ALL carcinoma epithelial cells (same code path, no malignant restriction) = 1.39x  (Mac rebuild reference: ~1.39x)  -> MATCH: centered formula confirmed, no fix needed.
+
+Within malignant-like cells only (n=1056):
+  residual median = 5.5178  (normal median = 2.6119, ratio = 2.11x)
+  Spearman(residual, ASCL2) = -0.129  p=2.711e-05
+  Spearman(residual, SOX4)  = 0.028  p=3.650e-01
+  %ASCL2+ top decile = 53.8%   bottom decile = 67.0%
+
+Quality confound check (malignant-like cells only, 13 MT genes found; 0 cells missing raw-count match):
+  Spearman(residual, pct_counts_mt)     = -0.001  p=9.855e-01
+  Spearman(residual, n_genes_by_counts) = -0.113  p=2.240e-04
+
+==========================================================================================
+STEP 2 -- CRC epithelial cohort (data/crc_epithelial.h5ad)
+==========================================================================================
+Loaded: 13843 cells x 25344 genes (Moorman et al. 2025, Nature; HTAN CRC epithelial)
+Note: normal cells = obs['disease']=='normal' (this dataset's cell_type has no 'normal' category, only epithelial subtypes); malignant = cell_type=='malignant cell'.
+QC metrics computed from adata.raw counts (13 MT genes found).
+
+HTA8_6002: n_normal=268  n_malignant=64  residual ratio=3.56x
+  Spearman(residual, ASCL2)=0.238 p=5.823e-02  Spearman(residual, SOX4)=0.330 p=7.669e-03
+  %ASCL2+ top decile=57.1%  bottom decile=0.0%
+  Spearman(residual, pct_counts_mt)=-0.036 p=7.793e-01  Spearman(residual, n_genes_by_counts)=0.577 p=6.158e-07
+  Tissue split not possible for HTA8_6002: n_primary=38, n_met=26 (need >=50 each).
+
+HTA8_6006: n_normal=117  n_malignant=117  residual ratio=1.00x
+  Spearman(residual, ASCL2)=-0.137 p=1.412e-01  Spearman(residual, SOX4)=-0.057 p=5.398e-01
+  %ASCL2+ top decile=8.3%  bottom decile=25.0%
+  Spearman(residual, pct_counts_mt)=-0.138 p=1.382e-01  Spearman(residual, n_genes_by_counts)=-0.356 p=8.216e-05
+  Tissue split not possible for HTA8_6006: n_primary=117, n_met=0 (need >=50 each).
+
+HTA8_6009: n_normal=832  n_malignant=771  residual ratio=3.24x
+  Spearman(residual, ASCL2)=-0.133 p=2.132e-04  Spearman(residual, SOX4)=0.265 p=7.520e-14
+  %ASCL2+ top decile=33.3%  bottom decile=50.0%
+  Spearman(residual, pct_counts_mt)=-0.445 p=8.451e-39  Spearman(residual, n_genes_by_counts)=-0.088 p=1.474e-02
+  Tissue split (n_primary=685, n_met=86):
+    primary_colon: n=685  median_residual=13.273  rho_ASCL2=-0.147 p=1.155e-04  rho_SOX4=0.287 p=1.779e-14  ASCL2%_top=34.8  ASCL2%_bot=49.3
+    liver_met: n=86  median_residual=14.657  rho_ASCL2=-0.202 p=6.188e-02  rho_SOX4=0.022 p=8.411e-01  ASCL2%_top=22.2  ASCL2%_bot=44.4
+
+HTA8_6013: n_normal=770  n_malignant=668  residual ratio=4.97x
+  Spearman(residual, ASCL2)=0.142 p=2.409e-04  Spearman(residual, SOX4)=0.037 p=3.409e-01
+  %ASCL2+ top decile=70.1%  bottom decile=43.3%
+  Spearman(residual, pct_counts_mt)=-0.318 p=3.694e-17  Spearman(residual, n_genes_by_counts)=0.209 p=4.994e-08
+  Tissue split not possible for HTA8_6013: n_primary=627, n_met=41 (need >=50 each).
+
+HTA8_6016: n_normal=1516  n_malignant=788  residual ratio=4.23x
+  Spearman(residual, ASCL2)=-0.001 p=9.783e-01  Spearman(residual, SOX4)=0.309 p=6.481e-19
+  %ASCL2+ top decile=15.2%  bottom decile=22.8%
+  Spearman(residual, pct_counts_mt)=-0.126 p=3.743e-04  Spearman(residual, n_genes_by_counts)=0.346 p=1.293e-23
+  Tissue split (n_primary=267, n_met=521):
+    primary_colon: n=267  median_residual=15.637  rho_ASCL2=0.064 p=2.967e-01  rho_SOX4=0.491 p=1.327e-17  ASCL2%_top=29.6  ASCL2%_bot=22.2
+    liver_met: n=521  median_residual=15.920  rho_ASCL2=-0.048 p=2.693e-01  rho_SOX4=0.205 p=2.421e-06  ASCL2%_top=15.1  ASCL2%_bot=35.8
+
+HTA8_6018: n_normal=1257  n_malignant=2578  residual ratio=5.53x
+  Spearman(residual, ASCL2)=0.112 p=1.030e-08  Spearman(residual, SOX4)=0.112 p=1.193e-08
+  %ASCL2+ top decile=91.1%  bottom decile=82.6%
+  Spearman(residual, pct_counts_mt)=-0.011 p=5.824e-01  Spearman(residual, n_genes_by_counts)=0.198 p=2.795e-24
+  Tissue split (n_primary=1892, n_met=686):
+    primary_colon: n=1892  median_residual=19.630  rho_ASCL2=0.071 p=1.887e-03  rho_SOX4=0.053 p=2.237e-02  ASCL2%_top=96.8  ASCL2%_bot=84.2
+    liver_met: n=686  median_residual=20.263  rho_ASCL2=0.183 p=1.365e-06  rho_SOX4=0.143 p=1.738e-04  ASCL2%_top=87.0  ASCL2%_bot=79.7
+
+HTA8_6028: n_normal=215  n_malignant=1243  residual ratio=4.30x
+  Spearman(residual, ASCL2)=0.015 p=6.002e-01  Spearman(residual, SOX4)=0.302 p=1.176e-27
+  %ASCL2+ top decile=56.0%  bottom decile=36.8%
+  Spearman(residual, pct_counts_mt)=-0.030 p=2.935e-01  Spearman(residual, n_genes_by_counts)=0.312 p=2.191e-29
+  Tissue split (n_primary=586, n_met=657):
+    primary_colon: n=586  median_residual=15.986  rho_ASCL2=0.042 p=3.135e-01  rho_SOX4=0.307 p=3.155e-14  ASCL2%_top=44.1  ASCL2%_bot=35.6
+    liver_met: n=657  median_residual=16.842  rho_ASCL2=-0.079 p=4.252e-02  rho_SOX4=0.262 p=8.736e-12  ASCL2%_top=57.6  ASCL2%_bot=71.2
+
+Donors passing >=50/50 normal/malignant filter: 7/9 (HTA8_6002, HTA8_6006, HTA8_6009, HTA8_6013, HTA8_6016, HTA8_6018, HTA8_6028)
+Donors with a valid primary-vs-metastasis tissue split (>=50 each): 4
+
+==========================================================================================
+STEP 3 -- Summary table across all samples
+==========================================================================================
+
+Decision rule (stated before the numbers): the stemness claim -- that high-residual
+cells are enriched for ASCL2 (stemness marker) -- survives restriction to confirmed
+malignant cells only if Spearman(residual, ASCL2) is POSITIVE and significant (p<0.05)
+in MOST samples below.
+
+sample        N_malignant  resid_ratio  rho_ASCL2  p          rho_SOX4   p          ASCL2%_top  ASCL2%_bot
+----------------------------------------------------------------------------------------------------------
+Patient1      2231         3.94         0.285      7.239e-43  0.557      2.258e-182 94.2        81.2
+Patient2      1056         2.11         -0.129     2.711e-05  0.028      3.650e-01  53.8        67.0
+HTA8_6002     64           3.56         0.238      5.823e-02  0.330      7.669e-03  57.1        0.0
+HTA8_6006     117          1.00         -0.137     1.412e-01  -0.057     5.398e-01  8.3         25.0
+HTA8_6009     771          3.24         -0.133     2.132e-04  0.265      7.520e-14  33.3        50.0
+HTA8_6013     668          4.97         0.142      2.409e-04  0.037      3.409e-01  70.1        43.3
+HTA8_6016     788          4.23         -0.001     9.783e-01  0.309      6.481e-19  15.2        22.8
+HTA8_6018     2578         5.53         0.112      1.030e-08  0.112      1.193e-08  91.1        82.6
+HTA8_6028     1243         4.30         0.015      6.002e-01  0.302      1.176e-27  56.0        36.8
+
+3/9 samples show positive AND significant Spearman(residual, ASCL2) within malignant cells only.
+By the stated decision rule: the stemness claim DOES NOT SURVIVE restriction to malignant-only cells.
+
+--- Tissue-split summary: primary colon vs liver metastasis (Moorman et al. predict
+    the ASCL2/stem-like association should differ: primary tumors LGR5+ stem-like,
+    metastases lose intestinal identity) ---
+sample                  N       resid_med  rho_ASCL2  p          rho_SOX4   p          ASCL2%_top  ASCL2%_bot
+-------------------------------------------------------------------------------------------------------------
+HTA8_6009_primary_colon 685     13.273     -0.147     1.155e-04  0.287      1.779e-14  34.8        49.3
+HTA8_6009_liver_met     86      14.657     -0.202     6.188e-02  0.022      8.411e-01  22.2        44.4
+HTA8_6016_primary_colon 267     15.637     0.064      2.967e-01  0.491      1.327e-17  29.6        22.2
+HTA8_6016_liver_met     521     15.920     -0.048     2.693e-01  0.205      2.421e-06  15.1        35.8
+HTA8_6018_primary_colon 1892    19.630     0.071      1.887e-03  0.053      2.237e-02  96.8        84.2
+HTA8_6018_liver_met     686     20.263     0.183      1.365e-06  0.143      1.738e-04  87.0        79.7
+HTA8_6028_primary_colon 586     15.986     0.042      3.135e-01  0.307      3.155e-14  44.1        35.6
+HTA8_6028_liver_met     657     16.842     -0.079     4.252e-02  0.262      8.736e-12  57.6        71.2
+
+==========================================================================================
+STEP 4 -- Quality confound summary (already reported per-sample above; consolidated here)
+==========================================================================================
+sample        rho_pct_mt   p          rho_n_genes  p
+Patient1      -0.003       8.862e-01  -0.172       3.116e-16
+Patient2      -0.001       9.855e-01  -0.113       2.240e-04
+HTA8_6002     -0.036       7.793e-01  0.577        6.158e-07
+HTA8_6006     -0.138       1.382e-01  -0.356       8.216e-05
+HTA8_6009     -0.445       8.451e-39  -0.088       1.474e-02
+HTA8_6013     -0.318       3.694e-17  0.209        4.994e-08
+HTA8_6016     -0.126       3.743e-04  0.346        1.293e-23
+HTA8_6018     -0.011       5.824e-01  0.198        2.795e-24
+HTA8_6028     -0.030       2.935e-01  0.312        2.191e-29
+
+##########################################################################################
+SUMMARY OF CHECK 1 AND CHECK 2 (facts only, no interpretation beyond the numbers above)
+##########################################################################################
+
+CHECK 1 (formula sanity check):
+- scripts/malignant_only_stemness.py imports residual()/subspace_svd() directly from
+  scripts/paper_final_verification.py (the centered formula) and never reimplements them.
+- Recomputing the ratio on ALL carcinoma epithelial cells (no malignant restriction), via
+  this exact code path, gave 3.67x for Patient1 and 1.39x for Patient2 -- an exact match to
+  the Mac rebuild verification reference. No bug found; no fix was needed. The 3.94x and
+  2.11x figures reported for the malignant-only subsets in the previous run are real and
+  expected: they are the ratio computed on the smaller, normal-like-cell-excluded population,
+  not the same quantity as the ~3.67x/1.39x whole-population reference, so they are not
+  comparable to each other.
+
+CHECK 2 (CRC cohort) -- a real bug was found and fixed while implementing this check: the
+  original step2_crc_cohort() masked normal cells with `cell_type == "normal"`, but this
+  dataset's cell_type column has no "normal" category (only epithelial subtypes: colonocyte,
+  secretory cell, etc.) -- that mask would have silently returned 0 normal cells for every
+  donor. Fixed to use `disease == "normal"` (this dataset's actual normal/tumor label),
+  matching the approach in scripts/paper_final_verification.py's run_crc(). This is now noted
+  explicitly in the script's Step 2 output.
+- 7/9 donors passed the >=50 normal / >=50 malignant filter (HTA8_6011 and HTA8_6014 failed,
+  both for <50 normal cells).
+- Only 3/9 samples overall (Patient1, HTA8_6002, HTA8_6013) show positive AND significant
+  Spearman(residual, ASCL2) within malignant cells -- by the stated rule, the ASCL2 stemness
+  claim DOES NOT SURVIVE restriction to malignant-only cells across this expanded sample set.
+- SOX4 behaves differently: 6/9 samples (Patient1, HTA8_6002, HTA8_6009, HTA8_6016, HTA8_6018,
+  HTA8_6028) show positive AND significant Spearman(residual, SOX4) -- a majority, unlike
+  ASCL2. The two stemness markers do not agree with each other in most CRC donors; SOX4 tracks
+  residual more consistently than ASCL2 does once normal-like/non-malignant cells are removed.
+- Quality confound differs by dataset: in Patient1/Patient2 (GSE161277, raw-count pct_mt),
+  pct_counts_mt showed no correlation with residual. In the CRC cohort, pct_counts_mt is
+  significantly NEGATIVELY correlated with residual in several donors (HTA8_6009 rho=-0.445
+  p=8e-39, HTA8_6013 rho=-0.318 p=4e-17, HTA8_6016 rho=-0.126 p=4e-4) -- lower-residual cells
+  in these donors have relatively higher mitochondrial content, a pattern often associated
+  with cell stress/death, not simply "low quality/low complexity." n_genes_by_counts also
+  behaves oppositely from the GSE161277 patients: it is POSITIVELY correlated with residual in
+  5/7 CRC donors (rho 0.198-0.577, all p<0.02), including a strong rho=0.577 in HTA8_6002 (the
+  smallest malignant group, n=64). This is the opposite direction from Patient1/Patient2's
+  small negative correlations, and is large enough in HTA8_6002 to be a genuine quality
+  confound candidate: in that donor, higher-residual cells reliably have more detected genes,
+  which is at least as plausibly a library-complexity effect as a biological one. This
+  confound pattern was not present in the GSE161277 patients and should be weighed when
+  comparing residual findings across the two data sources.
+- Tissue split (primary colon vs liver metastasis) was possible for 4/7 donors (HTA8_6009,
+  HTA8_6016, HTA8_6018, HTA8_6028; the other 3 lacked >=50 cells in one tissue). The
+  Moorman et al. expectation -- that primary tumors retain a stronger LGR5+/stem-like
+  (ASCL2) association while metastases lose intestinal identity -- is NOT consistently
+  supported by these four donors:
+    HTA8_6009: primary rho=-0.147 (p=1.2e-4), met rho=-0.202 (p=0.062, not significant) --
+      both negative, similar direction; no primary>met asymmetry.
+    HTA8_6016: primary rho=+0.064 (n.s.), met rho=-0.048 (n.s.) -- both near zero, neither
+      significant; no evidence either way.
+    HTA8_6018: primary rho=+0.071 (p=1.9e-3), met rho=+0.183 (p=1.4e-6) -- BOTH positive and
+      significant, with the metastasis correlation numerically STRONGER than the primary --
+      the opposite of the expected direction.
+    HTA8_6028: primary rho=+0.042 (n.s.), met rho=-0.079 (p=0.043) -- weakly in the expected
+      direction (primary slightly higher than met), but the primary correlation itself is not
+      significant.
+  Across these 4 donors, only HTA8_6028 shows a pattern even loosely consistent with the
+  Moorman et al. prediction, and its primary-tissue correlation is not itself significant.
+  HTA8_6018 shows the opposite pattern. This check does not support the ASCL2-residual
+  association being reliably stronger in primary tumors than in liver metastases.

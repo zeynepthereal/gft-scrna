@@ -1,0 +1,46 @@
+NOTE — the "R1" normal-only-space robustness check (results/geom_ppca_potential.txt,
+results/geom_principal_angles.txt) is INVALID BY DESIGN and its conclusions should not be relied
+upon. Nothing in those two files has been edited; this note documents the flaw and supersedes
+their R1-based conclusions going forward.
+
+THE FLAW
+--------
+R1's "normal-only space" fit a 50-D PCA on normal cells' top-2000 HVGs, then projected malignant
+cells into that fixed subspace. Projecting a point onto a subspace by construction discards all
+variance orthogonal to that subspace. But the projection residual under test — the entire quantity
+this thesis is about — IS the out-of-subspace variance. A normal-cell-only subspace, by
+definition, cannot contain directions that are specific to malignant cells; projecting malignant
+cells into it necessarily throws away exactly the signal (large, malignant-specific out-of-
+subspace variance) that the residual is supposed to detect. The "normal-only space" was not a
+leakage-free control — it was a test with its own answer built into its construction, biased
+toward finding LESS separation regardless of the true underlying biology.
+
+This means:
+  - geom_ppca_potential.py's "normal_only" B1 results (2/6 donors passing, several wildly
+    unstable/negative share_residual values such as -4.25) do not show that the residual finding
+    is unreliable — the test itself could not have shown otherwise had the residual finding been
+    completely real, because the 50-D truncation to a normal-only-derived subspace pre-discards
+    the very signal being measured.
+  - geom_principal_angles.py's "normal_only" B2a results are affected the same way.
+  - The "cohort PCA leaks / R1 shows the malignant signal is inflated" narrative given at the end
+    of the geom_ppca_potential.py / geom_principal_angles.py summary is WITHDRAWN. It does not
+    follow from the R1 comparison as constructed.
+
+WHAT IS AND ISN'T INVALIDATED
+------------------------------
+- The cohort-PCA-space results in geom_ppca_potential.py and geom_principal_angles.py are NOT
+  invalidated by this note. Cohort PCA is unsupervised (fit without using the normal/malignant
+  label at all) and is not the flawed part of R1; only the specific "normal-only 50-D projection"
+  construction used as a control is flawed.
+- B2b's cohort-PCA-space result (observed cross-donor consistency 0.1284 vs null p95 0.1287,
+  NOT SUPPORTED) is unaffected by this note and stands as reported. It is not retested here (see
+  scripts/geom_r1_fullgene.py's docstring: B2b is closed and is not reopened by relaxing the space
+  it was tested in).
+- A corrected, scalable version of the full-gene-space idea (no truncation to 50 dimensions, no
+  early projection that discards malignant-specific variance) is implemented in
+  scripts/geom_r1_fullgene.py -> results/geom_r1_fullgene.txt.
+
+A second, independent correction addressed in the same follow-up step: the previous PPCA delta-E
+decomposition used MEDIAN differences, which are not additive across the residual and M_in terms
+(this produced the impossible -4.25 "share" value in the invalid normal-only space above). The
+corrected script uses MEAN differences, which decompose exactly.

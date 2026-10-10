@@ -1,0 +1,61 @@
+GSE161277_all.h5ad rebuild verification (Mac)
+platform=macOS-26.5.1-arm64-arm-64bit  python=3.11.16
+versions: scanpy=1.11.5, anndata=0.12.19, numpy=2.4.6, scipy=1.17.1, scikit-learn=1.9.1, leidenalg=0.12.0, igraph=1.0.0, pandas=2.3.3
+Leiden: resolution=0.5, random_state=0, flavor=leidenalg (scanpy default), n_clusters=27
+
+Quantity                                  Expected    Obtained      Diff       Rel
+----------------------------------------------------------------------------------
+Cells after filtering                       50,518      50,518        +0    +0.00%
+Genes after filtering                       24,111      24,111        +0    +0.00%
+cell_type: Epithelial/Tumor                 21,969      22,002       +33    +0.15%
+cell_type: T cell                           13,176      13,437      +261    +1.98%
+cell_type: B cell                            8,377       8,374        -3    -0.04%
+cell_type: NK cell                           3,467       3,188      -279    -8.05%
+cell_type: Macrophage/Monocyte               2,876       2,876        +0    +0.00%
+cell_type: Fibroblast/CAF                      529         529        +0    +0.00%
+cell_type: Endothelial                         124         112       -12    -9.68%
+Patient1 normal epithelial                     834         836        +2    +0.24%
+Patient1 carcinoma epithelial                2,972       2,972        +0    +0.00%
+Patient1 residual median normal               2.20        2.20     -0.00    -0.10%
+Patient1 residual median cancer               8.02        8.06     +0.04    +0.45%
+Patient1 residual ratio (median)              3.64        3.67     +0.03    +0.70%
+Patient2 normal epithelial                   3,584       3,595       +11    +0.31%
+Patient2 carcinoma epithelial                3,304       3,305        +1    +0.03%
+Patient2 residual median normal               2.59        2.61     +0.02    +0.85%
+Patient2 residual median cancer               3.58        3.63     +0.05    +1.33%
+Patient2 residual ratio (median)              1.38        1.39     +0.01    +0.65%
+
+(Patient2 medians 2.59 / 3.58 taken from results/paper_final_verification.txt; the task spec listed only the 1.38x ratio.)
+
+Sensitivity: Leiden random_state=42 on the same graph (n_clusters=27; not saved)
+cell_type                 Expected    seed=0   seed=42
+Epithelial/Tumor            21,969    22,002    21,994
+T cell                      13,176    13,437    13,502
+B cell                       8,377     8,374     8,376
+NK cell                      3,467     3,188     3,131
+Macrophage/Monocyte          2,876     2,876     2,862
+Fibroblast/CAF                 529       529       529
+Endothelial                    124       112       124
+cell_type agreement seed 0 vs 42: 99.79% of cells
+
+Residual without mean-centering (formula exactly as written in the task, r=||x-UU^T x||; paper script centers):
+  Patient1: median normal=2.22 cancer=8.74 ratio=3.94x
+  Patient2: median normal=2.65 cancer=3.67 ratio=1.39x
+
+INTERPRETATION
+- Preprocessing is exact: 50,518 cells x 24,111 genes, identical to the paper. The loading/filtering/
+  normalization path is deterministic and platform-independent.
+- All deviations come from Leiden cluster boundaries. The same 13 samples give 27 clusters;
+  Macrophage and Fibroblast counts match exactly, B cell within 3, Epithelial within 33 (0.15%).
+  The largest deviation is NK vs T (-279 NK / +261 T): a cluster on the NK/CD8-T border is split
+  differently. That is the part of the embedding a Leiden run most easily cuts in a different place.
+- Likely cause: Leiden (leidenalg + igraph) partitions depend on the random seed AND on the
+  library versions and floating-point details of the kNN graph (UMAP-style connectivities / PCA
+  solver on arm64 vs x86_64 Windows, numpy/scipy BLAS). The original environment's versions were
+  not recorded, so the original partition cannot be reproduced bit-for-bit. Changing only the seed
+  (0 vs 42) on the same Mac graph moves ~0.2% of labels and gives a similar
+  (not identical) spread, e.g. Endothelial 124 with seed 42, which matches the paper exactly.
+- Paper-level claims are preserved: Patient1 residual ratio 3.67x vs 3.64x, Patient2 1.39x vs
+  1.38x; epithelial counts differ by <=11 cells (<0.35%).
+- Nothing was tuned to match. The saved h5ad uses the original script's settings
+  (random_state=0, scanpy default), not the random_state=42 in the task spec. See the sensitivity block.

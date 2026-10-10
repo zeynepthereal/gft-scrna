@@ -1,0 +1,218 @@
+EXPLORATORY - T1 failed pre-registered robustness; results here are hypothesis-generating only.
+
+Decision rule ("kappa_resid carries a gene program independent of local geometry"), stated before the numbers -- ALL THREE must hold:
+  (a) >=20 consistent genes for kappa_resid (positive+negative, FDR<0.05, same sign, >=4/6 donors).
+  (b) |Spearman(median_rho_kappa_resid, median_rho_ID)| < 0.5 across the shared gene set.
+  (c) >=1 gene set has FDR<0.05 in kappa_resid's GSEA AND FDR>=0.25 in ID's GSEA.
+Otherwise: curvature reduces to local geometry; the Ricci line closes as a negative result.
+Secondary phase-portrait rule: kappa_resid separates subtypes if, in >=4/6 donors, its cross-cluster epsilon^2>=0.05 AND exceeds local_ID's epsilon^2.
+
+versions: numpy=2.4.6, scipy=1.17.1, statsmodels=0.15.0, POT=0.9.7.post1, scanpy=1.11.5
+gseapy=1.3.1
+
+================================================================================================
+STEP 0 -- per-cell quantities, malignant-only graphs, k=20
+================================================================================================
+
+HTA8_6002: n_normal=264 n_malignant=60
+  ORC ~ log(deg)+log(n_genes)+local_ID: R2=0.583  coef_logdeg=-0.1523 coef_logngenes=-0.0243 coef_localID=-0.0264
+  Spearman correlation matrix (residual, ORC, kappa_resid, local_ID, n_genes):
+        residual          ORC  kappa_resid     local_ID      n_genes
+    residual        1.000       -0.211        0.166        0.544        0.746
+    ORC            -0.211        1.000        0.615       -0.750       -0.241
+    kappa_resid       0.166        0.615        1.000       -0.134        0.104
+    local_ID        0.544       -0.750       -0.134        1.000        0.419
+    n_genes         0.746       -0.241        0.104        0.419        1.000
+
+HTA8_6009: n_normal=822 n_malignant=761
+  ORC ~ log(deg)+log(n_genes)+local_ID: R2=0.310  coef_logdeg=+0.0911 coef_logngenes=-0.0068 coef_localID=-0.0188
+  Spearman correlation matrix (residual, ORC, kappa_resid, local_ID, n_genes):
+        residual          ORC  kappa_resid     local_ID      n_genes
+    residual        1.000       -0.065       -0.033        0.049        0.188
+    ORC            -0.065        1.000        0.801       -0.527       -0.028
+    kappa_resid      -0.033        0.801        1.000       -0.078        0.031
+    local_ID        0.049       -0.527       -0.078        1.000       -0.100
+    n_genes         0.188       -0.028        0.031       -0.100        1.000
+
+HTA8_6013: n_normal=769 n_malignant=667
+  ORC ~ log(deg)+log(n_genes)+local_ID: R2=0.336  coef_logdeg=+0.0592 coef_logngenes=-0.0244 coef_localID=-0.0304
+  Spearman correlation matrix (residual, ORC, kappa_resid, local_ID, n_genes):
+        residual          ORC  kappa_resid     local_ID      n_genes
+    residual        1.000        0.119        0.087       -0.136        0.205
+    ORC             0.119        1.000        0.794       -0.625       -0.035
+    kappa_resid       0.087        0.794        1.000       -0.128        0.016
+    local_ID       -0.136       -0.625       -0.128        1.000        0.007
+    n_genes         0.205       -0.035        0.016        0.007        1.000
+
+HTA8_6016: n_normal=1510 n_malignant=782
+  ORC ~ log(deg)+log(n_genes)+local_ID: R2=0.291  coef_logdeg=+0.0463 coef_logngenes=-0.0163 coef_localID=-0.0311
+  Spearman correlation matrix (residual, ORC, kappa_resid, local_ID, n_genes):
+        residual          ORC  kappa_resid     local_ID      n_genes
+    residual        1.000       -0.182       -0.062        0.025        0.418
+    ORC            -0.182        1.000        0.716       -0.585       -0.226
+    kappa_resid      -0.062        0.716        1.000        0.010       -0.006
+    local_ID        0.025       -0.585        0.010        1.000        0.094
+    n_genes         0.418       -0.226       -0.006        0.094        1.000
+
+HTA8_6018: n_normal=1256 n_malignant=2577
+  ORC ~ log(deg)+log(n_genes)+local_ID: R2=0.287  coef_logdeg=+0.0295 coef_logngenes=-0.0245 coef_localID=-0.0215
+  Spearman correlation matrix (residual, ORC, kappa_resid, local_ID, n_genes):
+        residual          ORC  kappa_resid     local_ID      n_genes
+    residual        1.000        0.017       -0.005       -0.087        0.225
+    ORC             0.017        1.000        0.827       -0.535       -0.076
+    kappa_resid      -0.005        0.827        1.000       -0.065       -0.017
+    local_ID       -0.087       -0.535       -0.065        1.000        0.023
+    n_genes         0.225       -0.076       -0.017        0.023        1.000
+
+HTA8_6028: n_normal=206 n_malignant=1234
+  ORC ~ log(deg)+log(n_genes)+local_ID: R2=0.353  coef_logdeg=+0.0823 coef_logngenes=-0.0516 coef_localID=-0.0189
+  Spearman correlation matrix (residual, ORC, kappa_resid, local_ID, n_genes):
+        residual          ORC  kappa_resid     local_ID      n_genes
+    residual        1.000       -0.111        0.086       -0.045        0.455
+    ORC            -0.111        1.000        0.773       -0.465       -0.130
+    kappa_resid       0.086        0.773        1.000       -0.021        0.127
+    local_ID       -0.045       -0.465       -0.021        1.000        0.040
+    n_genes         0.455       -0.130        0.127        0.040        1.000
+
+================================================================================================
+STEP 1 -- phase portrait (quantitative; figures saved, not read for conclusions)
+================================================================================================
+
+HTA8_6002: Author Cell Type categories among malignant cells: {'Primary Tumor': np.int64(34), 'Metastasis': np.int64(26)}
+  Clusters with >=30 malignant cells (Author Cell Type):
+  cluster             n       median_residual   median_kappa_resid  median_ID
+  Metastasis          26      (skipped, <30)
+  Primary Tumor       34      15.000            -0.000              1.813
+  Kruskal-Wallis across 1 clusters: kappa_resid p=nan eps2=nan  |  local_ID p=nan eps2=nan
+  partial Spearman(ISC Signature, kappa_resid | log deg, log n_genes, ID) = +0.257 (p=5.38e-02)
+  partial Spearman(ISC Signature, residual    | same covariates)          = +0.264 (p=4.69e-02)  [comparison]
+
+HTA8_6009: Author Cell Type categories among malignant cells: {'Primary Tumor': np.int64(675), 'Metastasis': np.int64(86)}
+  Clusters with >=30 malignant cells (Author Cell Type):
+  cluster             n       median_residual   median_kappa_resid  median_ID
+  Metastasis          86      17.975            -0.029              4.862
+  Primary Tumor       675     16.291            0.007               4.901
+  Kruskal-Wallis across 2 clusters: kappa_resid p=9.61e-06 eps2=0.0245  |  local_ID p=3.61e-01 eps2=0.0000
+  partial Spearman(ISC Signature, kappa_resid | log deg, log n_genes, ID) = +0.037 (p=3.11e-01)
+  partial Spearman(ISC Signature, residual    | same covariates)          = -0.610 (p=2.51e-78)  [comparison]
+
+HTA8_6013: Author Cell Type categories among malignant cells: {'Primary Tumor': np.int64(626), 'Metastasis': np.int64(41)}
+  Clusters with >=30 malignant cells (Author Cell Type):
+  cluster             n       median_residual   median_kappa_resid  median_ID
+  Metastasis          41      21.298            0.098               2.776
+  Primary Tumor       626     19.586            -0.003              3.906
+  Kruskal-Wallis across 2 clusters: kappa_resid p=2.10e-08 eps2=0.0457  |  local_ID p=8.49e-03 eps2=0.0089
+  partial Spearman(ISC Signature, kappa_resid | log deg, log n_genes, ID) = -0.020 (p=6.08e-01)
+  partial Spearman(ISC Signature, residual    | same covariates)          = -0.141 (p=2.58e-04)  [comparison]
+
+HTA8_6016: Author Cell Type categories among malignant cells: {'Metastasis': np.int64(521), 'Primary Tumor': np.int64(261)}
+  Clusters with >=30 malignant cells (Author Cell Type):
+  cluster             n       median_residual   median_kappa_resid  median_ID
+  Metastasis          521     17.193            -0.005              3.942
+  Primary Tumor       261     16.974            0.011               3.744
+  Kruskal-Wallis across 2 clusters: kappa_resid p=1.17e-01 eps2=0.0019  |  local_ID p=6.97e-02 eps2=0.0029
+  partial Spearman(ISC Signature, kappa_resid | log deg, log n_genes, ID) = -0.141 (p=8.33e-05)
+  partial Spearman(ISC Signature, residual    | same covariates)          = -0.447 (p=1.54e-39)  [comparison]
+
+HTA8_6018: Author Cell Type categories among malignant cells: {'Primary Tumor': np.int64(1891), 'Metastasis': np.int64(686)}
+  Clusters with >=30 malignant cells (Author Cell Type):
+  cluster             n       median_residual   median_kappa_resid  median_ID
+  Metastasis          686     21.122            0.003               4.896
+  Primary Tumor       1891    20.574            -0.001              5.672
+  Kruskal-Wallis across 2 clusters: kappa_resid p=9.62e-01 eps2=0.0000  |  local_ID p=8.38e-20 eps2=0.0318
+  partial Spearman(ISC Signature, kappa_resid | log deg, log n_genes, ID) = +0.004 (p=8.58e-01)
+  partial Spearman(ISC Signature, residual    | same covariates)          = -0.528 (p=1.84e-184)  [comparison]
+
+HTA8_6028: Author Cell Type categories among malignant cells: {'Metastasis': np.int64(657), 'Primary Tumor': np.int64(577)}
+  Clusters with >=30 malignant cells (Author Cell Type):
+  cluster             n       median_residual   median_kappa_resid  median_ID
+  Metastasis          657     19.687            -0.002              4.767
+  Primary Tumor       577     19.437            0.004               4.693
+  Kruskal-Wallis across 2 clusters: kappa_resid p=3.93e-01 eps2=0.0000  |  local_ID p=9.28e-02 eps2=0.0015
+  partial Spearman(ISC Signature, kappa_resid | log deg, log n_genes, ID) = +0.161 (p=1.31e-08)
+  partial Spearman(ISC Signature, residual    | same covariates)          = -0.447 (p=1.88e-61)  [comparison]
+
+================================================================================================
+STEP 2 -- gene programs
+================================================================================================
+Genes expressed in >=10% of malignant cells, per donor: HTA8_6002=4421, HTA8_6009=4593, HTA8_6013=10364, HTA8_6016=9544, HTA8_6018=10133, HTA8_6028=9972
+Intersection across all 6 donors: 3517 genes
+  HTA8_6002: 3517 genes tested (n_mal=60); median |rho| kappa_resid=0.103, ID=0.107
+  HTA8_6009: 3517 genes tested (n_mal=761); median |rho| kappa_resid=0.035, ID=0.051
+  HTA8_6013: 3517 genes tested (n_mal=667); median |rho| kappa_resid=0.037, ID=0.043
+  HTA8_6016: 3517 genes tested (n_mal=782); median |rho| kappa_resid=0.035, ID=0.034
+  HTA8_6018: 3517 genes tested (n_mal=2577); median |rho| kappa_resid=0.023, ID=0.035
+  HTA8_6028: 3517 genes tested (n_mal=1234); median |rho| kappa_resid=0.030, ID=0.029
+
+Consistent genes (FDR<0.05, same sign, in >=4/6 donors):
+  kappa_resid: 0 positive, 9 negative (total 9)
+  local_ID:    10 positive, 2 negative (total 12)
+
+Saved per-gene median rho -> ricci_gene_rho_kresid.csv, ricci_gene_rho_id.csv
+
+Spearman(median_rho_kappa_resid, median_rho_ID) across 3517 genes = -0.388
+
+================================================================================================
+GSEA (preranked by median rho across donors)
+================================================================================================
+  resolved Hallmark set 'EMT' -> 'Epithelial Mesenchymal Transition' (200 genes)
+  resolved Hallmark set 'APICAL_JUNCTION' -> 'Apical Junction' (200 genes)
+  resolved Hallmark set 'G2M_CHECKPOINT' -> 'G2-M Checkpoint' (200 genes)
+  resolved Hallmark set 'E2F_TARGETS' -> 'E2F Targets' (200 genes)
+  resolved Hallmark set 'MYC_TARGETS_V1' -> 'Myc Targets V1' (200 genes)
+  resolved Hallmark set 'OXIDATIVE_PHOSPHORYLATION' -> 'Oxidative Phosphorylation' (200 genes)
+  resolved Hallmark set 'WNT_BETA_CATENIN_SIGNALING' -> 'Wnt-beta Catenin Signaling' (42 genes)
+  resolved Hallmark set 'TNFA_SIGNALING_VIA_NFKB' -> 'TNF-alpha Signaling via NF-kB' (200 genes)
+  COULD NOT find the exact GO BP term 'cell-cell adhesion' in any available GO_Biological_Process_* Enrichr library (only narrower child terms like 'Regulation of ...' or 'Cell-Cell Adhesion Via ...' exist) -- SKIPPED per instructions (not approximated, not hand-built).
+  COULD NOT find the exact GO BP term 'actin cytoskeleton organization' in any available GO_Biological_Process_* Enrichr library (only narrower child terms like 'Regulation of ...' or 'Cell-Cell Adhesion Via ...' exist) -- SKIPPED per instructions (not approximated, not hand-built).
+
+GSEA on kappa_resid ranking:
+  GSEA (kappa_resid), 8 gene sets tested:
+    Oxidative Phosphorylation           NES=+2.338  FDR=0.000
+    E2F Targets                         NES=+2.136  FDR=0.000
+    TNF-alpha Signaling via NF-kB       NES=-1.821  FDR=0.001
+    G2-M Checkpoint                     NES=+1.761  FDR=0.005
+    Wnt-beta Catenin Signaling          NES=-1.658  FDR=0.009
+    Myc Targets V1                      NES=+1.608  FDR=0.013
+    Epithelial Mesenchymal Transition   NES=-1.451  FDR=0.044
+    Apical Junction                     NES=-1.017  FDR=0.435
+
+GSEA on local_ID ranking:
+  GSEA (local_ID), 8 gene sets tested:
+    E2F Targets                         NES=-1.767  FDR=0.004
+    G2-M Checkpoint                     NES=-1.799  FDR=0.006
+    Myc Targets V1                      NES=-1.160  FDR=0.200
+    Epithelial Mesenchymal Transition   NES=+1.264  FDR=0.598
+    TNF-alpha Signaling via NF-kB       NES=+0.949  FDR=0.710
+    Apical Junction                     NES=+1.019  FDR=0.731
+    Oxidative Phosphorylation           NES=+0.796  FDR=0.818
+    Wnt-beta Catenin Signaling          NES=+1.047  FDR=0.990
+
+================================================================================================
+SUMMARY TABLES
+================================================================================================
+
+donor        n_mal  R2(ORC~geom)  eps2_kresid   eps2_ID  subtype_rule  rho(ISC,kresid)
+HTA8_6002       60         0.583          nan       nan            NO           +0.257
+HTA8_6009      761         0.310       0.0245    0.0000            NO           +0.037
+HTA8_6013      667         0.336       0.0457    0.0089            NO           -0.020
+HTA8_6016      782         0.291       0.0019    0.0029            NO           -0.141
+HTA8_6018     2577         0.287       0.0000    0.0318            NO           +0.004
+HTA8_6028     1234         0.353       0.0000    0.0015            NO           +0.161
+
+Subtype rule met in 0/6 donors -> NOT SUPPORTED (need >=4/6)
+
+MAIN DECISION:
+  (a) consistent genes for kappa_resid: 9 -> FAIL (need >=20)
+  (b) |Spearman(median_rho_kresid, median_rho_ID)| = 0.388 -> PASS (need <0.5)
+  (c) gene sets meeting (c): ['Oxidative Phosphorylation', 'TNF-alpha Signaling via NF-kB', 'Wnt-beta Catenin Signaling', 'Epithelial Mesenchymal Transition'] -> PASS
+
+VERDICT: curvature reduces to local geometry; the Ricci line closes as a negative result.
+
+================================================================================================
+CAVEATS
+================================================================================================
+- ORC (kappa), residual, and gene expression are all derived from the same 50-D PCA / log-normalized expression matrix. Correlations with genes that dominate the PCA are partly mechanical for this reason; the local_ID comparison is the main control against that, not an independent validation.
+- n_genes_by_counts is also associated with stemness/CytoTRACE-like scores; using it as a covariate here may partially remove genuine biological signal along with the sequencing-depth confound, in either direction.
+- HTA8_6002 has only 60 malignant cells -- statistical power is low for this donor specifically, and its per-gene partial correlations are the least stable of the six.
+- This entire analysis is exploratory and follows a failed pre-registered robustness check (T1, 3/6 donors); nothing here should be read as confirmatory.

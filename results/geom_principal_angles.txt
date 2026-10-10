@@ -1,0 +1,163 @@
+COMPONENT 2 -- covariance structure change: principal (Grassmann) angles
+q=20; sampling-noise null reps=50; cross-donor null reps=1000; seed=0
+
+DECISION RULE (B2), stated before the numbers:
+  (a) 'covariance changes beyond sampling noise': in >=4/6 donors, d(N,M) > 95th
+      percentile of BOTH the N-N null and the M-M null. Reported as a baseline.
+  (b) 'new directions common across donors' (the ACTUAL test): cross-donor consistency
+      score > 95th percentile of its null (cohort PCA space only -- the shared basis).
+  (c) enrichment interpreted ONLY if (b) holds; otherwise each donor's new directions
+      are reported as idiosyncratic.
+
+
+================================================================================================
+SPACE: cohort_pca
+================================================================================================
+
+HTA8_6002: n_normal=264 n_malignant=60 (half-split n=30)
+  Grassmann d(N,M) observed = 4.2282
+  null (50 reps, n=30/group): d(N1,N2) median=3.3703 p95=3.5513  |  d(M1,M2) median=3.3810 p95=3.5702  |  d(N1,M1) [cross, sanity check] median=4.3446
+  (a) d(N,M) > both p95 nulls? YES
+  'new direction' angles to normal subspace (degrees): ['89.6', '86.2', '82.3']
+
+HTA8_6009: n_normal=822 n_malignant=761 (half-split n=380)
+  Grassmann d(N,M) observed = 3.9898
+  null (50 reps, n=380/group): d(N1,N2) median=1.7427 p95=1.9765  |  d(M1,M2) median=1.9480 p95=2.1486  |  d(N1,M1) [cross, sanity check] median=4.0241
+  (a) d(N,M) > both p95 nulls? YES
+  'new direction' angles to normal subspace (degrees): ['88.6', '85.5', '85.0']
+
+HTA8_6013: n_normal=769 n_malignant=667 (half-split n=333)
+  Grassmann d(N,M) observed = 4.1294
+  null (50 reps, n=333/group): d(N1,N2) median=1.6051 p95=2.0467  |  d(M1,M2) median=1.8565 p95=2.0184  |  d(N1,M1) [cross, sanity check] median=4.1144
+  (a) d(N,M) > both p95 nulls? YES
+  'new direction' angles to normal subspace (degrees): ['89.8', '87.8', '83.2']
+
+HTA8_6016: n_normal=1510 n_malignant=782 (half-split n=391)
+  Grassmann d(N,M) observed = 4.0952
+  null (50 reps, n=391/group): d(N1,N2) median=1.8387 p95=2.1221  |  d(M1,M2) median=1.7880 p95=2.0029  |  d(N1,M1) [cross, sanity check] median=4.1384
+  (a) d(N,M) > both p95 nulls? YES
+  'new direction' angles to normal subspace (degrees): ['89.3', '88.7', '83.1']
+
+HTA8_6018: n_normal=1256 n_malignant=2577 (half-split n=628)
+  Grassmann d(N,M) observed = 4.2159
+  null (50 reps, n=628/group): d(N1,N2) median=2.0192 p95=2.1818  |  d(M1,M2) median=1.1959 p95=1.5259  |  d(N1,M1) [cross, sanity check] median=4.2369
+  (a) d(N,M) > both p95 nulls? YES
+  'new direction' angles to normal subspace (degrees): ['88.7', '84.9', '84.5']
+
+HTA8_6028: n_normal=206 n_malignant=1234 (half-split n=103)
+  Grassmann d(N,M) observed = 4.1325
+  null (50 reps, n=103/group): d(N1,N2) median=2.5802 p95=2.7471  |  d(M1,M2) median=2.5145 p95=2.7188  |  d(N1,M1) [cross, sanity check] median=4.2026
+  (a) d(N,M) > both p95 nulls? YES
+  'new direction' angles to normal subspace (degrees): ['88.7', '88.1', '82.0']
+
+(a) donors passing (d(N,M) beyond both nulls): 6/6 -> SUPPORTED
+
+Cross-donor consistency of 'new directions' (cohort PCA space only, the shared basis):
+  observed mean cos^2 (15 donor pairs) = 0.1284
+  null (1000 reps, random 3D subspaces within each donor's U_m): median=0.1068  p95=0.1287
+  (b) observed > null p95? NO -> NOT SUPPORTED
+
+================================================================================================
+SPACE: normal_only
+================================================================================================
+
+HTA8_6002: n_normal=264 n_malignant=60 (half-split n=30)
+  Grassmann d(N,M) observed = 4.4197
+  null (50 reps, n=30/group): d(N1,N2) median=4.0851 p95=4.2973  |  d(M1,M2) median=4.0531 p95=4.1734  |  d(N1,M1) [cross, sanity check] median=4.2617
+  (a) d(N,M) > both p95 nulls? YES
+  'new direction' angles to normal subspace (degrees): ['89.6', '85.2', '82.6']
+
+HTA8_6009: n_normal=822 n_malignant=761 (half-split n=380)
+  Grassmann d(N,M) observed = 3.7953
+  null (50 reps, n=380/group): d(N1,N2) median=4.2158 p95=4.3094  |  d(M1,M2) median=2.7942 p95=2.9386  |  d(N1,M1) [cross, sanity check] median=4.1102
+  (a) d(N,M) > both p95 nulls? NO
+  'new direction' angles to normal subspace (degrees): ['88.2', '86.9', '78.8']
+
+HTA8_6013: n_normal=769 n_malignant=667 (half-split n=333)
+  Grassmann d(N,M) observed = 3.8703
+  null (50 reps, n=333/group): d(N1,N2) median=4.5912 p95=4.6893  |  d(M1,M2) median=2.7063 p95=2.8568  |  d(N1,M1) [cross, sanity check] median=4.3184
+  (a) d(N,M) > both p95 nulls? NO
+  'new direction' angles to normal subspace (degrees): ['89.4', '84.0', '77.6']
+
+HTA8_6016: n_normal=1510 n_malignant=782 (half-split n=391)
+  Grassmann d(N,M) observed = 3.8218
+  null (50 reps, n=391/group): d(N1,N2) median=3.3951 p95=3.6337  |  d(M1,M2) median=2.2827 p95=2.4234  |  d(N1,M1) [cross, sanity check] median=4.0913
+  (a) d(N,M) > both p95 nulls? YES
+  'new direction' angles to normal subspace (degrees): ['89.0', '83.6', '76.2']
+
+HTA8_6018: n_normal=1256 n_malignant=2577 (half-split n=628)
+  Grassmann d(N,M) observed = 3.6812
+  null (50 reps, n=628/group): d(N1,N2) median=3.0132 p95=3.1595  |  d(M1,M2) median=1.9520 p95=2.2218  |  d(N1,M1) [cross, sanity check] median=3.8509
+  (a) d(N,M) > both p95 nulls? YES
+  'new direction' angles to normal subspace (degrees): ['88.0', '80.1', '77.4']
+
+HTA8_6028: n_normal=206 n_malignant=1234 (half-split n=103)
+  Grassmann d(N,M) observed = 4.2150
+  null (50 reps, n=103/group): d(N1,N2) median=5.3112 p95=5.4108  |  d(M1,M2) median=3.6267 p95=3.8497  |  d(N1,M1) [cross, sanity check] median=4.3359
+  (a) d(N,M) > both p95 nulls? NO
+  'new direction' angles to normal subspace (degrees): ['87.6', '87.3', '83.4']
+
+(a) donors passing (d(N,M) beyond both nulls): 3/6 -> NOT SUPPORTED
+
+================================================================================================
+MAIN DECISION
+================================================================================================
+(a) 'covariance changes beyond sampling noise': cohort_pca 6/6, normal_only 3/6 -> NOT SUPPORTED in both spaces (reported as baseline, not the main test)
+NOTE: (a) pass counts differ between spaces -- flagged per the R1 instruction.
+
+(b) 'new directions common across donors' (cohort PCA space, the actual test): NOT SUPPORTED
+    observed=0.1284  null_median=0.1068  null_p95=0.1287
+
+================================================================================================
+GENE-LEVEL MAPPING (cohort PCA space)
+================================================================================================
+Consensus new direction = 1st left singular vector of the stacked 50x18 new-direction matrix (singular values: [1.666, 1.573, 1.505, 1.212, 1.179, 1.107, 1.079, 1.051, 0.981, 0.851, 0.793, 0.692, 0.622, 0.543, 0.511, 0.406, 0.383, 0.293])
+Fraction of stacked variance in the 1st singular vector: 0.154
+
+Recomputing cohort PCA loadings via sc.pp.pca(n_comps=50, mask_var=None) (not cached by extract_pca50.py) to map the consensus direction to genes...
+Saved gene weights for the consensus new direction -> geom_new_direction_gene_weights.csv (25339 genes)
+Top 15 positive-weight genes: MT1G, HSPB1, AGR2, HSPA1A, MT2A, AREG, HSP90AA1, MT1X, RBP1, DST, LMO7, CST1, REG4, HSPH1, MT1E
+Top 15 negative-weight genes: FABP1, IFI27, TFF3, FXYD3, JUN, CKB, ELF3, GPR15LG, TXNIP, IFI6, MARCKSL1, PPDPF, RNF43, PHGR1, LCN2
+
+================================================================================================
+(c) Enrichment (GSEA, preranked by consensus new-direction gene weight)
+================================================================================================
+(b) is NOT SUPPORTED -- new directions are donor-specific/idiosyncratic. Enrichment
+is still computed and saved below for completeness, but is NOT interpreted as a
+finding, per the decision rule.
+  resolved Hallmark set 'EMT' -> 'Epithelial Mesenchymal Transition' (200 genes)
+  resolved Hallmark set 'APICAL_JUNCTION' -> 'Apical Junction' (200 genes)
+  resolved Hallmark set 'G2M_CHECKPOINT' -> 'G2-M Checkpoint' (200 genes)
+  resolved Hallmark set 'E2F_TARGETS' -> 'E2F Targets' (200 genes)
+  resolved Hallmark set 'MYC_TARGETS_V1' -> 'Myc Targets V1' (200 genes)
+  resolved Hallmark set 'OXIDATIVE_PHOSPHORYLATION' -> 'Oxidative Phosphorylation' (200 genes)
+  resolved Hallmark set 'WNT_BETA_CATENIN_SIGNALING' -> 'Wnt-beta Catenin Signaling' (42 genes)
+  resolved Hallmark set 'TNFA_SIGNALING_VIA_NFKB' -> 'TNF-alpha Signaling via NF-kB' (200 genes)
+  COULD NOT find the exact GO BP term 'cell-cell adhesion' in any available GO_Biological_Process_* Enrichr library (only narrower child terms like 'Regulation of ...' or 'Cell-Cell Adhesion Via ...' exist) -- SKIPPED per instructions (not approximated, not hand-built).
+  COULD NOT find the exact GO BP term 'actin cytoskeleton organization' in any available GO_Biological_Process_* Enrichr library (only narrower child terms like 'Regulation of ...' or 'Cell-Cell Adhesion Via ...' exist) -- SKIPPED per instructions (not approximated, not hand-built).
+  GSEA (consensus_new_direction), 8 gene sets tested:
+    Apical Junction                     NES=+1.578  FDR=0.005
+    G2-M Checkpoint                     NES=-1.450  FDR=0.015
+    Epithelial Mesenchymal Transition   NES=+1.384  FDR=0.040
+    TNF-alpha Signaling via NF-kB       NES=+1.346  FDR=0.042
+    E2F Targets                         NES=-1.238  FDR=0.068
+    Myc Targets V1                      NES=+1.222  FDR=0.133
+    Oxidative Phosphorylation           NES=+1.107  FDR=0.269
+    Wnt-beta Catenin Signaling          NES=+1.049  FDR=0.325
+
+================================================================================================
+CAVEATS
+================================================================================================
+- The cross-donor consistency test (b) is only meaningful in the cohort PCA space, which
+  is the one shared basis across donors; the normal-only space uses a different,
+  donor-specific HVG set and PCA fit for every donor, so 'new direction' vectors from
+  different donors in that space are not directly comparable and are not tested for (b).
+- 'Average cos^2' between two donors' new-direction subspaces is computed as the mean
+  cos^2 of the principal angles BETWEEN THE TWO 3-D SUBSPACES (via SVD(Nd^T Nd')), not as
+  a naive column-by-column cosine, since individual N_d column vectors have no canonical
+  ordering beyond spanning the subspace.
+- Gene weights, the consensus direction, and any enrichment are derived from the same
+  expression matrix used to build the PCA subspaces; this is an internal-consistency
+  analysis, not independent validation.
+- HTA8_6002 (60 malignant, 264 normal cells) gives the noisiest per-donor subspace fits
+  of the six, most visibly in the sampling-noise null (smallest half-split n).

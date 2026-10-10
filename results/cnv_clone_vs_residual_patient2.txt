@@ -1,0 +1,107 @@
+STEP 0 -- Setup
+versions: scanpy=1.11.5, infercnvpy=0.6.1, leidenalg=0.12.0, numpy=2.4.6, anndata=0.12.19, scipy=1.17.1
+var_names format: Ensembl gene id (e.g. ENSG00000238009)
+Genes with genomic position: 23885/24111 (99.1%); dropping the rest.
+==========================================================================================
+Patient2
+==========================================================================================
+Cells: normal_epithelial=3595  carcinoma_epithelial=3305  immune=9388  (reference=12983, observation=3305)
+
+--- Sanity check (a): CNV score, carcinoma vs normal epithelial ---
+  normal median=0.0055  carcinoma median=0.0047  ratio=0.85x  Mann-Whitney p=6.328e-06
+
+--- Sanity check (b): known CRC chromosome-arm events ---
+(per-cell arm-mean smoothed CNV, carcinoma vs normal epithelial; Mann-Whitney U test;
+ 'present' = p<0.01 AND direction matches expected event)
+event         expected  carc_mean   norm_mean   p-value     present?
+7             gain      0.0129      0.0029      1.551e-57   YES
+8q            gain      0.0086      -0.0001     6.739e-160  YES
+13            gain      0.0295      -0.0021     1.098e-305  YES
+20q           gain      0.0190      0.0032      4.843e-88   YES
+8p            loss      -0.0061     -0.0009     1.710e-87   YES
+17p           loss      -0.0002     0.0005      2.367e-21   YES
+18            loss      -0.0024     0.0023      8.707e-193  YES
+Arm events detected in carcinoma: 7/7 (7, 8q, 13, 20q, 8p, 17p, 18)
+
+--- STEP 2: CNV clones (carcinoma epithelial cells, PCA(X_cnv) -> neighbors -> Leiden) ---
+  resolution=0.3: n_clusters=4  sizes={'0': np.int64(1128), '3': np.int64(1056), '2': np.int64(910), '1': np.int64(211)}
+  resolution=0.5: n_clusters=6  sizes={'1': np.int64(991), '3': np.int64(592), '2': np.int64(574), '0': np.int64(506), '4': np.int64(391), '5': np.int64(251)}
+  resolution=0.8: n_clusters=8  sizes={'1': np.int64(829), '4': np.int64(437), '5': np.int64(383), '2': np.int64(375), '3': np.int64(368), '0': np.int64(345), '6': np.int64(317), '7': np.int64(251)}
+
+Chosen resolution=0.3: 4 CNV clones, sizes:
+  clone 0: n=1128
+    arm-level (|mean|>0.05): none notable
+  clone 3: n=1056
+    arm-level (|mean|>0.05): 7:+0.036, 8q:+0.026, 13:+0.091, 20q:+0.054, 8p:-0.017
+  clone 2: n=910
+    arm-level (|mean|>0.05): none notable
+  clone 1: n=211
+    arm-level (|mean|>0.05): none notable
+
+--- STEP 3: projection residual (exact function from paper_final_verification.py) ---
+  normal median=2.6119  carcinoma median=3.6277  ratio=1.39x  (Mac rebuild verification reference: ~1.39x)
+
+--- STEP 4: clone vs state tests ---
+Decision rules (stated before results):
+  Clone hypothesis: top-decile residual cells concentrated in ONE CNV clone (>70%) AND CNV clone explains most residual variance.
+  State hypothesis: top-decile residual and ASCL2+ cells spread across clones ~proportionally to clone size, AND within-clone residual variance is large.
+
+(a) Spearman(residual, cnv_score) = 0.621  p=0.000e+00
+
+(b) Crosstab residual_group x cnv_clone:
+cnv_clone         0    1    2    3
+residual_group                    
+bottom10        163   79   89    0
+middle80        942  125  762  814
+top10            23    7   59  242
+    chi2 p=6.251e-120  adjusted_mutual_info=0.0948
+
+(c) One-way ANOVA residual ~ cnv_clone: F=370.810  p=0.000e+00  eta^2=0.2521
+
+(d) Per-clone summary:
+clone   n       med_resid   %ASCL2+   mean_ASCL2  %SOX4+
+0       1128    2.849       8.3       0.105       49.1
+1       211     2.520       0.9       0.022       15.6
+2       910     3.224       16.2      0.212       64.1
+3       1056    5.518       68.9      0.664       93.8
+
+(e) Observed vs expected share of top-decile residual cells, per clone:
+clone   clone_size  expected_top10  observed_top10  obs/exp
+0       1128        112.97          23              0.20
+1       211         21.13           7               0.33
+2       910         91.14           59              0.65
+3       1056        105.76          242             2.29
+
+Max concentration of top-decile cells in a single clone: 73.1%
+Verdict per stated decision rules: Neither rule set is cleanly satisfied -- mixed/ambiguous result.
+
+SUMMARY (facts only, no interpretation beyond the numbers above)
+- CNV signal is present and CRC-typical: 7/7 expected arm events detected, all p<1e-20.
+  Global CNV score is actually slightly LOWER in carcinoma than normal (ratio 0.85x,
+  p=6.3e-6) even though arm-level tests are individually significant -- the global score
+  averages over the whole genome including many unaffected regions, while the arm tests
+  isolate the affected arms; both are reported as computed, without adjustment.
+- Only 4 CNV clones at the lowest passing resolution (0.3). Just one clone (clone 3, n=1056)
+  carries the CRC-typical arm profile (7+/8q+/13+/20q+/8p-); the other 3 clones (0, 1, 2)
+  show no notable arm-level event by the |mean|>0.01 threshold.
+- Top-decile residual cells ARE concentrated: 73.1% fall in clone 3, which is also the only
+  clone with the CNV-typical profile and by far the highest ASCL2+ rate (68.9% vs 0.9-16.2%
+  in the other clones) and highest median residual (5.52 vs 2.52-3.22).
+- CNV clone explains a moderate-to-large share of residual variance: eta^2=0.252 (ANOVA),
+  i.e. ~25% of residual variance is between-clone.
+- Spearman(residual, cnv_score)=0.621, p~0: stronger correlation than Patient1.
+- By the stated decision rules: max clone concentration (73.1%) exceeds the 70% clone
+  threshold, but eta^2 (0.252) does not clear the >0.5 bar the clone rule also requires;
+  it also does not fall under the <0.3 bar the state rule requires for "small" between-clone
+  variance -- 0.252 sits just under that boundary while direction (concentration) points to
+  clone. Verdict printed above: neither rule set is cleanly satisfied; the crosstab and
+  ASCL2 pattern (d, e) lean toward a single dominant CNV clone carrying most high-residual,
+  ASCL2+ cells, more clone-like than Patient1's pattern, but eta^2 alone does not meet the
+  clone threshold.
+
+CAVEAT on arm-level test (b): "present" means direction-vs-normal matches the expected event
+AND p<0.01 -- it does not require the carcinoma value itself to be clearly positive (gain) or
+negative (loss). Chr17p in Patient2 is flagged "present" (loss) but its carcinoma value is
+close to zero (-0.0002) and only marginally more negative than normal (0.0005); a weak signal
+despite the significant p-value, likely driven by large cell numbers rather than a strong
+effect.

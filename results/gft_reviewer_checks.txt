@@ -1,0 +1,177 @@
+GFT reviewer checks (label-free heterogeneity, Leiden resolution sweep, Harmony baseline)
+versions: numpy=2.4.6, scipy=1.17.1, scikit-learn=1.9.1, scanpy=1.11.5, harmonypy=2.0.2, leidenalg=0.12.0
+seed=42  k_nn=20  kmeans_seeds=[42, 43, 44, 45, 46, 47, 48, 49, 50, 51]  kmeans_n_init=10  resolutions=[0.02, 0.05, 0.1, 0.2, 0.3, 0.5, 1.0]
+
+
+================================================================================================
+TEST A -- label-free heterogeneity score
+================================================================================================
+DECISION (stated before the numbers): label-free score is usable if it stays on the
+SAME side of threshold 7 as the label-based score, for BOTH datasets (CRC above 7, PBMC below 7).
+
+--- GSE161277 (Mac rebuild) ---
+  n_cells=50518  n_true_types=7  n_leiden_clusters=27
+  heterogeneity_score: true_labels=20.293  leiden_labels=20.720
+  Same side of threshold 7? YES (true above / leiden above)  [15s]
+
+--- PBMC3k (negative control) ---
+  n_cells=2638  n_true_types=8  n_leiden_clusters=6
+  heterogeneity_score: true_labels=13.149  leiden_labels=13.477
+  Same side of threshold 7? YES (true above / leiden above)  [1s]
+
+  Recomputing GFT vs PCA K-Means ARI on PBMC3k with both label sets:
+  [true_labels, k=8]
+      PCA K-Means ARI (10 seeds, n_init=10): 0.7749 +/- 0.1225
+      GFT K-Means ARI (10 seeds, n_init=10): 0.8231 +/- 0.0229
+    ratio GFT/PCA = 1.06x
+  [leiden_labels, k=6]
+      PCA K-Means ARI (10 seeds, n_init=10): 0.8948 +/- 0.0003
+      GFT K-Means ARI (10 seeds, n_init=10): 0.4335 +/- 0.0000
+    ratio GFT/PCA = 0.48x
+
+TEST A VERDICT: label-free score usable = YES (both datasets must stay on the same side)
+
+
+Loading GSE161277 for Tests B and C...
+
+================================================================================================
+TEST B -- Leiden resolution sweep (GSE161277)
+================================================================================================
+DECISION (stated before the numbers): 'structural incompatibility' survives only if
+GFT's best Leiden ARI (either k_eig, any resolution) stays CLEARLY below PCA's best
+(operationalized as PCA_best - GFT_best >= 0.02).
+
+Cosine k=20 graph built on PCA(50) points [19s], reused for both GFT(k_eig=5) and GFT(k_eig=20).
+
+  [PCA(50)] Leiden resolution sweep:
+  resolution  n_clusters  ARI
+  0.02        6           0.8938
+  0.05        10          0.7060
+  0.1         15          0.4706
+  0.2         19          0.3899
+  0.3         22          0.3443
+  0.5         27          0.2536
+  1.0         36          0.1869
+  [PCA(50)] BEST: resolution=0.02  n_clusters=6  ARI=0.8938
+  [PCA(50)] sweep time: 6s
+
+  [GFT(k_eig=5)] Leiden resolution sweep:
+  resolution  n_clusters  ARI
+  0.02        11          0.5413
+  0.05        15          0.3954
+  0.1         25          0.2406
+  0.2         40          0.1613
+  0.3         47          0.1267
+  0.5         65          0.0982
+  1.0         104         0.0565
+  [GFT(k_eig=5)] BEST: resolution=0.02  n_clusters=11  ARI=0.5413
+  [GFT(k_eig=5)] sweep time: 4s
+
+  [GFT(k_eig=20)] Leiden resolution sweep:
+  resolution  n_clusters  ARI
+  0.02        16          0.4540
+  0.05        24          0.2982
+  0.1         29          0.2395
+  0.2         34          0.2113
+  0.3         42          0.1553
+  0.5         56          0.1120
+  1.0         83          0.0710
+  [GFT(k_eig=20)] BEST: resolution=0.02  n_clusters=16  ARI=0.4540
+  [GFT(k_eig=20)] sweep time: 4s
+
+Best ARI: PCA=0.8938  GFT(best of k=5,20)=0.5413  gap=+0.3525
+TEST B VERDICT: structural incompatibility claim SURVIVES (gap >= 0.02 required)
+
+================================================================================================
+TEST C -- Harmony baseline (GSE161277)
+================================================================================================
+Harmony (batch=sample, 13 batches) on PCA(50) [4s]. Embedding shape: (50518, 50)
+GFT(k_eig=5) on Harmony graph built [23s]
+
+K-Means ARI (k=7, 10 seeds, n_init=10):
+  PCA K-Means ARI (10 seeds, n_init=10): 0.7332 +/- 0.0386
+  Harmony K-Means ARI (10 seeds, n_init=10): 0.6898 +/- 0.0317
+  GFT-on-PCA-graph (k_eig=5) K-Means ARI (10 seeds, n_init=10): 0.8658 +/- 0.0001
+  GFT-on-Harmony-graph (k_eig=5) K-Means ARI (10 seeds, n_init=10): 0.8695 +/- 0.0207
+
+Best Leiden ARI, same 7 resolutions:
+  PCA best (from Test B): resolution=0.02  ARI=0.8938
+
+  [Harmony] Leiden resolution sweep:
+  resolution  n_clusters  ARI
+  0.02        8           0.8656
+  0.05        10          0.8535
+  0.1         15          0.6838
+  0.2         17          0.6267
+  0.3         20          0.4270
+  0.5         24          0.3278
+  1.0         32          0.2387
+  [Harmony] BEST: resolution=0.02  n_clusters=8  ARI=0.8656
+
+Summary: PCA best Leiden ARI=0.8938  Harmony best Leiden ARI=0.8656
+K-Means: PCA=0.7332  Harmony=0.6898  GFT-on-PCA=0.8658  GFT-on-Harmony=0.8695
+Best K-Means ARI overall: GFT-on-Harmony-graph (k_eig=5) (0.8695)
+
+================================================================================================
+TOTAL RUNTIME: 94s
+================================================================================================
+
+================================================================================================
+OVERALL SUMMARY
+================================================================================================
+Test A: label-free heterogeneity score usable = YES
+Test B: structural incompatibility claim SURVIVES (PCA best=0.8938, GFT best=0.5413)
+Test C: Harmony K-Means ARI (0.6898) vs PCA K-Means ARI (0.7332) -- Harmony does not improve on PCA as a baseline
+
+================================================================================================
+CAVEATS
+================================================================================================
+- All ARI values are relative to a single label set per dataset (cell_type for
+  GSE161277, louvain for PBMC3k); those labels are themselves the product of an
+  earlier clustering/annotation pipeline, not ground truth in an absolute sense.
+- The threshold of 7 for heterogeneity_score, and the >=0.02 margin used to call a Test
+  B gap 'clear', are both operationalizations chosen for this report, not externally
+  validated cutoffs.
+- Harmony is run once (random_state=42, single run); no seed-repeat variance is
+  reported for the Harmony correction step itself, only for the downstream K-Means.
+- GFT, PCA and Harmony embeddings are all derived from the same expression matrix and
+  the same original 50-D PCA; comparisons are internal to this pipeline.
+
+##########################################################################################
+IMPORTANT FLAGS (facts, surfaced explicitly because they qualify the summary verdicts above)
+##########################################################################################
+
+FLAG 1 -- PBMC3k does not score below the threshold 7.
+The decision framework as given states the expected pattern is "CRC above 7, PBMC below 7."
+As measured here (scanpy.datasets.pbmc3k_processed(), 8 louvain types, X_pca[:, :50]):
+  PBMC3k heterogeneity_score (true labels)   = 13.149
+  PBMC3k heterogeneity_score (Leiden labels) = 13.477
+Both are clearly ABOVE 7, not below. Test A's pass/fail logic as implemented only checks that the
+label-free score stays on the SAME side as the label-based score WITHIN each dataset (which it
+does: both true and Leiden labels put PBMC above 7, so the internal consistency check reports
+"YES"). But the premise that PBMC3k is a below-7 negative control does not hold with this exact
+loader/label set. Two honest readings: (a) whatever PBMC benchmark established the "PBMC below 7"
+expectation used a different subset, filtering, or PC count than scanpy.datasets.pbmc3k_processed()
+with its default 50-D X_pca and 8 louvain classes, or (b) the threshold-7 rule of thumb does not
+transfer to this specific, commonly-used PBMC3k loading. Either way, this PBMC3k run is not
+functioning as a below-7 negative control, and the "usable" verdict for Test A should be read with
+that caveat rather than as confirmation that heterogeneity_score cleanly separates the two
+datasets the way the task's framing assumed.
+
+FLAG 2 -- Test B (Leiden) and Test C (K-Means) give OPPOSITE verdicts on GFT vs PCA.
+Test B: under Leiden clustering, GFT is clearly worse than PCA at every resolution tested
+  (best ARI: PCA=0.8938, GFT=0.5413, a large and consistent gap).
+Test C: under K-Means clustering (same 50518 cells, same true labels, k=7), GFT is the BEST
+  embedding of the four tested -- better than both plain PCA and Harmony:
+  PCA=0.7332  Harmony=0.6898  GFT-on-PCA=0.8658  GFT-on-Harmony=0.8695
+This is a direct contradiction if read as a single verdict on "GFT vs PCA structural
+compatibility": Test B's decision rule (which was specified in terms of Leiden ARI only) reports
+the structural-incompatibility claim SURVIVES, while the K-Means numbers computed in the same run,
+on the same data and labels, show GFT outperforming both PCA and Harmony. This is not a numerical
+error -- it reflects that Leiden and K-Means impose different structure on an embedding (Leiden
+is graph-community-based and sensitive to local neighbourhood density; K-Means is centroid-based
+and favors compact, well-separated clusters), and GFT's spectral embedding evidently produces
+compact K-Means-friendly clusters while producing a graph structure Leiden partitions poorly
+relative to PCA's. The honest conclusion is algorithm-dependent, not a single clean verdict: GFT's
+apparent "structural incompatibility" is specific to Leiden clustering on a k=20 cosine graph, not
+a general property of the GFT embedding across all common clustering methods.

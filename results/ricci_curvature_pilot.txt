@@ -1,0 +1,100 @@
+Tests and decision rule (STATED BEFORE THE NUMBERS):
+  T1  malignant vs normal node ORC: OLS  ORC ~ is_malignant + log(deg) + log(n_genes).
+  T2  within MALIGNANT cells: Spearman(residual, node ORC), raw and partial (ranks of log deg,
+      log n_genes regressed out). Control: same correlation within NORMAL cells.
+  T3  bridge test: mean ORC of normal-malignant (cross) edges vs within-group edges;
+      label-permutation p-value (edges fixed, labels shuffled, 1000 perms).
+
+  "Residual has a curvature counterpart" is SUPPORTED if, in a MAJORITY of donors,
+  T2 partial rho <= -0.10 with p < 0.05 among malignant cells, AND that rho is more negative
+  than the corresponding rho among normal cells (otherwise the relation is generic
+  graph-periphery geometry, not malignancy-specific).
+  T3 "bridge" hypothesis SUPPORTED if cross-edge ORC < within-edge ORC with perm p < 0.05 in a
+  majority of donors.
+
+versions: numpy=2.4.4, POT=0.9.7.post1; k_nn=20, k_eig=20, alpha=0.5
+
+Sanity check vs results/all_samples_residual.txt (in-sample normal, disease-based groups):
+  HTA8_6002: ratio=3.58x
+  HTA8_6009: ratio=2.97x
+  HTA8_6013: ratio=4.81x
+  HTA8_6016: ratio=3.66x
+  HTA8_6018: ratio=5.51x
+  HTA8_6028: ratio=4.18x
+
+================================================================================================
+HTA8_6002: n_normal=264 n_malignant=60 edges=4279 (2s)
+  held-out residual median: normal=4.673 malignant=15.711 ratio=3.36x
+  edge ORC: mean=0.197 min=-0.817 max=0.525; frac negative=0.145
+  T1 node ORC median: normal=0.213 malignant=0.172 (MWU p=1.18e-04)
+     OLS ORC ~ is_mal + log deg + log n_genes: coef_mal=-0.0697 p=2.77e-03; coef_logdeg=0.0549
+  T2 [malignant] rho(res,ORC) raw=-0.641 (p=3.5e-08)  partial=-0.166 (p=2.1e-01)  | rho(res,Forman)=-0.650  rho(res,deg)=-0.697
+  T2 [normal   ] rho(res,ORC) raw=-0.447 (p=2.1e-14)  partial=-0.437 (p=1.3e-13)  | rho(res,Forman)=-0.479  rho(res,deg)=-0.265
+     malignant residual quartile -> median node ORC: Q1=+0.264  Q2=+0.222  Q3=+0.087  Q4=+0.013
+  T3 cross edges=285; mean ORC cross - within = -0.2318 (perm null mean -0.0003, one-sided p=0.0010)
+SKIP HTA8_6006: n_normal=0, n_malignant=0
+================================================================================================
+HTA8_6009: n_normal=822 n_malignant=761 edges=22573 (14s)
+  held-out residual median: normal=4.214 malignant=16.435 ratio=3.90x
+  edge ORC: mean=0.075 min=-0.877 max=0.525; frac negative=0.289
+  T1 node ORC median: normal=0.119 malignant=0.038 (MWU p=2.23e-55)
+     OLS ORC ~ is_mal + log deg + log n_genes: coef_mal=-0.0829 p=1.60e-39; coef_logdeg=0.1291
+  T2 [malignant] rho(res,ORC) raw=+0.047 (p=2.0e-01)  partial=+0.061 (p=9.0e-02)  | rho(res,Forman)=+0.045  rho(res,deg)=-0.071
+  T2 [normal   ] rho(res,ORC) raw=-0.038 (p=2.8e-01)  partial=-0.029 (p=4.1e-01)  | rho(res,Forman)=+0.171  rho(res,deg)=-0.534
+     malignant residual quartile -> median node ORC: Q1=+0.040  Q2=+0.036  Q3=+0.026  Q4=+0.054
+  T3 cross edges=505; mean ORC cross - within = -0.2003 (perm null mean -0.0001, one-sided p=0.0010)
+SKIP HTA8_6011: n_normal=7, n_malignant=97
+================================================================================================
+HTA8_6013: n_normal=769 n_malignant=667 edges=20073 (12s)
+  held-out residual median: normal=4.120 malignant=19.615 ratio=4.76x
+  edge ORC: mean=0.080 min=-0.909 max=0.523; frac negative=0.290
+  T1 node ORC median: normal=0.128 malignant=0.030 (MWU p=4.53e-80)
+     OLS ORC ~ is_mal + log deg + log n_genes: coef_mal=-0.0989 p=8.72e-61; coef_logdeg=0.1043
+  T2 [malignant] rho(res,ORC) raw=+0.154 (p=6.7e-05)  partial=+0.148 (p=1.3e-04)  | rho(res,Forman)=+0.056  rho(res,deg)=+0.131
+  T2 [normal   ] rho(res,ORC) raw=-0.072 (p=4.4e-02)  partial=+0.037 (p=3.0e-01)  | rho(res,Forman)=-0.018  rho(res,deg)=-0.470
+     malignant residual quartile -> median node ORC: Q1=-0.003  Q2=+0.042  Q3=+0.040  Q4=+0.026
+  T3 cross edges=150; mean ORC cross - within = -0.3168 (perm null mean +0.0002, one-sided p=0.0010)
+SKIP HTA8_6014: n_normal=0, n_malignant=1236
+================================================================================================
+HTA8_6016: n_normal=1510 n_malignant=782 edges=32186 (19s)
+  held-out residual median: normal=3.793 malignant=17.096 ratio=4.51x
+  edge ORC: mean=0.059 min=-0.905 max=0.521; frac negative=0.336
+  T1 node ORC median: normal=0.061 malignant=0.039 (MWU p=2.54e-09)
+     OLS ORC ~ is_mal + log deg + log n_genes: coef_mal=-0.0321 p=8.61e-10; coef_logdeg=0.0767
+  T2 [malignant] rho(res,ORC) raw=-0.129 (p=2.9e-04)  partial=-0.017 (p=6.4e-01)  | rho(res,Forman)=+0.026  rho(res,deg)=-0.212
+  T2 [normal   ] rho(res,ORC) raw=+0.123 (p=1.7e-06)  partial=+0.204 (p=1.2e-15)  | rho(res,Forman)=+0.358  rho(res,deg)=-0.476
+     malignant residual quartile -> median node ORC: Q1=+0.067  Q2=+0.040  Q3=+0.026  Q4=+0.023
+  T3 cross edges=424; mean ORC cross - within = -0.1449 (perm null mean +0.0000, one-sided p=0.0010)
+================================================================================================
+HTA8_6018: n_normal=1256 n_malignant=2577 edges=56510 (35s)
+  held-out residual median: normal=3.692 malignant=20.674 ratio=5.60x
+  edge ORC: mean=-0.016 min=-0.882 max=0.525; frac negative=0.530
+  T1 node ORC median: normal=0.065 malignant=-0.061 (MWU p=3.75e-243)
+     OLS ORC ~ is_mal + log deg + log n_genes: coef_mal=-0.1076 p=6.39e-191; coef_logdeg=0.0557
+  T2 [malignant] rho(res,ORC) raw=+0.023 (p=2.4e-01)  partial=+0.033 (p=9.5e-02)  | rho(res,Forman)=+0.045  rho(res,deg)=+0.094
+  T2 [normal   ] rho(res,ORC) raw=+0.151 (p=8.1e-08)  partial=+0.125 (p=8.9e-06)  | rho(res,Forman)=+0.280  rho(res,deg)=-0.533
+     malignant residual quartile -> median node ORC: Q1=-0.050  Q2=-0.072  Q3=-0.069  Q4=-0.047
+  T3 cross edges=78; mean ORC cross - within = -0.3354 (perm null mean +0.0001, one-sided p=0.0010)
+================================================================================================
+HTA8_6028: n_normal=206 n_malignant=1234 edges=20715 (12s)
+  held-out residual median: normal=4.178 malignant=19.629 ratio=4.70x
+  edge ORC: mean=0.019 min=-0.852 max=0.522; frac negative=0.433
+  T1 node ORC median: normal=0.182 malignant=-0.012 (MWU p=2.42e-65)
+     OLS ORC ~ is_mal + log deg + log n_genes: coef_mal=-0.1595 p=6.76e-98; coef_logdeg=0.1206
+  T2 [malignant] rho(res,ORC) raw=-0.096 (p=7.3e-04)  partial=+0.022 (p=4.4e-01)  | rho(res,Forman)=-0.105  rho(res,deg)=-0.055
+  T2 [normal   ] rho(res,ORC) raw=-0.194 (p=5.2e-03)  partial=-0.207 (p=3.0e-03)  | rho(res,Forman)=-0.163  rho(res,deg)=-0.553
+     malignant residual quartile -> median node ORC: Q1=+0.010  Q2=-0.020  Q3=-0.022  Q4=-0.007
+  T3 cross edges=171; mean ORC cross - within = -0.1462 (perm null mean +0.0000, one-sided p=0.0010)
+
+==============================================================================================================
+SUMMARY
+donor         N_n   N_m  T1 coef_mal         p  T2 rho_mal         p  rho_norm    T3 gap  n_cross   perm p
+HTA8_6002     264    60      -0.0697   2.8e-03      -0.166   2.1e-01    -0.437   -0.2318      285   0.0010
+HTA8_6009     822   761      -0.0829   1.6e-39      +0.061   9.0e-02    -0.029   -0.2003      505   0.0010
+HTA8_6013     769   667      -0.0989   8.7e-61      +0.148   1.3e-04    +0.037   -0.3168      150   0.0010
+HTA8_6016    1510   782      -0.0321   8.6e-10      -0.017   6.4e-01    +0.204   -0.1449      424   0.0010
+HTA8_6018    1256  2577      -0.1076  6.4e-191      +0.033   9.5e-02    +0.125   -0.3354       78   0.0010
+HTA8_6028     206  1234      -0.1595   6.8e-98      +0.022   4.4e-01    -0.207   -0.1462      171   0.0010
+
+T2 criterion met in 0/6 donors -> NOT SUPPORTED
+T3 criterion met in 6/6 donors -> SUPPORTED

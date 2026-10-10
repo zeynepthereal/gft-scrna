@@ -1,0 +1,397 @@
+Held-out and cross-donor normal controls for the malignant-vs-normal residual claim
+versions: numpy=2.4.6, scipy=1.17.1, scikit-learn=1.9.1, scanpy=1.11.5, infercnvpy=0.6.1
+seed=42  n_folds=5  k_eig=20  min_normal_n=100
+
+DECISION RULE, stated before the numbers: the disease-deviation claim survives only if,
+in MOST samples, malignant/held-out-normal ratios are CLEARLY above 1 (>1.2x) AND
+clearly exceed the typical (median) cross-donor normal ratio for that dataset. If a
+malignant cell deviates no more than a healthy cell from a different person, the claim
+fails for that sample.
+
+================================================================================================
+TEST 1 -- held-out normal control, per sample
+================================================================================================
+
+--- GSE161277 (Patient1, Patient2) ---
+var_names format: Ensembl gene id (e.g. ENSG00000238009)
+Genes with genomic position: 23885/24111 (99.1%); dropping the rest.
+
+================================================================================================
+Patient1
+================================================================================================
+n_normal=836  n_malignant=2231
+  median normal residual: in-sample=2.1978  held-out=2.2503  (held-out/in-sample gap = 1.024x -- the in-sample advantage itself)
+  median malignant residual (avg over 5 fold-fits per cell) = 8.4791
+  RATIO malignant / held-out-normal = 3.768x
+  [for reference] RATIO malignant / in-sample-normal (the original, biased comparison) = 3.858x
+
+  Test A (n_genes quintile stratification + OLS) using HELD-OUT normal residuals:
+
+--- TEST A: Patient1_heldout ---
+  n_normal=836  n_malignant=2231
+  median n_genes_by_counts: normal=1603  malignant=4400
+  raw (unstratified) residual median ratio malignant/normal = 3.77x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [202, 1951]         494       120         2.579           7.588           2.94
+  1         [1958, 3460]        153       462         2.222           9.085           4.09
+  2         [3463, 4356]        114       499         1.718           10.585          6.16
+  3         [4358, 5306]        67        544         1.669           8.443           5.06
+  4         [5309, 9110]        8         606         --              --              skipped (<20/group)
+  Median of per-quintile ratios: 4.57x  (n_quintiles_used=4/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 9.3194  95% CI=[8.6713, 9.9675]  p=1.099e-155
+    log(n_genes) coefficient = -0.8975  p=1.949e-05  R^2=0.262  n=3067
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+================================================================================================
+Patient2
+================================================================================================
+n_normal=3595  n_malignant=1056
+  median normal residual: in-sample=2.6119  held-out=2.6476  (held-out/in-sample gap = 1.014x -- the in-sample advantage itself)
+  median malignant residual (avg over 5 fold-fits per cell) = 5.5284
+  RATIO malignant / held-out-normal = 2.088x
+  [for reference] RATIO malignant / in-sample-normal (the original, biased comparison) = 2.117x
+
+  Test A (n_genes quintile stratification + OLS) using HELD-OUT normal residuals:
+
+--- TEST A: Patient2_heldout ---
+  n_normal=3595  n_malignant=1056
+  median n_genes_by_counts: normal=1365  malignant=4194
+  raw (unstratified) residual median ratio malignant/normal = 2.09x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [200, 907]          875       57          3.054           4.939           1.62
+  1         [908, 1346]         880       49          2.932           5.241           1.79
+  2         [1347, 2352]        819       112         2.781           5.827           2.10
+  3         [2357, 3813]        688       241         2.101           6.299           3.00
+  4         [3816, 7966]        333       597         1.850           5.323           2.88
+  Median of per-quintile ratios: 2.10x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 4.1763  95% CI=[3.9974, 4.3553]  p=0.000e+00
+    log(n_genes) coefficient = -0.4797  p=3.080e-22  R^2=0.327  n=4651
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+--- CRC epithelial cohort ---
+CRC cohort donors with >=100 normal cells: ['HTA8_6002', 'HTA8_6006', 'HTA8_6009', 'HTA8_6013', 'HTA8_6016', 'HTA8_6018', 'HTA8_6028']
+
+================================================================================================
+HTA8_6002
+================================================================================================
+n_normal=268  n_malignant=64
+  median normal residual: in-sample=4.1915  held-out=4.6564  (held-out/in-sample gap = 1.111x -- the in-sample advantage itself)
+  median malignant residual (avg over 5 fold-fits per cell) = 15.0391
+  RATIO malignant / held-out-normal = 3.230x
+  [for reference] RATIO malignant / in-sample-normal (the original, biased comparison) = 3.588x
+
+  Test A (n_genes quintile stratification + OLS) using HELD-OUT normal residuals:
+
+--- TEST A: HTA8_6002_heldout ---
+  n_normal=268  n_malignant=64
+  median n_genes_by_counts: normal=3264  malignant=760
+  raw (unstratified) residual median ratio malignant/normal = 3.23x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [291, 1134]         27        41          6.313           14.162          2.24
+  1         [1191, 2041]        55        10          --              --              skipped (<20/group)
+  2         [2051, 3399]        58        8           --              --              skipped (<20/group)
+  3         [3461, 4546]        64        2           --              --              skipped (<20/group)
+  4         [4549, 6425]        64        3           --              --              skipped (<20/group)
+  Median of per-quintile ratios: 2.24x  (n_quintiles_used=1/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 9.9097  95% CI=[9.1158, 10.7037]  p=2.292e-76
+    log(n_genes) coefficient = -0.5466  p=9.329e-03  R^2=0.738  n=332
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+================================================================================================
+HTA8_6006
+================================================================================================
+n_normal=117  n_malignant=117
+  median normal residual: in-sample=4.6355  held-out=5.9420  (held-out/in-sample gap = 1.282x -- the in-sample advantage itself)
+  median malignant residual (avg over 5 fold-fits per cell) = 4.7617
+  RATIO malignant / held-out-normal = 0.801x
+  [for reference] RATIO malignant / in-sample-normal (the original, biased comparison) = 1.027x
+
+  Test A (n_genes quintile stratification + OLS) using HELD-OUT normal residuals:
+
+--- TEST A: HTA8_6006_heldout ---
+  n_normal=117  n_malignant=117
+  median n_genes_by_counts: normal=766  malignant=766
+  raw (unstratified) residual median ratio malignant/normal = 0.80x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [361, 554]          24        24          5.858           4.777           0.82
+  1         [558, 659]          23        23          6.604           5.148           0.78
+  2         [670, 912]          23        23          5.997           4.918           0.82
+  3         [926, 1635]         24        24          6.192           4.591           0.74
+  4         [1660, 5640]        23        23          5.624           4.278           0.76
+  Median of per-quintile ratios: 0.78x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = -1.4176  95% CI=[-1.7191, -1.1161]  p=1.416e-17
+    log(n_genes) coefficient = -0.1671  p=1.460e-01  R^2=0.276  n=234
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): NO
+
+================================================================================================
+HTA8_6009
+================================================================================================
+n_normal=832  n_malignant=771
+  median normal residual: in-sample=4.1631  held-out=4.2949  (held-out/in-sample gap = 1.032x -- the in-sample advantage itself)
+  median malignant residual (avg over 5 fold-fits per cell) = 13.7602
+  RATIO malignant / held-out-normal = 3.204x
+  [for reference] RATIO malignant / in-sample-normal (the original, biased comparison) = 3.305x
+
+  Test A (n_genes quintile stratification + OLS) using HELD-OUT normal residuals:
+
+--- TEST A: HTA8_6009_heldout ---
+  n_normal=832  n_malignant=771
+  median n_genes_by_counts: normal=2505  malignant=946
+  raw (unstratified) residual median ratio malignant/normal = 3.20x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [365, 788]          55        267         6.764           13.876          2.05
+  1         [791, 1273]         83        236         5.923           15.419          2.60
+  2         [1275, 2194]        207       114         5.093           13.387          2.63
+  3         [2197, 3194]        229       91          3.963           11.944          3.01
+  4         [3196, 5645]        258       63          3.392           12.309          3.63
+  Median of per-quintile ratios: 2.63x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 9.4077  95% CI=[9.0504, 9.7650]  p=0.000e+00
+    log(n_genes) coefficient = -1.2717  p=3.057e-20  R^2=0.727  n=1603
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+================================================================================================
+HTA8_6013
+================================================================================================
+n_normal=770  n_malignant=668
+  median normal residual: in-sample=3.9517  held-out=4.1044  (held-out/in-sample gap = 1.039x -- the in-sample advantage itself)
+  median malignant residual (avg over 5 fold-fits per cell) = 19.6189
+  RATIO malignant / held-out-normal = 4.780x
+  [for reference] RATIO malignant / in-sample-normal (the original, biased comparison) = 4.965x
+
+  Test A (n_genes quintile stratification + OLS) using HELD-OUT normal residuals:
+
+--- TEST A: HTA8_6013_heldout ---
+  n_normal=770  n_malignant=668
+  median n_genes_by_counts: normal=2669  malignant=4988
+  raw (unstratified) residual median ratio malignant/normal = 4.78x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [495, 2039]         188       101         4.860           18.888          3.89
+  1         [2044, 2840]        243       43          4.009           18.423          4.60
+  2         [2841, 3800]        218       70          3.706           19.113          5.16
+  3         [3810, 5377]        106       182         3.497           19.635          5.61
+  4         [5378, 8538]        15        272         --              --              skipped (<20/group)
+  Median of per-quintile ratios: 4.88x  (n_quintiles_used=4/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 15.1731  95% CI=[14.9572, 15.3890]  p=0.000e+00
+    log(n_genes) coefficient = 0.1315  p=1.812e-01  R^2=0.940  n=1438
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+================================================================================================
+HTA8_6016
+================================================================================================
+n_normal=1516  n_malignant=788
+  median normal residual: in-sample=3.7366  held-out=3.8126  (held-out/in-sample gap = 1.020x -- the in-sample advantage itself)
+  median malignant residual (avg over 5 fold-fits per cell) = 15.7826
+  RATIO malignant / held-out-normal = 4.140x
+  [for reference] RATIO malignant / in-sample-normal (the original, biased comparison) = 4.224x
+
+  Test A (n_genes quintile stratification + OLS) using HELD-OUT normal residuals:
+
+--- TEST A: HTA8_6016_heldout ---
+  n_normal=1516  n_malignant=788
+  median n_genes_by_counts: normal=3814  malignant=3318
+  raw (unstratified) residual median ratio malignant/normal = 4.14x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [315, 1742]         175       287         6.314           14.000          2.22
+  1         [1747, 3339]        350       110         4.262           17.473          4.10
+  2         [3341, 4176]        379       81          3.533           16.866          4.77
+  3         [4178, 5165]        379       84          3.296           16.609          5.04
+  4         [5173, 8610]        233       226         3.424           16.056          4.69
+  Median of per-quintile ratios: 4.69x  (n_quintiles_used=5/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 11.9853  95% CI=[11.7625, 12.2082]  p=0.000e+00
+    log(n_genes) coefficient = 0.0754  p=3.019e-01  R^2=0.834  n=2304
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+================================================================================================
+HTA8_6018
+================================================================================================
+n_normal=1257  n_malignant=2578
+  median normal residual: in-sample=3.5743  held-out=3.7150  (held-out/in-sample gap = 1.039x -- the in-sample advantage itself)
+  median malignant residual (avg over 5 fold-fits per cell) = 19.7052
+  RATIO malignant / held-out-normal = 5.304x
+  [for reference] RATIO malignant / in-sample-normal (the original, biased comparison) = 5.513x
+
+  Test A (n_genes quintile stratification + OLS) using HELD-OUT normal residuals:
+
+--- TEST A: HTA8_6018_heldout ---
+  n_normal=1257  n_malignant=2578
+  median n_genes_by_counts: normal=2853  malignant=4788
+  raw (unstratified) residual median ratio malignant/normal = 5.30x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [436, 2549]         476       291         4.379           18.539          4.23
+  1         [2550, 3555]        491       276         3.383           19.457          5.75
+  2         [3559, 4542]        205       563         3.223           19.529          6.06
+  3         [4543, 5651]        68        698         3.007           19.895          6.62
+  4         [5654, 9669]        17        750         --              --              skipped (<20/group)
+  Median of per-quintile ratios: 5.90x  (n_quintiles_used=4/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 15.6716  95% CI=[15.5297, 15.8134]  p=0.000e+00
+    log(n_genes) coefficient = 0.5096  p=1.725e-14  R^2=0.937  n=3835
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+================================================================================================
+HTA8_6028
+================================================================================================
+n_normal=215  n_malignant=1243
+  median normal residual: in-sample=3.8343  held-out=4.3710  (held-out/in-sample gap = 1.140x -- the in-sample advantage itself)
+  median malignant residual (avg over 5 fold-fits per cell) = 16.5527
+  RATIO malignant / held-out-normal = 3.787x
+  [for reference] RATIO malignant / in-sample-normal (the original, biased comparison) = 4.317x
+
+  Test A (n_genes quintile stratification + OLS) using HELD-OUT normal residuals:
+
+--- TEST A: HTA8_6028_heldout ---
+  n_normal=215  n_malignant=1243
+  median n_genes_by_counts: normal=2615  malignant=4306
+  raw (unstratified) residual median ratio malignant/normal = 3.79x
+  quintile  n_genes_range       n_normal  n_malignant med_resid_norm  med_resid_mal   ratio
+  0         [359, 2079]         66        226         5.257           12.560          2.39
+  1         [2090, 3447]        87        204         4.093           16.740          4.09
+  2         [3448, 4554]        39        253         3.688           16.752          4.54
+  3         [4555, 5528]        16        275         --              --              skipped (<20/group)
+  4         [5536, 9873]        7         285         --              --              skipped (<20/group)
+  Median of per-quintile ratios: 4.09x  (n_quintiles_used=3/5)
+  OLS residual ~ is_malignant + log(n_genes_by_counts):
+    is_malignant coefficient = 11.1447  95% CI=[10.7341, 11.5552]  p=0.000e+00
+    log(n_genes) coefficient = 1.7205  p=9.221e-57  R^2=0.704  n=1458
+  Survives-per-sample verdict (stratified median ratio>1.2x AND OLS coef>0,p<0.05): YES
+
+================================================================================================
+TEST 2 -- cross-donor normal control
+================================================================================================
+
+------------------------------------------------------------------------------------------------
+TEST 2 -- cross-donor normal control, within CRC_epithelial
+------------------------------------------------------------------------------------------------
+  A (train)     B (test)      median(B on A)  A held-out-norm   ratio
+  HTA8_6002     HTA8_6006     16.6899         4.6564            3.584x
+  HTA8_6002     HTA8_6009     9.2390          4.6564            1.984x
+  HTA8_6002     HTA8_6013     7.5934          4.6564            1.631x
+  HTA8_6002     HTA8_6016     7.6610          4.6564            1.645x
+  HTA8_6002     HTA8_6018     7.4034          4.6564            1.590x
+  HTA8_6002     HTA8_6028     7.8519          4.6564            1.686x
+  HTA8_6006     HTA8_6002     21.5478         5.9420            3.626x
+  HTA8_6006     HTA8_6009     21.1107         5.9420            3.553x
+  HTA8_6006     HTA8_6013     26.1604         5.9420            4.403x
+  HTA8_6006     HTA8_6016     24.6514         5.9420            4.149x
+  HTA8_6006     HTA8_6018     23.7115         5.9420            3.991x
+  HTA8_6006     HTA8_6028     25.3979         5.9420            4.274x
+  HTA8_6009     HTA8_6002     9.7865          4.2949            2.279x
+  HTA8_6009     HTA8_6006     16.1724         4.2949            3.765x
+  HTA8_6009     HTA8_6013     9.0107          4.2949            2.098x
+  HTA8_6009     HTA8_6016     9.9854          4.2949            2.325x
+  HTA8_6009     HTA8_6018     9.2753          4.2949            2.160x
+  HTA8_6009     HTA8_6028     8.6453          4.2949            2.013x
+  HTA8_6013     HTA8_6002     7.0159          4.1044            1.709x
+  HTA8_6013     HTA8_6006     19.5543         4.1044            4.764x
+  HTA8_6013     HTA8_6009     8.1589          4.1044            1.988x
+  HTA8_6013     HTA8_6016     8.6044          4.1044            2.096x
+  HTA8_6013     HTA8_6018     7.5273          4.1044            1.834x
+  HTA8_6013     HTA8_6028     8.0684          4.1044            1.966x
+  HTA8_6016     HTA8_6002     7.8000          3.8126            2.046x
+  HTA8_6016     HTA8_6006     17.8952         3.8126            4.694x
+  HTA8_6016     HTA8_6009     9.3489          3.8126            2.452x
+  HTA8_6016     HTA8_6013     9.6488          3.8126            2.531x
+  HTA8_6016     HTA8_6018     8.8574          3.8126            2.323x
+  HTA8_6016     HTA8_6028     9.3704          3.8126            2.458x
+  HTA8_6018     HTA8_6002     7.2875          3.7150            1.962x
+  HTA8_6018     HTA8_6006     20.7415         3.7150            5.583x
+  HTA8_6018     HTA8_6009     9.2033          3.7150            2.477x
+  HTA8_6018     HTA8_6013     9.2462          3.7150            2.489x
+  HTA8_6018     HTA8_6016     8.7160          3.7150            2.346x
+  HTA8_6018     HTA8_6028     8.7928          3.7150            2.367x
+  HTA8_6028     HTA8_6002     7.6205          4.3710            1.743x
+  HTA8_6028     HTA8_6006     14.8066         4.3710            3.387x
+  HTA8_6028     HTA8_6009     9.3359          4.3710            2.136x
+  HTA8_6028     HTA8_6013     10.9998         4.3710            2.517x
+  HTA8_6028     HTA8_6016     7.8724          4.3710            1.801x
+  HTA8_6028     HTA8_6018     8.9278          4.3710            2.042x
+
+  Cross-donor normal ratio distribution (CRC_epithelial, n=42 ordered pairs): min=1.590  median=2.324  max=5.583
+
+  Comparison: malignant/held-out-normal ratio vs typical (median) cross-donor ratio:
+    HTA8_6002: malignant/held-out-normal=3.230x  vs  cross-donor median=2.324x (exceeds? YES)  vs cross-donor max=5.583x (exceeds? NO)
+    HTA8_6006: malignant/held-out-normal=0.801x  vs  cross-donor median=2.324x (exceeds? NO)  vs cross-donor max=5.583x (exceeds? NO)
+    HTA8_6009: malignant/held-out-normal=3.204x  vs  cross-donor median=2.324x (exceeds? YES)  vs cross-donor max=5.583x (exceeds? NO)
+    HTA8_6013: malignant/held-out-normal=4.780x  vs  cross-donor median=2.324x (exceeds? YES)  vs cross-donor max=5.583x (exceeds? NO)
+    HTA8_6016: malignant/held-out-normal=4.140x  vs  cross-donor median=2.324x (exceeds? YES)  vs cross-donor max=5.583x (exceeds? NO)
+    HTA8_6018: malignant/held-out-normal=5.304x  vs  cross-donor median=2.324x (exceeds? YES)  vs cross-donor max=5.583x (exceeds? NO)
+    HTA8_6028: malignant/held-out-normal=3.787x  vs  cross-donor median=2.324x (exceeds? YES)  vs cross-donor max=5.583x (exceeds? NO)
+
+------------------------------------------------------------------------------------------------
+TEST 2 -- cross-donor normal control, within GSE161277
+------------------------------------------------------------------------------------------------
+  A (train)     B (test)      median(B on A)  A held-out-norm   ratio
+  Patient1      Patient2      3.3755          2.2503            1.500x
+  Patient2      Patient1      2.9793          2.6476            1.125x
+
+  Cross-donor normal ratio distribution (GSE161277, n=2 ordered pairs): min=1.125  median=1.313  max=1.500
+  NOTE: only 2 donors in this dataset -> only 2 ordered pairs; this
+  distribution is not statistically meaningful, reported for completeness only.
+
+  Comparison: malignant/held-out-normal ratio vs typical (median) cross-donor ratio:
+    Patient1: malignant/held-out-normal=3.768x  vs  cross-donor median=1.313x (exceeds? YES)  vs cross-donor max=1.500x (exceeds? YES)
+    Patient2: malignant/held-out-normal=2.088x  vs  cross-donor median=1.313x (exceeds? YES)  vs cross-donor max=1.500x (exceeds? YES)
+
+================================================================================================
+SUMMARY
+================================================================================================
+sample      dataset         med_insample med_heldout  med_mal   mal/heldout  insample_gap testA_survives 
+Patient1    GSE161277       2.1978       2.2503       8.4791    3.768        1.024        YES            
+Patient2    GSE161277       2.6119       2.6476       5.5284    2.088        1.014        YES            
+HTA8_6002   CRC_epithelial  4.1915       4.6564       15.0391   3.230        1.111        YES            
+HTA8_6006   CRC_epithelial  4.6355       5.9420       4.7617    0.801        1.282        NO             
+HTA8_6009   CRC_epithelial  4.1631       4.2949       13.7602   3.204        1.032        YES            
+HTA8_6013   CRC_epithelial  3.9517       4.1044       19.6189   4.780        1.039        YES            
+HTA8_6016   CRC_epithelial  3.7366       3.8126       15.7826   4.140        1.020        YES            
+HTA8_6018   CRC_epithelial  3.5743       3.7150       19.7052   5.304        1.039        YES            
+HTA8_6028   CRC_epithelial  3.8343       4.3710       16.5527   3.787        1.140        YES            
+
+8/9 samples: malignant/held-out-normal ratio > 1.2x
+8/9 samples: ratio also exceeds the typical (median) cross-donor normal ratio for that dataset
+
+8/9 samples satisfy BOTH conditions.
+VERDICT: the disease-deviation claim SURVIVES this control (need a majority of samples satisfying both conditions).
+
+================================================================================================
+CAVEATS
+================================================================================================
+- GSE161277 has only 2 donors -- its cross-donor distribution (2 ordered pairs) is not
+  statistically meaningful and is reported for completeness only, not as a robust
+  baseline the way the 7-donor CRC cohort distribution is.
+- Malignant cells' held-out residual is an AVERAGE over 5 different fold-fits per cell
+  (since malignant cells are never in the training set regardless of fold); normal
+  cells get exactly one held-out value each, from the single fold where they were
+  excluded. This asymmetry is a reasonable way to put both groups on equal out-of-
+  sample footing, but is not identical machinery for both groups.
+- CNV clone labels (GSE161277 malignant-like cells) and the residual are derived from
+  the same expression matrix -- internal consistency, not independent ground truth.
+- Cross-donor comparisons mix different individuals, sequencing runs and possibly batch
+  effects; a large cross-donor ratio does not distinguish biological inter-individual
+  variation from technical batch variation.
+
+ADDITIONAL OBSERVATION (facts only, not part of the pre-stated decision rule, but relevant)
+---------------------------------------------------------------------------------------------
+The decision rule above compares each sample's malignant ratio to the cross-donor MEDIAN. A
+stricter comparison -- against the cross-donor MAX (the largest healthy-person-to-healthy-person
+deviation observed) -- gives a different picture for the two datasets:
+- GSE161277 (Patient1, Patient2): malignant ratios (3.77x, 2.09x) exceed even the cross-donor MAX
+  (1.50x) in both samples. Clean separation from person-to-person variation.
+- CRC_epithelial: malignant ratios exceed the cross-donor MEDIAN (2.32x) in 6/7 donors, but do NOT
+  exceed the cross-donor MAX (5.58x) in ANY of the 7 donors. The largest healthy-vs-healthy
+  cross-donor deviation observed in this cohort (HTA8_6006 scored on HTA8_6018's subspace, 5.58x)
+  is larger than every donor's malignant/held-out-normal ratio except HTA8_6018 itself (5.30x,
+  still below 5.58x). Read plainly: in the CRC cohort, the single largest residual deviation
+  measured anywhere in Test 1/Test 2 came from one healthy donor's normal cells scored on another
+  healthy donor's subspace, not from a malignant cell.
+This does not overturn the SURVIVES verdict above (which used the median, as the decision rule
+specified), but it means the CRC cohort's separation between "malignant" and "different healthy
+person" is not clean at the extremes -- cross-donor (batch/individual) variation in this cohort
+can rival or exceed malignant deviation in magnitude, even though malignant cells are higher than
+their own held-out normal reference in most donors.

@@ -1,0 +1,118 @@
+STEP 0 -- Setup
+versions: scanpy=1.11.5, infercnvpy=0.6.1, leidenalg=0.12.0, numpy=2.4.6, anndata=0.12.19, scipy=1.17.1
+var_names format: Ensembl gene id (e.g. ENSG00000238009)
+Genes with genomic position: 23885/24111 (99.1%); dropping the rest.
+==========================================================================================
+Patient1
+==========================================================================================
+Cells: normal_epithelial=836  carcinoma_epithelial=2972  immune=4660  (reference=5496, observation=2972)
+
+--- Sanity check (a): CNV score, carcinoma vs normal epithelial ---
+  normal median=0.0064  carcinoma median=0.0076  ratio=1.20x  Mann-Whitney p=2.947e-35
+
+--- Sanity check (b): known CRC chromosome-arm events ---
+(per-cell arm-mean smoothed CNV, carcinoma vs normal epithelial; Mann-Whitney U test;
+ 'present' = p<0.01 AND direction matches expected event)
+event         expected  carc_mean   norm_mean   p-value     present?
+7             gain      0.0013      0.0024      4.087e-15   no
+8q            gain      0.0337      -0.0002     3.843e-248  YES
+13            gain      -0.0004     -0.0040     3.028e-64   YES
+20q           gain      0.0306      0.0026      1.275e-165  YES
+8p            loss      -0.0205     -0.0006     4.490e-194  YES
+17p           loss      -0.0243     0.0004      8.125e-198  YES
+18            loss      -0.0056     0.0028      7.659e-119  YES
+Arm events detected in carcinoma: 6/7 (8q, 13, 20q, 8p, 17p, 18)
+
+--- STEP 2: CNV clones (carcinoma epithelial cells, PCA(X_cnv) -> neighbors -> Leiden) ---
+  resolution=0.3: n_clusters=7  sizes={'0': np.int64(1056), '4': np.int64(636), '5': np.int64(375), '2': np.int64(366), '3': np.int64(210), '6': np.int64(194), '1': np.int64(135)}
+  resolution=0.5: n_clusters=8  sizes={'0': np.int64(959), '4': np.int64(616), '6': np.int64(376), '3': np.int64(367), '2': np.int64(262), '5': np.int64(214), '1': np.int64(137), '7': np.int64(41)}
+  resolution=0.8: n_clusters=11  sizes={'4': np.int64(609), '1': np.int64(597), '5': np.int64(374), '2': np.int64(368), '0': np.int64(351), '3': np.int64(209), '7': np.int64(196), '6': np.int64(136), '9': np.int64(73), '8': np.int64(40), '10': np.int64(19)}
+
+Chosen resolution=0.3: 7 CNV clones, sizes:
+  clone 0: n=1056
+    arm-level (|mean|>0.05): 8q:+0.047, 20q:+0.042, 8p:-0.027, 17p:-0.034
+  clone 4: n=636
+    arm-level (|mean|>0.05): 8q:+0.049, 20q:+0.022, 8p:-0.027, 17p:-0.038
+  clone 5: n=375
+    arm-level (|mean|>0.05): 20q:+0.012
+  clone 2: n=366
+    arm-level (|mean|>0.05): none notable
+  clone 3: n=210
+    arm-level (|mean|>0.05): 8p:-0.021
+  clone 6: n=194
+    arm-level (|mean|>0.05): 8q:+0.043, 20q:+0.029, 8p:-0.027, 17p:-0.036
+  clone 1: n=135
+    arm-level (|mean|>0.05): 8q:+0.048, 20q:+0.143, 8p:-0.025, 17p:-0.026
+
+--- STEP 3: projection residual (exact function from paper_final_verification.py) ---
+  normal median=2.1978  carcinoma median=8.0558  ratio=3.67x  (Mac rebuild verification reference: ~3.67x)
+
+--- STEP 4: clone vs state tests ---
+Decision rules (stated before results):
+  Clone hypothesis: top-decile residual cells concentrated in ONE CNV clone (>70%) AND CNV clone explains most residual variance.
+  State hypothesis: top-decile residual and ASCL2+ cells spread across clones ~proportionally to clone size, AND within-clone residual variance is large.
+
+(a) Spearman(residual, cnv_score) = 0.475  p=1.584e-167
+
+(b) Crosstab residual_group x cnv_clone:
+cnv_clone         0    1    2    3    4    5    6
+residual_group                                   
+bottom10         27    3  178   10   18   61    1
+middle80        896  120  169  181  525  300  185
+top10           133   12   19   19   93   14    8
+    chi2 p=8.764e-163  adjusted_mutual_info=0.0842
+
+(c) One-way ANOVA residual ~ cnv_clone: F=37.644  p=0.000e+00  eta^2=0.0708
+
+(d) Per-clone summary:
+clone   n       med_resid   %ASCL2+   mean_ASCL2  %SOX4+
+0       1056    8.626       85.0      1.057       95.3
+1       135     9.403       74.8      0.931       88.9
+2       366     4.787       15.8      0.272       41.0
+3       210     8.440       61.9      0.871       94.3
+4       636     8.686       84.6      1.040       96.4
+5       375     6.230       73.9      0.759       88.8
+6       194     8.619       80.9      0.751       94.3
+
+(e) Observed vs expected share of top-decile residual cells, per clone:
+clone   clone_size  expected_top10  observed_top10  obs/exp
+0       1056        105.88          133             1.26
+1       135         13.54           12              0.89
+2       366         36.70           19              0.52
+3       210         21.06           19              0.90
+4       636         63.77           93              1.46
+5       375         37.60           14              0.37
+6       194         19.45           8               0.41
+
+Max concentration of top-decile cells in a single clone: 44.6%
+Verdict per stated decision rules: STATE hypothesis better supported by the stated rules.
+
+SUMMARY (facts only, no interpretation beyond the numbers above)
+- CNV signal is present and CRC-typical: 6/7 expected arm events detected (8q/20q gain,
+  13/8p/17p/18 as listed; chr7 gain not significant here), all p<1e-14.
+- 7 CNV clones at the chosen (lowest passing) resolution 0.3; clones 0, 4, 1, 6 share the
+  8q+/20q+/8p-/17p- profile at varying strength; clone 2 has no notable arm event; clone 5
+  has only a weak 20q+; clone 3 has only 8p-.
+- Top-decile residual cells are NOT concentrated in one clone: max concentration in a single
+  clone is 44.6% (clone 0), spread across all 7 clones. obs/exp top-decile ratios range
+  0.37-1.46 -- above and below 1, not a single dominant clone.
+- CNV clone explains a small share of residual variance: eta^2=0.071 (ANOVA), i.e. ~7% of
+  residual variance is between-clone, ~93% is within-clone.
+- Spearman(residual, cnv_score)=0.475, p~0: residual and CNV score are correlated, as
+  expected since both derive from related signal, but far from 1 -- most residual variation
+  is not explained by overall CNV burden.
+- ASCL2+ rate varies by clone (15.8%-85.0%) but does NOT track the CNV-arm profile cleanly:
+  clone 2 (no notable arm event) has the lowest ASCL2+ rate (15.8%) and lowest median
+  residual (4.79), while clones 0/4/6 (matching arm profiles) have similarly high ASCL2+
+  rates (80-85%) despite different top-decile enrichment (obs/exp 1.26, 1.46, 0.41).
+- By the stated decision rules: max clone concentration (44.6%) is below the 70% clone
+  threshold, and eta^2 (0.071) is below the 0.3 state threshold used for a clean call in
+  either direction: with the exception that within-clone variance is clearly large (eta^2
+  low), which favors the state side of that rule. Verdict printed above: STATE hypothesis
+  better supported.
+
+CAVEAT on arm-level test (b): "present" means direction-vs-normal matches the expected event
+AND p<0.01 -- it does not require the carcinoma value itself to be clearly positive (gain) or
+negative (loss). Chr13 in Patient1 is flagged "present" (gain) but its carcinoma value is
+still slightly negative (-0.0004); only relatively less negative than normal (-0.0040). Read
+that row as "shifted in the expected direction, weakly," not as a clear positive gain.
