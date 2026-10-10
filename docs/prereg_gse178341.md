@@ -249,3 +249,37 @@ parameters; it adds a control and two gating conditions on top of them.
 This amendment, appended to `docs/prereg_gse178341.md` only. No residual, CNV, or AUROC
 script has been written or run for GSE178341 — C-ctrl, H1, H2, and H3 are still
 descriptions of analyses to be run, not results.
+
+---
+
+## Amendment 2, before any analysis (2026-10-10)
+
+Written after Amendment 1 above, still before any residual, CNV, or AUROC analysis has
+been run on GSE178341. Nothing above is deleted or altered; this section fixes the CNV
+score's reference definition before it is computed.
+
+### CNV reference definition
+
+For H2/H3, the CNV score (`infercnvpy.tl.infercnv` + `infercnvpy.tl.cnv_score`,
+`window_size=250`, genomic positions from the GENCODE GTF already at
+`data/reference/`) is run per patient with the reference set to **non-epithelial cells
+only** (T/NK, myeloid, stromal; pooled from both tumor and normal channels of that
+patient). **Normal epithelial cells are explicitly excluded from the reference**,
+because they are one of the two groups (tumor epithelium vs. normal epithelium) being
+classified by the CNV score — using them as the reference would give normal epithelial
+cells artificially low CNV scores by construction (the reference is always ~0 relative
+to itself) and inflate the CNV AUROC. This is the same in-sample bias a reviewer
+identified for the residual (see `results/heldout_crossdonor_control.txt` and
+`scripts/replicate_gse161277.py`'s frozen pipeline, which addresses it for the residual
+via 5-fold held-out scoring); the CNV score gets the analogous fix here by reference
+exclusion rather than cross-validation, since infercnvpy's reference is used
+structurally differently from a fitted subspace.
+
+Observation set = both normal epithelial and tumor epithelial cells of that patient
+(both are scored against the same non-epithelial reference, symmetrically — neither
+group gets an in-sample advantage).
+
+### Commit scope (Amendment 2)
+
+This amendment, appended to `docs/prereg_gse178341.md` only. No residual, CNV, or AUROC
+script has been written or run for GSE178341 yet.
