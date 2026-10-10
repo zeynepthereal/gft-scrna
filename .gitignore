@@ -4,6 +4,7 @@ __pycache__/
 .DS_Store
 data/*.h5ad
 data/*.h5
+data/GSE178341/
 #results/*.json
 *.log
 .ipynb_checkpoints/
